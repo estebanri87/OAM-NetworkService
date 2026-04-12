@@ -5,17 +5,17 @@
   <op:config href="NetworkService.conf.xml" />
 
   <op:ETS
-    OpenKnxId="0xAE"
+    OpenKnxId="0xAF"
     ApplicationNumber="0x2F"
     ApplicationVersion="0.1"
-    ReplacesVersions=""
+    ReplacesVersions="0.0"
     ApplicationRevision="0"
     ProductName="Netzwerk Dienste"
     BusCurrent="30"
     BuildSuffix="-Dev"
     BuildSuffixText=" (Dev)"
     MediumTypes="MT-0 MT-5"
-    OrderNumber="MGKnxNET" />
+    OrderNumber="OpenKNX-SR-NET" />
 
   <op:define prefix="BASE" ModuleType="10"
     share="../lib/OGM-Common/src/Common.share.xml">
@@ -52,8 +52,8 @@
     share="../lib/OFM-SIPClientModule/src/SIPClientModule.share.xml"
     template="../lib/OFM-SIPClientModule/src/SIPClientModule.templ.xml"
     NumChannels="5"
-    KoSingleOffset="100"
-    KoOffset="110">
+    KoSingleOffset="400"
+    KoOffset="401">
     <op:verify File="../lib/OFM-SIPClientModule/library.json" ModuleVersion="%SIP_VerifyVersion%" />
   </op:define>
 
@@ -61,8 +61,8 @@
     share="../lib/OFM-IPCameraModule/src/IPCameraModule.share.xml"
     template="../lib/OFM-IPCameraModule/src/IPCameraModule.templ.xml"
     NumChannels="8"
-    KoSingleOffset="200"
-    KoOffset="205">
+    KoSingleOffset="406"
+    KoOffset="407">
     <op:verify File="../lib/OFM-IPCameraModule/library.json" ModuleVersion="%IPC_VerifyVersion%" />
   </op:define>
 
