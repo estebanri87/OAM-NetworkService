@@ -1,0 +1,47 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../OFM-IPCameraModule"
+		},
+		{
+			"path": "../OFM-SIPClientModule"
+		},
+		{
+			"path": "./lib/OFM-Network"
+		},
+		{
+			"path": "../OFM-UsbExchange"
+		},
+		{
+			"path": "../OFM-FileTransferModule"
+		},
+		{
+			"path": "../OFM-FunctionBlocks"
+		},
+		{
+			"path": "../OFM-LogicModule"
+		},
+		{
+			"path": "../OFM-ConfigTransfer"
+		},
+		{
+			"path": "../knx"
+		},
+		{
+			"path": "../OGM-Common"
+		},
+		{
+			"path": "../OGM-HardwareConfig"
+		}
+	],
+	"settings": {
+		"cSpell.language": "en,de,de-DE",
+		"C_Cpp.autoAddFileAssociations": false,
+		"files.associations": {
+			"new": "cpp"
+		}
+	}
+}
