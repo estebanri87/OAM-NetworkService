@@ -1,0 +1,115 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Generate Dependencies.txt",
+			"type": "shell",
+			"command": "lib/OGM-Common/scripts/setup/reusable/Build-Dependencies.ps1",
+			"args": [],
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "OpenKNXproducer (DEV)",
+			"type": "shell",
+			"command": "OpenKNXproducer",
+			"args": [
+				"create",
+				"--Debug",
+				"-h",
+				"include/knxprod.h",
+				"src/NetworkService-Dev"
+			],
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "OpenKNXproducer (Beta)",
+			"type": "shell",
+			"command": "OpenKNXproducer",
+			"args": [
+				"create",
+				"--Debug",
+				"-h",
+				"include/knxprod.h",
+				"src/NetworkService"
+			],
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Develop: REG1_LAN_TP_BASE",
+			"type": "shell",
+			"command": "scripts/OpenKNX-Build.ps1",
+			"args": [
+				"develop_REG1_LAN_TP_BASE"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Develop: REG1_LAN_TP_BASE (USB)",
+			"type": "shell",
+			"command": "scripts/OpenKNX-Build.ps1",
+			"args": [
+				"develop_REG1_LAN_TP_BASE",
+				"upload"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Develop: REG1_LAN_TP_BASE (JTAG)",
+			"type": "shell",
+			"command": "scripts/OpenKNX-Build.ps1",
+			"args": [
+				"develop_REG1_LAN_TP_BASE_JTAG",
+				"upload"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Build-Dev",
+			"type": "shell",
+			"command": "scripts/Build-Release.ps1",
+			"args": [
+				"Dev"
+			],
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Build-Beta",
+			"type": "shell",
+			"command": "scripts/Build-Release.ps1",
+			"args": [
+				""
+			],
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Build-Release",
+			"type": "shell",
+			"command": "scripts/Build-Release.ps1",
+			"args": [
+				"Release"
+			],
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "PlatformIO Serial Monitor",
+			"type": "shell",
+			"command": "platformio",
+			"args": [
+				"device",
+				"monitor",
+				"-b",
+				"115200"
+			],
+			"isBackground": true
+		}
+	]
+}
