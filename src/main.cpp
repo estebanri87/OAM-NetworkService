@@ -1,7 +1,11 @@
 #include "OpenKNX.h"
 #include "NetworkModule.h"
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
 #include "UsbExchangeModule.h"
+#endif
+#ifndef OPENKNX_FILE_TRANSFER_IGNORE
 #include "FileTransferModule.h"
+#endif
 #include "Logic.h"
 #include "FunctionBlocksModule.h"
 #include "SIPModule.h"
@@ -18,8 +22,12 @@ void setup()
     openknx.addModule(2, openknxNetwork);
 #endif
     openknx.addModule(1, openknxLogic);
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
     openknx.addModule(5, openknxUsbExchangeModule);
+#endif
+#ifndef OPENKNX_FILE_TRANSFER_IGNORE
     openknx.addModule(6, openknxFileTransferModule);
+#endif
     openknx.addModule(9, openknxFunctionBlocksModule);
     openknx.addModule(7, openknxSIPModule);
     openknx.addModule(8, openknxIPCameraModule);
