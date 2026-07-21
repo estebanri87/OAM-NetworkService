@@ -13,3 +13,5 @@ compile_commands.json
 include/versions.h
 data/
 src/Baggages/Thumbs.db
+.claude/CLAUDE.md
+EX1-Modbus-Spec.md

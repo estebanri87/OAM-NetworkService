@@ -35,6 +35,9 @@
 		},
 		{
 			"path": "../OGM-HardwareConfig"
+		},
+		{
+			"path": "../OFM-EnergyEdgeModule"
 		}
 	],
 	"settings": {
