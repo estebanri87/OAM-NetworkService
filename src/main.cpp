@@ -10,6 +10,7 @@
 #include "FunctionBlocksModule.h"
 #include "SIPModule.h"
 #include "IPCameraModule.h"
+#include "EnergyEdgeModule.h"
 
 void setup()
 {
@@ -31,6 +32,7 @@ void setup()
     openknx.addModule(9, openknxFunctionBlocksModule);
     openknx.addModule(7, openknxSIPModule);
     openknx.addModule(8, openknxIPCameraModule);
+    openknx.addModule(10, openknxEnergyEdgeModule);
     openknx.setup();
 }
 

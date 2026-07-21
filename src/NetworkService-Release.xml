@@ -33,22 +33,6 @@
     <op:verify File="../lib/OFM-ConfigTransfer/library.json" ModuleVersion="%UCT_VerifyVersion%" />
   </op:define>
 
-  <op:define prefix="LOG" ModuleType="10"
-    share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
-    template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
-    NumChannels="50"
-    KoOffset="100">
-    <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="%LOG_VerifyVersion%" />
-  </op:define>
-
-  <op:define prefix="FCB" ModuleType="11"
-    share="../lib/OFM-FunctionBlocks/src/FunctionBlocks.share.xml"
-    template="../lib/OFM-FunctionBlocks/src/FunctionBlocks.templ.xml"
-    NumChannels="15"
-    KoOffset="250">
-    <op:verify File="../lib/OFM-FunctionBlocks/library.json" ModuleVersion="%FCB_VerifyVersion%" />
-  </op:define>
-
   <op:define prefix="SIP" ModuleType="22"
     share="../lib/OFM-SIPClientModule/src/SIPClientModule.share.xml"
     template="../lib/OFM-SIPClientModule/src/SIPClientModule.templ.xml"
@@ -65,6 +49,31 @@
     KoSingleOffset="406"
     KoOffset="407">
     <op:verify File="../lib/OFM-IPCameraModule/library.json" ModuleVersion="%IPC_VerifyVersion%" />
+  </op:define>
+
+  <op:define prefix="EEX" ModuleType="27"
+    share="../lib/OFM-EnergyEdgeModule/src/EnergyEdgeModule.share.xml"
+    template="../lib/OFM-EnergyEdgeModule/src/EnergyEdgeModule.templ.xml"
+    NumChannels="20"
+    KoSingleOffset="703"
+    KoOffset="709">
+    <op:verify File="../lib/OFM-EnergyEdgeModule/library.json" ModuleVersion="%EEX_VerifyVersion%" />
+  </op:define>
+
+  <op:define prefix="LOG" ModuleType="10"
+    share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
+    template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
+    NumChannels="50"
+    KoOffset="100">
+    <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="%LOG_VerifyVersion%" />
+  </op:define>
+
+  <op:define prefix="FCB" ModuleType="11"
+    share="../lib/OFM-FunctionBlocks/src/FunctionBlocks.share.xml"
+    template="../lib/OFM-FunctionBlocks/src/FunctionBlocks.templ.xml"
+    NumChannels="15"
+    KoOffset="250">
+    <op:verify File="../lib/OFM-FunctionBlocks/library.json" ModuleVersion="%FCB_VerifyVersion%" />
   </op:define>
 
   <generate />
