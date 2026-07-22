@@ -62,7 +62,9 @@
 
   <op:define prefix="SPV" ModuleType="28"
     share="../lib/OFM-SolarmanPV/src/SolarmanPV.share.xml"
-    KoSingleOffset="809">
+    template="../lib/OFM-SolarmanPV/src/SolarmanPV.templ.xml"
+    NumChannels="6"
+    KoOffset="809">
     <op:verify File="../lib/OFM-SolarmanPV/library.json" ModuleVersion="%SPV_VerifyVersion%" />
   </op:define>
 
