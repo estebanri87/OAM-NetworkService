@@ -59,6 +59,12 @@
     <op:verify File="../lib/OFM-EnergyEdgeModule/library.json" ModuleVersion="%EEX_VerifyVersion%" />
   </op:define>
 
+  <op:define prefix="SPV" ModuleType="28"
+    share="../lib/OFM-SolarmanPV/src/SolarmanPV.share.xml"
+    KoSingleOffset="809">
+    <op:verify File="../lib/OFM-SolarmanPV/library.json" ModuleVersion="%SPV_VerifyVersion%" />
+  </op:define>
+
   <op:define prefix="LOG" ModuleType="10"
     share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
     template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"

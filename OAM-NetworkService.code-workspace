@@ -38,6 +38,9 @@
 		},
 		{
 			"path": "../OFM-EnergyEdgeModule"
+		},
+		{
+			"path": "../OFM-SolarmanPV"
 		}
 	],
 	"settings": {

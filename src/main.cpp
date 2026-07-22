@@ -11,6 +11,7 @@
 #include "SIPModule.h"
 #include "IPCameraModule.h"
 #include "EnergyEdgeModule.h"
+#include "SolarmanPVModule.h"
 
 void setup()
 {
@@ -33,6 +34,7 @@ void setup()
     openknx.addModule(7, openknxSIPModule);
     openknx.addModule(8, openknxIPCameraModule);
     openknx.addModule(10, openknxEnergyEdgeModule);
+    openknx.addModule(11, openknxSolarmanPVModule);
     openknx.setup();
 }
 
