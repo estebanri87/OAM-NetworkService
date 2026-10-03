@@ -11,6 +11,7 @@
 #include "SIPModule.h"
 #include "EnergyEdgeModule.h"
 #include "SolarmanPVModule.h"
+#include "VaillantModule.h"
 
 void setup()
 {
@@ -33,6 +34,9 @@ void setup()
     openknx.addModule(7, openknxSIPModule);
     openknx.addModule(10, openknxEnergyEdgeModule);
     openknx.addModule(11, openknxSolarmanPVModule);
+#ifdef OPENKNX_VAILLANT
+    openknx.addModule(13, openknxVaillantModule);
+#endif
     openknx.setup();
 }
 

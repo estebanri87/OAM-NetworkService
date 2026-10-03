@@ -38,6 +38,9 @@
 		},
 		{
 			"path": "../OFM-SolarmanPV"
+		},
+		{
+			"path": "../OFM-Vaillant"
 		}
 	],
 	"settings": {
