@@ -2,7 +2,6 @@
 
 Die Anwendung stellt netzwerkbasierte Dienste auf dem KNX Bus zur Verfügung:
 
-- IP-Kamera Integration (Reolink, Hikvision, Dahua) mit ONVIF-Bewegungserkennung
 - SIP-Client – Auslösen von Telefonanrufen (ohne Sprachverbindung)
 - Logikmodule und Funktionsblöcke
 
