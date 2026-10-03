@@ -12,7 +12,6 @@ Die detaillierten Beschreibungen der Module sind hier zu finden:
 
 - [OpenKNX Applikationsbeschreibung](https://github.com/OpenKNX/OGM-Common/blob/v1/doc/Applikationsbeschreibung-Common.md)
 - [Konfigurationstransfer](https://github.com/OpenKNX/OFM-ConfigTransfer/blob/v1/doc/Applikationsbeschreibung-ConfigTransfer.md)
-- [IP-Kamera Modul](https://github.com/estebanri87/OFM-IPCameraModule)
 - [SIP Client](https://github.com/OpenKNX/OFM-SIPClientModule)
 - [Logikmodule](https://github.com/OpenKNX/OFM-LogicModule/blob/v1/doc/Applikationsbeschreibung-Logik.md)
 - [Funktionsblöcke](https://github.com/mgeramb/OFM-FunctionBlocks/blob/v1/doc/Applikationsbeschreibung-FunctionBlocks.md)

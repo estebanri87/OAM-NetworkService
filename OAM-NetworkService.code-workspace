@@ -4,9 +4,6 @@
 			"path": "."
 		},
 		{
-			"path": "../OFM-IPCameraModule"
-		},
-		{
 			"path": "../OFM-SIPClientModule"
 		},
 		{
