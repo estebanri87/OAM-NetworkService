@@ -40,7 +40,10 @@
 			"path": "../OFM-SolarmanPV"
 		},
 		{
-			"path": "../OFM-Vaillant"
+			"path": "../OFM-WelcomeIP"
+		},
+		{
+			"path": "../OFM-Roborock"
 		}
 	],
 	"settings": {

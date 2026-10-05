@@ -11,7 +11,8 @@
 #include "SIPModule.h"
 #include "EnergyEdgeModule.h"
 #include "SolarmanPVModule.h"
-#include "VaillantModule.h"
+#include "WelcomeIPModule.h"
+#include "RoborockModule.h"
 
 void setup()
 {
@@ -34,8 +35,11 @@ void setup()
     openknx.addModule(7, openknxSIPModule);
     openknx.addModule(10, openknxEnergyEdgeModule);
     openknx.addModule(11, openknxSolarmanPVModule);
-#ifdef OPENKNX_VAILLANT
-    openknx.addModule(13, openknxVaillantModule);
+#ifdef OPENKNX_WELCOMEIP
+    openknx.addModule(12, openknxWelcomeIPModule);
+#endif
+#ifdef OPENKNX_ROBOROCK
+    openknx.addModule(13, openknxRoborockModule);
 #endif
     openknx.setup();
 }

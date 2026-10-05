@@ -14,4 +14,10 @@ include/versions.h
 data/
 src/Baggages/Thumbs.db
 .claude/CLAUDE.md
-EX1-Modbus-Spec.md
+doc/Zugang.md
+Archiv_Build/
+doc/EX1-API-Analyse.md
+doc/OFM-Xiaomi Integration.md
+doc/EX1-Modbus-Spec.md
+doc/SolarmanPV Integration.md
+To-Do.md

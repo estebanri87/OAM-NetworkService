@@ -46,8 +46,8 @@
     share="../lib/OFM-EnergyEdgeModule/src/EnergyEdgeModule.share.xml"
     template="../lib/OFM-EnergyEdgeModule/src/EnergyEdgeModule.templ.xml"
     NumChannels="20"
-    KoSingleOffset="703"
-    KoOffset="709">
+    KoSingleOffset="450"
+    KoOffset="470">
     <op:verify File="../lib/OFM-EnergyEdgeModule/library.json" ModuleVersion="%EEX_VerifyVersion%" />
   </op:define>
 
@@ -55,17 +55,26 @@
     share="../lib/OFM-SolarmanPV/src/SolarmanPV.share.xml"
     template="../lib/OFM-SolarmanPV/src/SolarmanPV.templ.xml"
     NumChannels="6"
-    KoOffset="809">
+    KoOffset="600">
     <op:verify File="../lib/OFM-SolarmanPV/library.json" ModuleVersion="%SPV_VerifyVersion%" />
   </op:define>
 
-  <op:define prefix="VAI" ModuleType="30"
-    share="../lib/OFM-Vaillant/src/Vaillant.share.xml"
-    template="../lib/OFM-Vaillant/src/Vaillant.templ.xml"
+  <op:define prefix="WIP" ModuleType="29"
+    share="../lib/OFM-WelcomeIP/src/WelcomeIP.share.xml"
+    template="../lib/OFM-WelcomeIP/src/WelcomeIP.templ.xml"
     NumChannels="8"
-    KoSingleOffset="1320"
-    KoOffset="1340">
-    <op:verify File="../lib/OFM-Vaillant/library.json" ModuleVersion="%VAI_VerifyVersion%" />
+    KoSingleOffset="1050"
+    KoOffset="1070">
+    <op:verify File="../lib/OFM-WelcomeIP/library.json" ModuleVersion="%WIP_VerifyVersion%" />
+  </op:define>
+
+  <op:define prefix="ROB" ModuleType="31"
+    share="../lib/OFM-Roborock/src/Roborock.share.xml"
+    template="../lib/OFM-Roborock/src/Roborock.templ.xml"
+    NumChannels="2"
+    KoSingleOffset="1200"
+    KoOffset="1210">
+    <op:verify File="../lib/OFM-Roborock/library.json" ModuleVersion="%ROB_VerifyVersion%" />
   </op:define>
 
   <op:define prefix="LOG" ModuleType="10"
