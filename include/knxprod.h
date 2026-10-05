@@ -22,7 +22,7 @@
 #define MAIN_FirmwareName "Netzwerk Dienste (Beta)"
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 47
-#define MAIN_ApplicationVersion 10
+#define MAIN_ApplicationVersion 16
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 15434
