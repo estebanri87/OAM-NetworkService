@@ -13,28 +13,31 @@
 #define ETS_ModuleId_NET 2
 #define ETS_ModuleId_UCT 3
 #define ETS_ModuleId_SIP 4
-#define ETS_ModuleId_IPC 5
-#define ETS_ModuleId_EEX 6
-#define ETS_ModuleId_SPV 7
-#define ETS_ModuleId_LOG 8
-#define ETS_ModuleId_FCB 9
-#define MAIN_FirmwareName "Netzwerk Dienste (Dev)"
+#define ETS_ModuleId_EEX 5
+#define ETS_ModuleId_SPV 6
+#define ETS_ModuleId_WIP 7
+#define ETS_ModuleId_ROB 8
+#define ETS_ModuleId_LOG 9
+#define ETS_ModuleId_FCB 10
+#define MAIN_FirmwareName "Netzwerk Dienste (Beta)"
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 47
-#define MAIN_ApplicationVersion 1
+#define MAIN_ApplicationVersion 10
+#define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 14242
-#define MAIN_MaxKoNumber 958
+#define MAIN_ParameterSize 15434
+#define MAIN_MaxKoNumber 1255
 #define MAIN_OrderNumber "OpenKNX-SR-NET"
-#define BASE_ModuleVersion 24
-#define NET_ModuleVersion 6
+#define BASE_ModuleVersion 25
+#define NET_ModuleVersion 8
 #define UCT_ModuleVersion 5
 #define SIP_ModuleVersion 3
-#define IPC_ModuleVersion 1
-#define EEX_ModuleVersion 5
-#define SPV_ModuleVersion 1
-#define LOG_ModuleVersion 67
-#define FCB_ModuleVersion 10
+#define EEX_ModuleVersion 9
+#define SPV_ModuleVersion 5
+#define WIP_ModuleVersion 2
+#define ROB_ModuleVersion 1
+#define LOG_ModuleVersion 68
+#define FCB_ModuleVersion 11
 // Parameter with single occurrence
 
 
@@ -107,21 +110,24 @@
 #define BASE_ModuleEnabled_SIP                   110      // 1 Bit, Bit 4
 #define     BASE_ModuleEnabled_SIPMask 0x10
 #define     BASE_ModuleEnabled_SIPShift 4
-#define BASE_ModuleEnabled_IPC                   110      // 1 Bit, Bit 3
-#define     BASE_ModuleEnabled_IPCMask 0x08
-#define     BASE_ModuleEnabled_IPCShift 3
-#define BASE_ModuleEnabled_EEX                   110      // 1 Bit, Bit 2
-#define     BASE_ModuleEnabled_EEXMask 0x04
-#define     BASE_ModuleEnabled_EEXShift 2
-#define BASE_ModuleEnabled_SPV                   110      // 1 Bit, Bit 1
-#define     BASE_ModuleEnabled_SPVMask 0x02
-#define     BASE_ModuleEnabled_SPVShift 1
-#define BASE_ModuleEnabled_LOG                   110      // 1 Bit, Bit 0
-#define     BASE_ModuleEnabled_LOGMask 0x01
-#define     BASE_ModuleEnabled_LOGShift 0
-#define BASE_ModuleEnabled_FCB                   111      // 1 Bit, Bit 7
-#define     BASE_ModuleEnabled_FCBMask 0x80
-#define     BASE_ModuleEnabled_FCBShift 7
+#define BASE_ModuleEnabled_EEX                   110      // 1 Bit, Bit 3
+#define     BASE_ModuleEnabled_EEXMask 0x08
+#define     BASE_ModuleEnabled_EEXShift 3
+#define BASE_ModuleEnabled_SPV                   110      // 1 Bit, Bit 2
+#define     BASE_ModuleEnabled_SPVMask 0x04
+#define     BASE_ModuleEnabled_SPVShift 2
+#define BASE_ModuleEnabled_WIP                   110      // 1 Bit, Bit 1
+#define     BASE_ModuleEnabled_WIPMask 0x02
+#define     BASE_ModuleEnabled_WIPShift 1
+#define BASE_ModuleEnabled_ROB                   110      // 1 Bit, Bit 0
+#define     BASE_ModuleEnabled_ROBMask 0x01
+#define     BASE_ModuleEnabled_ROBShift 0
+#define BASE_ModuleEnabled_LOG                   111      // 1 Bit, Bit 7
+#define     BASE_ModuleEnabled_LOGMask 0x80
+#define     BASE_ModuleEnabled_LOGShift 7
+#define BASE_ModuleEnabled_FCB                   111      // 1 Bit, Bit 6
+#define     BASE_ModuleEnabled_FCBMask 0x40
+#define     BASE_ModuleEnabled_FCBShift 6
 
 // Zeitbasis
 #define ParamBASE_StartupDelayBase                    ((knx.paramByte(BASE_StartupDelayBase) & BASE_StartupDelayBaseMask) >> BASE_StartupDelayBaseShift)
@@ -184,12 +190,14 @@
 #define ParamBASE_ModuleEnabled_UCT                   ((bool)(knx.paramByte(BASE_ModuleEnabled_UCT) & BASE_ModuleEnabled_UCTMask))
 // SIP
 #define ParamBASE_ModuleEnabled_SIP                   ((bool)(knx.paramByte(BASE_ModuleEnabled_SIP) & BASE_ModuleEnabled_SIPMask))
-// IPC
-#define ParamBASE_ModuleEnabled_IPC                   ((bool)(knx.paramByte(BASE_ModuleEnabled_IPC) & BASE_ModuleEnabled_IPCMask))
 // EEX
 #define ParamBASE_ModuleEnabled_EEX                   ((bool)(knx.paramByte(BASE_ModuleEnabled_EEX) & BASE_ModuleEnabled_EEXMask))
 // SPV
 #define ParamBASE_ModuleEnabled_SPV                   ((bool)(knx.paramByte(BASE_ModuleEnabled_SPV) & BASE_ModuleEnabled_SPVMask))
+// WIP
+#define ParamBASE_ModuleEnabled_WIP                   ((bool)(knx.paramByte(BASE_ModuleEnabled_WIP) & BASE_ModuleEnabled_WIPMask))
+// ROB
+#define ParamBASE_ModuleEnabled_ROB                   ((bool)(knx.paramByte(BASE_ModuleEnabled_ROB) & BASE_ModuleEnabled_ROBMask))
 // LOG
 #define ParamBASE_ModuleEnabled_LOG                   ((bool)(knx.paramByte(BASE_ModuleEnabled_LOG) & BASE_ModuleEnabled_LOGMask))
 // FCB
@@ -381,267 +389,126 @@
 // 
 #define KoSIP_CHPhoneNumber                       (knx.getGroupObject(SIP_KoCalcNumber(SIP_KoCHPhoneNumber)))
 
-#define IPC_IPCVisibleChannels                  467      // uint8_t
-
-// Aktive Kameras
-#define ParamIPC_IPCVisibleChannels                  (knx.paramByte(IPC_IPCVisibleChannels))
-
-#define IPC_ChannelCount 8
-
-// Parameter per channel
-#define IPC_ParamBlockOffset 468
-#define IPC_ParamBlockSize 300
-#define IPC_ParamCalcIndex(index) (index + IPC_ParamBlockOffset + _channelIndex * IPC_ParamBlockSize)
-
-#define IPC_CHManufacturer                       0      // 8 Bits, Bit 7-0
-#define IPC_CHDeviceType                         1      // 8 Bits, Bit 7-0
-#define IPC_CHConnectionType                     2      // 8 Bits, Bit 7-0
-#define IPC_CHBattery                            3      // 8 Bits, Bit 7-0
-#define IPC_CHHasChime                           4      // 8 Bits, Bit 7-0
-#define IPC_CHPollingInterval                    5      // 8 Bits, Bit 7-0
-#define IPC_CHHoldTime                           6      // uint16_t
-#define IPC_CHNvrChannelIndex                    8      // uint8_t
-#define IPC_CHIpAddress                          9      // char*, 80 Byte
-#define     IPC_CHIpAddressLength 80
-#define IPC_CHUsername                          89      // char*, 32 Byte
-#define     IPC_CHUsernameLength 32
-#define IPC_CHPassword                          121      // char*, 32 Byte
-#define     IPC_CHPasswordLength 32
-#define IPC_CHConnectionMode                    153      // 8 Bits, Bit 7-0
-#define IPC_CHOnvifPort                         154      // uint16_t
-#define IPC_CHOnvifPath                         156      // char*, 64 Byte
-#define     IPC_CHOnvifPathLength 64
-#define IPC_CHSnapshotURL                       220      // char*, 80 Byte
-#define     IPC_CHSnapshotURLLength 80
-
-// Hersteller
-#define ParamIPC_CHManufacturer                      (knx.paramByte(IPC_ParamCalcIndex(IPC_CHManufacturer)))
-// Gerätetyp
-#define ParamIPC_CHDeviceType                        (knx.paramByte(IPC_ParamCalcIndex(IPC_CHDeviceType)))
-// Verbindungstyp
-#define ParamIPC_CHConnectionType                    (knx.paramByte(IPC_ParamCalcIndex(IPC_CHConnectionType)))
-// Akkubetrieben
-#define ParamIPC_CHBattery                           (knx.paramByte(IPC_ParamCalcIndex(IPC_CHBattery)))
-// Chime vorhanden
-#define ParamIPC_CHHasChime                          (knx.paramByte(IPC_ParamCalcIndex(IPC_CHHasChime)))
-// Polling-Intervall
-#define ParamIPC_CHPollingInterval                   (knx.paramByte(IPC_ParamCalcIndex(IPC_CHPollingInterval)))
-// Hold-Zeit Alarm-KOs
-#define ParamIPC_CHHoldTime                          (knx.paramWord(IPC_ParamCalcIndex(IPC_CHHoldTime)))
-// NVR Kanal-Index (0-15)
-#define ParamIPC_CHNvrChannelIndex                   (knx.paramByte(IPC_ParamCalcIndex(IPC_CHNvrChannelIndex)))
-// IP-Adresse
-#define ParamIPC_CHIpAddress                         (knx.paramData(IPC_ParamCalcIndex(IPC_CHIpAddress)))
-#define ParamIPC_CHIpAddressStr                      (knx.paramString(IPC_ParamCalcIndex(IPC_CHIpAddress), IPC_CHIpAddressLength))
-// Benutzername
-#define ParamIPC_CHUsername                          (knx.paramData(IPC_ParamCalcIndex(IPC_CHUsername)))
-#define ParamIPC_CHUsernameStr                       (knx.paramString(IPC_ParamCalcIndex(IPC_CHUsername), IPC_CHUsernameLength))
-// Passwort
-#define ParamIPC_CHPassword                          (knx.paramData(IPC_ParamCalcIndex(IPC_CHPassword)))
-#define ParamIPC_CHPasswordStr                       (knx.paramString(IPC_ParamCalcIndex(IPC_CHPassword), IPC_CHPasswordLength))
-// Verbindungsmodus
-#define ParamIPC_CHConnectionMode                    (knx.paramByte(IPC_ParamCalcIndex(IPC_CHConnectionMode)))
-// ONVIF-Port
-#define ParamIPC_CHOnvifPort                         (knx.paramWord(IPC_ParamCalcIndex(IPC_CHOnvifPort)))
-// ONVIF-Dienstpfad
-#define ParamIPC_CHOnvifPath                         (knx.paramData(IPC_ParamCalcIndex(IPC_CHOnvifPath)))
-#define ParamIPC_CHOnvifPathStr                      (knx.paramString(IPC_ParamCalcIndex(IPC_CHOnvifPath), IPC_CHOnvifPathLength))
-// Snapshot-URL
-#define ParamIPC_CHSnapshotURL                       (knx.paramData(IPC_ParamCalcIndex(IPC_CHSnapshotURL)))
-#define ParamIPC_CHSnapshotURLStr                    (knx.paramString(IPC_ParamCalcIndex(IPC_CHSnapshotURL), IPC_CHSnapshotURLLength))
-
-// deprecated
-#define IPC_KoOffset 407
-
-// Communication objects per channel (multiple occurrence)
-#define IPC_KoBlockOffset 407
-#define IPC_KoBlockSize 37
-
-#define IPC_KoCalcNumber(index) (index + IPC_KoBlockOffset + _channelIndex * IPC_KoBlockSize)
-#define IPC_KoCalcIndex(number) ((number >= IPC_KoCalcNumber(0) && number < IPC_KoCalcNumber(IPC_KoBlockSize)) ? (number - IPC_KoBlockOffset) % IPC_KoBlockSize : -1)
-#define IPC_KoCalcChannel(number) ((number >= IPC_KoBlockOffset && number < IPC_KoBlockOffset + IPC_ChannelCount * IPC_KoBlockSize) ? (number - IPC_KoBlockOffset) / IPC_KoBlockSize : -1)
-
-#define IPC_KoCHOnline 0
-#define IPC_KoCHMotion 1
-#define IPC_KoCHAnyAlarm 2
-#define IPC_KoCHPersonDetected 3
-#define IPC_KoCHVehicleDetected 4
-#define IPC_KoCHPrivacyMode 5
-#define IPC_KoCHRecording 6
-#define IPC_KoCHPushActive 7
-#define IPC_KoCHSiren 8
-#define IPC_KoCHFloodlight 9
-#define IPC_KoCHAnimalDetected 10
-#define IPC_KoCHPetDetected 11
-#define IPC_KoCHPackageDetected 12
-#define IPC_KoCHBabyAlarm 13
-#define IPC_KoCHFaceDetected 14
-#define IPC_KoCHIOAlarm 15
-#define IPC_KoCHPtzPreset 16
-#define IPC_KoCHMotionDetectActive 17
-#define IPC_KoCHIrLeds 18
-#define IPC_KoCHDayNightState 19
-#define IPC_KoCHDayNightMode 20
-#define IPC_KoCHAutoTracking 21
-#define IPC_KoCHManualRecord 22
-#define IPC_KoCHDoorbellTrigger 23
-#define IPC_KoCHDoorbellHold 24
-#define IPC_KoCHDoNotDisturb 25
-#define IPC_KoCHBellLedMode 26
-#define IPC_KoCHAutoReply 27
-#define IPC_KoCHChimeMute 28
-#define IPC_KoCHChimeVolume 29
-#define IPC_KoCHChimeRingtone 30
-#define IPC_KoCHChimeTrigger 31
-#define IPC_KoCHBatteryLevel 32
-#define IPC_KoCHBatteryStatus 33
-#define IPC_KoCHCameraSleeping 34
-#define IPC_KoCHWifiSignal 35
-#define IPC_KoCHSnapshotTrigger 36
-
-// 
-#define KoIPC_CHOnline                            (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHOnline)))
-// 
-#define KoIPC_CHMotion                            (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHMotion)))
-// 
-#define KoIPC_CHAnyAlarm                          (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHAnyAlarm)))
-// 
-#define KoIPC_CHPersonDetected                    (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHPersonDetected)))
-// 
-#define KoIPC_CHVehicleDetected                   (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHVehicleDetected)))
-// 
-#define KoIPC_CHPrivacyMode                       (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHPrivacyMode)))
-// 
-#define KoIPC_CHRecording                         (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHRecording)))
-// 
-#define KoIPC_CHPushActive                        (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHPushActive)))
-// 
-#define KoIPC_CHSiren                             (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHSiren)))
-// 
-#define KoIPC_CHFloodlight                        (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHFloodlight)))
-// 
-#define KoIPC_CHAnimalDetected                    (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHAnimalDetected)))
-// 
-#define KoIPC_CHPetDetected                       (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHPetDetected)))
-// 
-#define KoIPC_CHPackageDetected                   (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHPackageDetected)))
-// 
-#define KoIPC_CHBabyAlarm                         (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHBabyAlarm)))
-// 
-#define KoIPC_CHFaceDetected                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHFaceDetected)))
-// 
-#define KoIPC_CHIOAlarm                           (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHIOAlarm)))
-// 
-#define KoIPC_CHPtzPreset                         (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHPtzPreset)))
-// 
-#define KoIPC_CHMotionDetectActive                (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHMotionDetectActive)))
-// 
-#define KoIPC_CHIrLeds                            (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHIrLeds)))
-// 
-#define KoIPC_CHDayNightState                     (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHDayNightState)))
-// 
-#define KoIPC_CHDayNightMode                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHDayNightMode)))
-// 
-#define KoIPC_CHAutoTracking                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHAutoTracking)))
-// 
-#define KoIPC_CHManualRecord                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHManualRecord)))
-// 
-#define KoIPC_CHDoorbellTrigger                   (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHDoorbellTrigger)))
-// 
-#define KoIPC_CHDoorbellHold                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHDoorbellHold)))
-// 
-#define KoIPC_CHDoNotDisturb                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHDoNotDisturb)))
-// 
-#define KoIPC_CHBellLedMode                       (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHBellLedMode)))
-// 
-#define KoIPC_CHAutoReply                         (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHAutoReply)))
-// 
-#define KoIPC_CHChimeMute                         (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHChimeMute)))
-// 
-#define KoIPC_CHChimeVolume                       (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHChimeVolume)))
-// 
-#define KoIPC_CHChimeRingtone                     (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHChimeRingtone)))
-// 
-#define KoIPC_CHChimeTrigger                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHChimeTrigger)))
-// 
-#define KoIPC_CHBatteryLevel                      (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHBatteryLevel)))
-// 
-#define KoIPC_CHBatteryStatus                     (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHBatteryStatus)))
-// 
-#define KoIPC_CHCameraSleeping                    (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHCameraSleeping)))
-// 
-#define KoIPC_CHWifiSignal                        (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHWifiSignal)))
-// 
-#define KoIPC_CHSnapshotTrigger                   (knx.getGroupObject(IPC_KoCalcNumber(IPC_KoCHSnapshotTrigger)))
-
-#define EEX_EEXVisibleChannels                  2868      // uint8_t
-#define EEX_ConsumerPort                        2870      // uint16_t
-#define EEX_ProducerPort                        2872      // uint16_t
-#define EEX_EX1ApiIp                            2874      // char*, 32 Byte
+#define EEX_ConsumerPort                        469      // uint16_t
+#define EEX_ProducerPort                        471      // uint16_t
+#define EEX_EX1ApiIp                            473      // char*, 32 Byte
 #define     EEX_EX1ApiIpLength 32
-#define EEX_SwitchPollInterval                  2906      // uint16_t
-#define EEX_MvPvEnable                          2908      // 1 Bit, Bit 7
+#define EEX_SwitchPollInterval                  505      // uint16_t
+#define EEX_EX1ApiProtocol                      533      // 8 Bits, Bit 7-0
+#define EEX_EX1ApiKey                           534      // char*, 40 Byte
+#define     EEX_EX1ApiKeyLength 40
+#define EEX_MvPvEnable                          507      // 1 Bit, Bit 7
 #define     EEX_MvPvEnableMask 0x80
 #define     EEX_MvPvEnableShift 7
-#define EEX_MvConsEnable                        2908      // 1 Bit, Bit 6
+#define EEX_MvConsEnable                        507      // 1 Bit, Bit 6
 #define     EEX_MvConsEnableMask 0x40
 #define     EEX_MvConsEnableShift 6
-#define EEX_MvBatEnable                         2908      // 1 Bit, Bit 5
+#define EEX_MvBatEnable                         507      // 1 Bit, Bit 5
 #define     EEX_MvBatEnableMask 0x20
 #define     EEX_MvBatEnableShift 5
-#define EEX_MvSocEnable                         2908      // 1 Bit, Bit 4
+#define EEX_MvSocEnable                         507      // 1 Bit, Bit 4
 #define     EEX_MvSocEnableMask 0x10
 #define     EEX_MvSocEnableShift 4
-#define EEX_ShowModbusActive                    2908      // 1 Bit, Bit 3
+#define EEX_ShowModbusActive                    507      // 1 Bit, Bit 3
 #define     EEX_ShowModbusActiveMask 0x08
 #define     EEX_ShowModbusActiveShift 3
-#define EEX_ShowApiReachable                    2908      // 1 Bit, Bit 2
+#define EEX_ShowApiReachable                    507      // 1 Bit, Bit 2
 #define     EEX_ShowApiReachableMask 0x04
 #define     EEX_ShowApiReachableShift 2
-#define EEX_MvPvChangeMode                      2909      // 8 Bits, Bit 7-0
-#define EEX_MvPvThreshold                       2910      // float (4 Byte)
-#define EEX_MvPvDelayBase                       2914      // 2 Bits, Bit 7-6
+#define EEX_MvPvChangeMode                      508      // 8 Bits, Bit 7-0
+#define EEX_MvPvThreshold                       509      // float (4 Byte)
+#define EEX_MvPvDelayBase                       513      // 2 Bits, Bit 7-6
 #define     EEX_MvPvDelayBaseMask 0xC0
 #define     EEX_MvPvDelayBaseShift 6
-#define EEX_MvPvDelayTime                       2914      // 14 Bits, Bit 13-0
+#define EEX_MvPvDelayTime                       513      // 14 Bits, Bit 13-0
 #define     EEX_MvPvDelayTimeMask 0x3FFF
 #define     EEX_MvPvDelayTimeShift 0
-#define EEX_MvConsChangeMode                    2916      // 8 Bits, Bit 7-0
-#define EEX_MvConsThreshold                     2917      // float (4 Byte)
-#define EEX_MvConsDelayBase                     2921      // 2 Bits, Bit 7-6
+#define EEX_MvConsChangeMode                    515      // 8 Bits, Bit 7-0
+#define EEX_MvConsThreshold                     516      // float (4 Byte)
+#define EEX_MvConsDelayBase                     520      // 2 Bits, Bit 7-6
 #define     EEX_MvConsDelayBaseMask 0xC0
 #define     EEX_MvConsDelayBaseShift 6
-#define EEX_MvConsDelayTime                     2921      // 14 Bits, Bit 13-0
+#define EEX_MvConsDelayTime                     520      // 14 Bits, Bit 13-0
 #define     EEX_MvConsDelayTimeMask 0x3FFF
 #define     EEX_MvConsDelayTimeShift 0
-#define EEX_MvBatChangeMode                     2923      // 8 Bits, Bit 7-0
-#define EEX_MvBatThreshold                      2924      // float (4 Byte)
-#define EEX_MvBatDelayBase                      2928      // 2 Bits, Bit 7-6
+#define EEX_MvBatChangeMode                     522      // 8 Bits, Bit 7-0
+#define EEX_MvBatThreshold                      523      // float (4 Byte)
+#define EEX_MvBatDelayBase                      527      // 2 Bits, Bit 7-6
 #define     EEX_MvBatDelayBaseMask 0xC0
 #define     EEX_MvBatDelayBaseShift 6
-#define EEX_MvBatDelayTime                      2928      // 14 Bits, Bit 13-0
+#define EEX_MvBatDelayTime                      527      // 14 Bits, Bit 13-0
 #define     EEX_MvBatDelayTimeMask 0x3FFF
 #define     EEX_MvBatDelayTimeShift 0
-#define EEX_MvSocChangeMode                     2930      // 8 Bits, Bit 7-0
-#define EEX_MvSocThreshold                      2931      // uint8_t
-#define EEX_MvSocDelayBase                      2932      // 2 Bits, Bit 7-6
+#define EEX_MvSocChangeMode                     529      // 8 Bits, Bit 7-0
+#define EEX_MvSocThreshold                      530      // uint8_t
+#define EEX_MvSocDelayBase                      531      // 2 Bits, Bit 7-6
 #define     EEX_MvSocDelayBaseMask 0xC0
 #define     EEX_MvSocDelayBaseShift 6
-#define EEX_MvSocDelayTime                      2932      // 14 Bits, Bit 13-0
+#define EEX_MvSocDelayTime                      531      // 14 Bits, Bit 13-0
 #define     EEX_MvSocDelayTimeMask 0x3FFF
 #define     EEX_MvSocDelayTimeShift 0
+#define EEX_MvGridEnable                        574      // 1 Bit, Bit 7
+#define     EEX_MvGridEnableMask 0x80
+#define     EEX_MvGridEnableShift 7
+#define EEX_MvDevPowerEnable                    574      // 1 Bit, Bit 0
+#define     EEX_MvDevPowerEnableMask 0x01
+#define     EEX_MvDevPowerEnableShift 0
+#define EEX_MvDevTempEnable                     591      // 1 Bit, Bit 7
+#define     EEX_MvDevTempEnableMask 0x80
+#define     EEX_MvDevTempEnableShift 7
+#define EEX_MvDevFaultEnable                    591      // 1 Bit, Bit 6
+#define     EEX_MvDevFaultEnableMask 0x40
+#define     EEX_MvDevFaultEnableShift 6
+#define EEX_MvDevPowerId                        592      // char*, 32 Byte
+#define     EEX_MvDevPowerIdLength 32
+#define EEX_MvDevTempId                         624      // char*, 32 Byte
+#define     EEX_MvDevTempIdLength 32
+#define EEX_MvDevFaultId                        656      // char*, 32 Byte
+#define     EEX_MvDevFaultIdLength 32
+#define EEX_MvDevPowerChangeMode                688      // 8 Bits, Bit 7-0
+#define EEX_MvDevPowerThreshold                 689      // float (4 Byte)
+#define EEX_MvDevPowerDelayBase                 693      // 2 Bits, Bit 7-6
+#define     EEX_MvDevPowerDelayBaseMask 0xC0
+#define     EEX_MvDevPowerDelayBaseShift 6
+#define EEX_MvDevPowerDelayTime                 693      // 14 Bits, Bit 13-0
+#define     EEX_MvDevPowerDelayTimeMask 0x3FFF
+#define     EEX_MvDevPowerDelayTimeShift 0
+#define EEX_MvDevTempThreshold                  695      // float (4 Byte)
+#define EEX_MvDevTempDelayBase                  699      // 2 Bits, Bit 7-6
+#define     EEX_MvDevTempDelayBaseMask 0xC0
+#define     EEX_MvDevTempDelayBaseShift 6
+#define EEX_MvDevTempDelayTime                  699      // 14 Bits, Bit 13-0
+#define     EEX_MvDevTempDelayTimeMask 0x3FFF
+#define     EEX_MvDevTempDelayTimeShift 0
+#define EEX_MvDevPowerLabel                     701      // char*, 40 Byte
+#define     EEX_MvDevPowerLabelLength 40
+#define EEX_MvDevTempLabel                      741      // char*, 40 Byte
+#define     EEX_MvDevTempLabelLength 40
+#define EEX_MvDevFaultLabel                     781      // char*, 40 Byte
+#define     EEX_MvDevFaultLabelLength 40
+#define EEX_MvGridChangeMode                    575      // 8 Bits, Bit 7-0
+#define EEX_MvGridThreshold                     576      // float (4 Byte)
+#define EEX_MvGridDelayBase                     580      // 2 Bits, Bit 7-6
+#define     EEX_MvGridDelayBaseMask 0xC0
+#define     EEX_MvGridDelayBaseShift 6
+#define EEX_MvGridDelayTime                     580      // 14 Bits, Bit 13-0
+#define     EEX_MvGridDelayTimeMask 0x3FFF
+#define     EEX_MvGridDelayTimeShift 0
 
-// Aktive Kanäle
-#define ParamEEX_EEXVisibleChannels                  (knx.paramByte(EEX_EEXVisibleChannels))
 // Modbus-Port Verbraucher
 #define ParamEEX_ConsumerPort                        (knx.paramWord(EEX_ConsumerPort))
 // Modbus-Port Erzeuger (Wechselrichter)
 #define ParamEEX_ProducerPort                        (knx.paramWord(EEX_ProducerPort))
-// EX.1 API IP-Adresse
+// IP-Adresse
 #define ParamEEX_EX1ApiIp                            (knx.paramData(EEX_EX1ApiIp))
 #define ParamEEX_EX1ApiIpStr                         (knx.paramString(EEX_EX1ApiIp, EEX_EX1ApiIpLength))
-// Virtual-Switch Poll-Intervall (0 = aus)
+// Abfrageintervall (0 = aus)
 #define ParamEEX_SwitchPollInterval                  (knx.paramWord(EEX_SwitchPollInterval))
+// Protokoll
+#define ParamEEX_EX1ApiProtocol                      (knx.paramByte(EEX_EX1ApiProtocol))
+// API-Key (leer = ohne Authentifizierung)
+#define ParamEEX_EX1ApiKey                           (knx.paramData(EEX_EX1ApiKey))
+#define ParamEEX_EX1ApiKeyStr                        (knx.paramString(EEX_EX1ApiKey, EEX_EX1ApiKeyLength))
 // PV-Leistung
 #define ParamEEX_MvPvEnable                          ((bool)(knx.paramByte(EEX_MvPvEnable) & EEX_MvPvEnableMask))
 // Verbrauch
@@ -652,7 +519,7 @@
 #define ParamEEX_MvSocEnable                         ((bool)(knx.paramByte(EEX_MvSocEnable) & EEX_MvSocEnableMask))
 // Status 'Modbus-Server aktiv' verwenden
 #define ParamEEX_ShowModbusActive                    ((bool)(knx.paramByte(EEX_ShowModbusActive) & EEX_ShowModbusActiveMask))
-// Status 'EX.1-API erreichbar' verwenden
+// Status 'EX 1-API erreichbar' verwenden
 #define ParamEEX_ShowApiReachable                    ((bool)(knx.paramByte(EEX_ShowApiReachable) & EEX_ShowApiReachableMask))
 // Änderung angegeben
 #define ParamEEX_MvPvChangeMode                      (knx.paramByte(EEX_MvPvChangeMode))
@@ -694,13 +561,71 @@
 #define ParamEEX_MvSocDelayTime                      (knx.paramWord(EEX_MvSocDelayTime) & EEX_MvSocDelayTimeMask)
 // zyklisch senden alle (0 = aus) (in Millisekunden)
 #define ParamEEX_MvSocDelayTimeMS                    (paramDelay(knx.paramWord(EEX_MvSocDelayTime)))
+// Netzleistung (Bezug +, Einspeisung -)
+#define ParamEEX_MvGridEnable                        ((bool)(knx.paramByte(EEX_MvGridEnable) & EEX_MvGridEnableMask))
+// Geräteleistung
+#define ParamEEX_MvDevPowerEnable                    ((bool)(knx.paramByte(EEX_MvDevPowerEnable) & EEX_MvDevPowerEnableMask))
+// Gerätetemperatur
+#define ParamEEX_MvDevTempEnable                     ((bool)(knx.paramByte(EEX_MvDevTempEnable) & EEX_MvDevTempEnableMask))
+// Gerätestörung
+#define ParamEEX_MvDevFaultEnable                    ((bool)(knx.paramByte(EEX_MvDevFaultEnable) & EEX_MvDevFaultEnableMask))
+// Geräte-ID (_id)
+#define ParamEEX_MvDevPowerId                        (knx.paramData(EEX_MvDevPowerId))
+#define ParamEEX_MvDevPowerIdStr                     (knx.paramString(EEX_MvDevPowerId, EEX_MvDevPowerIdLength))
+// Geräte-ID (_id)
+#define ParamEEX_MvDevTempId                         (knx.paramData(EEX_MvDevTempId))
+#define ParamEEX_MvDevTempIdStr                      (knx.paramString(EEX_MvDevTempId, EEX_MvDevTempIdLength))
+// Geräte-ID (_id)
+#define ParamEEX_MvDevFaultId                        (knx.paramData(EEX_MvDevFaultId))
+#define ParamEEX_MvDevFaultIdStr                     (knx.paramString(EEX_MvDevFaultId, EEX_MvDevFaultIdLength))
+// Änderung angegeben
+#define ParamEEX_MvDevPowerChangeMode                (knx.paramByte(EEX_MvDevPowerChangeMode))
+// Senden bei Änderung um
+#define ParamEEX_MvDevPowerThreshold                 (knx.paramFloat(EEX_MvDevPowerThreshold, Float_Enc_IEEE754Single))
+// Zeitbasis
+#define ParamEEX_MvDevPowerDelayBase                 ((knx.paramByte(EEX_MvDevPowerDelayBase) & EEX_MvDevPowerDelayBaseMask) >> EEX_MvDevPowerDelayBaseShift)
+// zyklisch senden alle (0 = aus)
+#define ParamEEX_MvDevPowerDelayTime                 (knx.paramWord(EEX_MvDevPowerDelayTime) & EEX_MvDevPowerDelayTimeMask)
+// zyklisch senden alle (0 = aus) (in Millisekunden)
+#define ParamEEX_MvDevPowerDelayTimeMS               (paramDelay(knx.paramWord(EEX_MvDevPowerDelayTime)))
+// Senden bei Änderung um
+#define ParamEEX_MvDevTempThreshold                  (knx.paramFloat(EEX_MvDevTempThreshold, Float_Enc_IEEE754Single))
+// Zeitbasis
+#define ParamEEX_MvDevTempDelayBase                  ((knx.paramByte(EEX_MvDevTempDelayBase) & EEX_MvDevTempDelayBaseMask) >> EEX_MvDevTempDelayBaseShift)
+// zyklisch senden alle (0 = aus)
+#define ParamEEX_MvDevTempDelayTime                  (knx.paramWord(EEX_MvDevTempDelayTime) & EEX_MvDevTempDelayTimeMask)
+// zyklisch senden alle (0 = aus) (in Millisekunden)
+#define ParamEEX_MvDevTempDelayTimeMS                (paramDelay(knx.paramWord(EEX_MvDevTempDelayTime)))
+// Bezeichnung
+#define ParamEEX_MvDevPowerLabel                     (knx.paramData(EEX_MvDevPowerLabel))
+#define ParamEEX_MvDevPowerLabelStr                  (knx.paramString(EEX_MvDevPowerLabel, EEX_MvDevPowerLabelLength))
+// Bezeichnung
+#define ParamEEX_MvDevTempLabel                      (knx.paramData(EEX_MvDevTempLabel))
+#define ParamEEX_MvDevTempLabelStr                   (knx.paramString(EEX_MvDevTempLabel, EEX_MvDevTempLabelLength))
+// Bezeichnung
+#define ParamEEX_MvDevFaultLabel                     (knx.paramData(EEX_MvDevFaultLabel))
+#define ParamEEX_MvDevFaultLabelStr                  (knx.paramString(EEX_MvDevFaultLabel, EEX_MvDevFaultLabelLength))
+// Änderung angegeben
+#define ParamEEX_MvGridChangeMode                    (knx.paramByte(EEX_MvGridChangeMode))
+// Senden bei Änderung um
+#define ParamEEX_MvGridThreshold                     (knx.paramFloat(EEX_MvGridThreshold, Float_Enc_IEEE754Single))
+// Zeitbasis
+#define ParamEEX_MvGridDelayBase                     ((knx.paramByte(EEX_MvGridDelayBase) & EEX_MvGridDelayBaseMask) >> EEX_MvGridDelayBaseShift)
+// zyklisch senden alle (0 = aus)
+#define ParamEEX_MvGridDelayTime                     (knx.paramWord(EEX_MvGridDelayTime) & EEX_MvGridDelayTimeMask)
+// zyklisch senden alle (0 = aus) (in Millisekunden)
+#define ParamEEX_MvGridDelayTimeMS                   (paramDelay(knx.paramWord(EEX_MvGridDelayTime)))
 
-#define EEX_KoModbusActive 703
-#define EEX_KoApiReachable 704
-#define EEX_KoPvPower 705
-#define EEX_KoConsumption 706
-#define EEX_KoBatteryPower 707
-#define EEX_KoBatterySoc 708
+#define EEX_KoModbusActive 450
+#define EEX_KoApiReachable 451
+#define EEX_KoPvPower 452
+#define EEX_KoConsumption 453
+#define EEX_KoBatteryPower 454
+#define EEX_KoBatterySoc 455
+#define EEX_KoGridPower 456
+#define EEX_KoDevicePower 463
+#define EEX_KoDeviceTemp 464
+#define EEX_KoDeviceFault 465
 
 // 
 #define KoEEX_ModbusActive                        (knx.getGroupObject(EEX_KoModbusActive))
@@ -714,12 +639,20 @@
 #define KoEEX_BatteryPower                        (knx.getGroupObject(EEX_KoBatteryPower))
 // 
 #define KoEEX_BatterySoc                          (knx.getGroupObject(EEX_KoBatterySoc))
+// 
+#define KoEEX_GridPower                           (knx.getGroupObject(EEX_KoGridPower))
+// 
+#define KoEEX_DevicePower                         (knx.getGroupObject(EEX_KoDevicePower))
+// 
+#define KoEEX_DeviceTemp                          (knx.getGroupObject(EEX_KoDeviceTemp))
+// 
+#define KoEEX_DeviceFault                         (knx.getGroupObject(EEX_KoDeviceFault))
 
 #define EEX_ChannelCount 20
 
 // Parameter per channel
-#define EEX_ParamBlockOffset 2934
-#define EEX_ParamBlockSize 105
+#define EEX_ParamBlockOffset 821
+#define EEX_ParamBlockSize 106
 #define EEX_ParamCalcIndex(index) (index + EEX_ParamBlockOffset + _channelIndex * EEX_ParamBlockSize)
 
 #define EEX_CHCategory                           0      // 8 Bits, Bit 7-0
@@ -735,6 +668,9 @@
 #define EEX_CHDeviceId                          72      // char*, 32 Byte
 #define     EEX_CHDeviceIdLength 32
 #define EEX_CHShowLastQuery                     104      // 8 Bits, Bit 7-0
+#define EEX_CHSuspended                         105      // 1 Bit, Bit 7
+#define     EEX_CHSuspendedMask 0x80
+#define     EEX_CHSuspendedShift 7
 
 // Kategorie
 #define ParamEEX_CHCategory                          (knx.paramByte(EEX_ParamCalcIndex(EEX_CHCategory)))
@@ -759,12 +695,14 @@
 #define ParamEEX_CHDeviceIdStr                       (knx.paramString(EEX_ParamCalcIndex(EEX_CHDeviceId), EEX_CHDeviceIdLength))
 // Status KO 'Letzte Abfrage' verwenden
 #define ParamEEX_CHShowLastQuery                     (knx.paramByte(EEX_ParamCalcIndex(EEX_CHShowLastQuery)))
+// Suspendiert
+#define ParamEEX_CHSuspended                         ((bool)(knx.paramByte(EEX_ParamCalcIndex(EEX_CHSuspended)) & EEX_CHSuspendedMask))
 
 // deprecated
-#define EEX_KoOffset 709
+#define EEX_KoOffset 470
 
 // Communication objects per channel (multiple occurrence)
-#define EEX_KoBlockOffset 709
+#define EEX_KoBlockOffset 470
 #define EEX_KoBlockSize 5
 
 #define EEX_KoCalcNumber(index) (index + EEX_KoBlockOffset + _channelIndex * EEX_KoBlockSize)
@@ -788,16 +726,1649 @@
 // 
 #define KoEEX_CHEinspeisung                       (knx.getGroupObject(EEX_KoCalcNumber(EEX_KoCHEinspeisung)))
 
-#define SPV_SPVVisibleChannels                  5034      // uint8_t
+#define SPV_SPV_AsstIp                          2945      // char*, 32 Byte
+#define     SPV_SPV_AsstIpLength 32
+#define SPV_SPV_AsstPort                        2977      // uint16_t
+#define SPV_SPV_AsstSlaveId                     2979      // uint8_t
+#define SPV_SPV_AsstStartReg                    2981      // uint16_t
+#define SPV_SPV_AsstReadCount                   2983      // uint8_t
+#define SPV_SPV_AsstTransport                   2984      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstTargetChannel               2986      // uint8_t
+#define SPV_SPV_AsstRowCount                    2987      // uint8_t
+#define SPV_SPV_AsstSerial                      2989      // char*, 16 Byte
+#define     SPV_SPV_AsstSerialLength 16
+#define SPV_SPV_AsstResultText                  3005      // char*, 48 Byte
+#define     SPV_SPV_AsstResultTextLength 48
+#define SPV_SPV_AsstReg00                       3053      // uint16_t
+#define SPV_SPV_AsstRaw00                       3055      // uint16_t
+#define SPV_SPV_AsstMeaning00                   3057      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType00                      3058      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType00Mask 0xE0
+#define     SPV_SPV_AsstType00Shift 5
+#define SPV_SPV_AsstScale00                     3058      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale00Mask 0x1C
+#define     SPV_SPV_AsstScale00Shift 2
+#define SPV_SPV_AsstOffset00                    3059      // int8_t
+#define SPV_SPV_AsstRef00                       3061      // float (4 Byte)
+#define SPV_SPV_AsstReg01                       3065      // uint16_t
+#define SPV_SPV_AsstRaw01                       3067      // uint16_t
+#define SPV_SPV_AsstMeaning01                   3069      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType01                      3070      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType01Mask 0xE0
+#define     SPV_SPV_AsstType01Shift 5
+#define SPV_SPV_AsstScale01                     3070      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale01Mask 0x1C
+#define     SPV_SPV_AsstScale01Shift 2
+#define SPV_SPV_AsstOffset01                    3071      // int8_t
+#define SPV_SPV_AsstRef01                       3073      // float (4 Byte)
+#define SPV_SPV_AsstReg02                       3077      // uint16_t
+#define SPV_SPV_AsstRaw02                       3079      // uint16_t
+#define SPV_SPV_AsstMeaning02                   3081      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType02                      3082      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType02Mask 0xE0
+#define     SPV_SPV_AsstType02Shift 5
+#define SPV_SPV_AsstScale02                     3082      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale02Mask 0x1C
+#define     SPV_SPV_AsstScale02Shift 2
+#define SPV_SPV_AsstOffset02                    3083      // int8_t
+#define SPV_SPV_AsstRef02                       3085      // float (4 Byte)
+#define SPV_SPV_AsstReg03                       3089      // uint16_t
+#define SPV_SPV_AsstRaw03                       3091      // uint16_t
+#define SPV_SPV_AsstMeaning03                   3093      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType03                      3094      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType03Mask 0xE0
+#define     SPV_SPV_AsstType03Shift 5
+#define SPV_SPV_AsstScale03                     3094      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale03Mask 0x1C
+#define     SPV_SPV_AsstScale03Shift 2
+#define SPV_SPV_AsstOffset03                    3095      // int8_t
+#define SPV_SPV_AsstRef03                       3097      // float (4 Byte)
+#define SPV_SPV_AsstReg04                       3101      // uint16_t
+#define SPV_SPV_AsstRaw04                       3103      // uint16_t
+#define SPV_SPV_AsstMeaning04                   3105      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType04                      3106      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType04Mask 0xE0
+#define     SPV_SPV_AsstType04Shift 5
+#define SPV_SPV_AsstScale04                     3106      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale04Mask 0x1C
+#define     SPV_SPV_AsstScale04Shift 2
+#define SPV_SPV_AsstOffset04                    3107      // int8_t
+#define SPV_SPV_AsstRef04                       3109      // float (4 Byte)
+#define SPV_SPV_AsstReg05                       3113      // uint16_t
+#define SPV_SPV_AsstRaw05                       3115      // uint16_t
+#define SPV_SPV_AsstMeaning05                   3117      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType05                      3118      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType05Mask 0xE0
+#define     SPV_SPV_AsstType05Shift 5
+#define SPV_SPV_AsstScale05                     3118      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale05Mask 0x1C
+#define     SPV_SPV_AsstScale05Shift 2
+#define SPV_SPV_AsstOffset05                    3119      // int8_t
+#define SPV_SPV_AsstRef05                       3121      // float (4 Byte)
+#define SPV_SPV_AsstReg06                       3125      // uint16_t
+#define SPV_SPV_AsstRaw06                       3127      // uint16_t
+#define SPV_SPV_AsstMeaning06                   3129      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType06                      3130      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType06Mask 0xE0
+#define     SPV_SPV_AsstType06Shift 5
+#define SPV_SPV_AsstScale06                     3130      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale06Mask 0x1C
+#define     SPV_SPV_AsstScale06Shift 2
+#define SPV_SPV_AsstOffset06                    3131      // int8_t
+#define SPV_SPV_AsstRef06                       3133      // float (4 Byte)
+#define SPV_SPV_AsstReg07                       3137      // uint16_t
+#define SPV_SPV_AsstRaw07                       3139      // uint16_t
+#define SPV_SPV_AsstMeaning07                   3141      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType07                      3142      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType07Mask 0xE0
+#define     SPV_SPV_AsstType07Shift 5
+#define SPV_SPV_AsstScale07                     3142      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale07Mask 0x1C
+#define     SPV_SPV_AsstScale07Shift 2
+#define SPV_SPV_AsstOffset07                    3143      // int8_t
+#define SPV_SPV_AsstRef07                       3145      // float (4 Byte)
+#define SPV_SPV_AsstReg08                       3149      // uint16_t
+#define SPV_SPV_AsstRaw08                       3151      // uint16_t
+#define SPV_SPV_AsstMeaning08                   3153      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType08                      3154      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType08Mask 0xE0
+#define     SPV_SPV_AsstType08Shift 5
+#define SPV_SPV_AsstScale08                     3154      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale08Mask 0x1C
+#define     SPV_SPV_AsstScale08Shift 2
+#define SPV_SPV_AsstOffset08                    3155      // int8_t
+#define SPV_SPV_AsstRef08                       3157      // float (4 Byte)
+#define SPV_SPV_AsstReg09                       3161      // uint16_t
+#define SPV_SPV_AsstRaw09                       3163      // uint16_t
+#define SPV_SPV_AsstMeaning09                   3165      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType09                      3166      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType09Mask 0xE0
+#define     SPV_SPV_AsstType09Shift 5
+#define SPV_SPV_AsstScale09                     3166      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale09Mask 0x1C
+#define     SPV_SPV_AsstScale09Shift 2
+#define SPV_SPV_AsstOffset09                    3167      // int8_t
+#define SPV_SPV_AsstRef09                       3169      // float (4 Byte)
+#define SPV_SPV_AsstReg10                       3173      // uint16_t
+#define SPV_SPV_AsstRaw10                       3175      // uint16_t
+#define SPV_SPV_AsstMeaning10                   3177      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType10                      3178      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType10Mask 0xE0
+#define     SPV_SPV_AsstType10Shift 5
+#define SPV_SPV_AsstScale10                     3178      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale10Mask 0x1C
+#define     SPV_SPV_AsstScale10Shift 2
+#define SPV_SPV_AsstOffset10                    3179      // int8_t
+#define SPV_SPV_AsstRef10                       3181      // float (4 Byte)
+#define SPV_SPV_AsstReg11                       3185      // uint16_t
+#define SPV_SPV_AsstRaw11                       3187      // uint16_t
+#define SPV_SPV_AsstMeaning11                   3189      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType11                      3190      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType11Mask 0xE0
+#define     SPV_SPV_AsstType11Shift 5
+#define SPV_SPV_AsstScale11                     3190      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale11Mask 0x1C
+#define     SPV_SPV_AsstScale11Shift 2
+#define SPV_SPV_AsstOffset11                    3191      // int8_t
+#define SPV_SPV_AsstRef11                       3193      // float (4 Byte)
+#define SPV_SPV_AsstReg12                       3197      // uint16_t
+#define SPV_SPV_AsstRaw12                       3199      // uint16_t
+#define SPV_SPV_AsstMeaning12                   3201      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType12                      3202      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType12Mask 0xE0
+#define     SPV_SPV_AsstType12Shift 5
+#define SPV_SPV_AsstScale12                     3202      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale12Mask 0x1C
+#define     SPV_SPV_AsstScale12Shift 2
+#define SPV_SPV_AsstOffset12                    3203      // int8_t
+#define SPV_SPV_AsstRef12                       3205      // float (4 Byte)
+#define SPV_SPV_AsstReg13                       3209      // uint16_t
+#define SPV_SPV_AsstRaw13                       3211      // uint16_t
+#define SPV_SPV_AsstMeaning13                   3213      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType13                      3214      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType13Mask 0xE0
+#define     SPV_SPV_AsstType13Shift 5
+#define SPV_SPV_AsstScale13                     3214      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale13Mask 0x1C
+#define     SPV_SPV_AsstScale13Shift 2
+#define SPV_SPV_AsstOffset13                    3215      // int8_t
+#define SPV_SPV_AsstRef13                       3217      // float (4 Byte)
+#define SPV_SPV_AsstReg14                       3221      // uint16_t
+#define SPV_SPV_AsstRaw14                       3223      // uint16_t
+#define SPV_SPV_AsstMeaning14                   3225      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType14                      3226      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType14Mask 0xE0
+#define     SPV_SPV_AsstType14Shift 5
+#define SPV_SPV_AsstScale14                     3226      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale14Mask 0x1C
+#define     SPV_SPV_AsstScale14Shift 2
+#define SPV_SPV_AsstOffset14                    3227      // int8_t
+#define SPV_SPV_AsstRef14                       3229      // float (4 Byte)
+#define SPV_SPV_AsstReg15                       3233      // uint16_t
+#define SPV_SPV_AsstRaw15                       3235      // uint16_t
+#define SPV_SPV_AsstMeaning15                   3237      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType15                      3238      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType15Mask 0xE0
+#define     SPV_SPV_AsstType15Shift 5
+#define SPV_SPV_AsstScale15                     3238      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale15Mask 0x1C
+#define     SPV_SPV_AsstScale15Shift 2
+#define SPV_SPV_AsstOffset15                    3239      // int8_t
+#define SPV_SPV_AsstRef15                       3241      // float (4 Byte)
+#define SPV_SPV_AsstReg16                       3245      // uint16_t
+#define SPV_SPV_AsstRaw16                       3247      // uint16_t
+#define SPV_SPV_AsstMeaning16                   3249      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType16                      3250      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType16Mask 0xE0
+#define     SPV_SPV_AsstType16Shift 5
+#define SPV_SPV_AsstScale16                     3250      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale16Mask 0x1C
+#define     SPV_SPV_AsstScale16Shift 2
+#define SPV_SPV_AsstOffset16                    3251      // int8_t
+#define SPV_SPV_AsstRef16                       3253      // float (4 Byte)
+#define SPV_SPV_AsstReg17                       3257      // uint16_t
+#define SPV_SPV_AsstRaw17                       3259      // uint16_t
+#define SPV_SPV_AsstMeaning17                   3261      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType17                      3262      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType17Mask 0xE0
+#define     SPV_SPV_AsstType17Shift 5
+#define SPV_SPV_AsstScale17                     3262      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale17Mask 0x1C
+#define     SPV_SPV_AsstScale17Shift 2
+#define SPV_SPV_AsstOffset17                    3263      // int8_t
+#define SPV_SPV_AsstRef17                       3265      // float (4 Byte)
+#define SPV_SPV_AsstReg18                       3269      // uint16_t
+#define SPV_SPV_AsstRaw18                       3271      // uint16_t
+#define SPV_SPV_AsstMeaning18                   3273      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType18                      3274      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType18Mask 0xE0
+#define     SPV_SPV_AsstType18Shift 5
+#define SPV_SPV_AsstScale18                     3274      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale18Mask 0x1C
+#define     SPV_SPV_AsstScale18Shift 2
+#define SPV_SPV_AsstOffset18                    3275      // int8_t
+#define SPV_SPV_AsstRef18                       3277      // float (4 Byte)
+#define SPV_SPV_AsstReg19                       3281      // uint16_t
+#define SPV_SPV_AsstRaw19                       3283      // uint16_t
+#define SPV_SPV_AsstMeaning19                   3285      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType19                      3286      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType19Mask 0xE0
+#define     SPV_SPV_AsstType19Shift 5
+#define SPV_SPV_AsstScale19                     3286      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale19Mask 0x1C
+#define     SPV_SPV_AsstScale19Shift 2
+#define SPV_SPV_AsstOffset19                    3287      // int8_t
+#define SPV_SPV_AsstRef19                       3289      // float (4 Byte)
+#define SPV_SPV_AsstReg20                       3293      // uint16_t
+#define SPV_SPV_AsstRaw20                       3295      // uint16_t
+#define SPV_SPV_AsstMeaning20                   3297      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType20                      3298      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType20Mask 0xE0
+#define     SPV_SPV_AsstType20Shift 5
+#define SPV_SPV_AsstScale20                     3298      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale20Mask 0x1C
+#define     SPV_SPV_AsstScale20Shift 2
+#define SPV_SPV_AsstOffset20                    3299      // int8_t
+#define SPV_SPV_AsstRef20                       3301      // float (4 Byte)
+#define SPV_SPV_AsstReg21                       3305      // uint16_t
+#define SPV_SPV_AsstRaw21                       3307      // uint16_t
+#define SPV_SPV_AsstMeaning21                   3309      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType21                      3310      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType21Mask 0xE0
+#define     SPV_SPV_AsstType21Shift 5
+#define SPV_SPV_AsstScale21                     3310      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale21Mask 0x1C
+#define     SPV_SPV_AsstScale21Shift 2
+#define SPV_SPV_AsstOffset21                    3311      // int8_t
+#define SPV_SPV_AsstRef21                       3313      // float (4 Byte)
+#define SPV_SPV_AsstReg22                       3317      // uint16_t
+#define SPV_SPV_AsstRaw22                       3319      // uint16_t
+#define SPV_SPV_AsstMeaning22                   3321      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType22                      3322      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType22Mask 0xE0
+#define     SPV_SPV_AsstType22Shift 5
+#define SPV_SPV_AsstScale22                     3322      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale22Mask 0x1C
+#define     SPV_SPV_AsstScale22Shift 2
+#define SPV_SPV_AsstOffset22                    3323      // int8_t
+#define SPV_SPV_AsstRef22                       3325      // float (4 Byte)
+#define SPV_SPV_AsstReg23                       3329      // uint16_t
+#define SPV_SPV_AsstRaw23                       3331      // uint16_t
+#define SPV_SPV_AsstMeaning23                   3333      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType23                      3334      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType23Mask 0xE0
+#define     SPV_SPV_AsstType23Shift 5
+#define SPV_SPV_AsstScale23                     3334      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale23Mask 0x1C
+#define     SPV_SPV_AsstScale23Shift 2
+#define SPV_SPV_AsstOffset23                    3335      // int8_t
+#define SPV_SPV_AsstRef23                       3337      // float (4 Byte)
+#define SPV_SPV_AsstReg24                       3341      // uint16_t
+#define SPV_SPV_AsstRaw24                       3343      // uint16_t
+#define SPV_SPV_AsstMeaning24                   3345      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType24                      3346      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType24Mask 0xE0
+#define     SPV_SPV_AsstType24Shift 5
+#define SPV_SPV_AsstScale24                     3346      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale24Mask 0x1C
+#define     SPV_SPV_AsstScale24Shift 2
+#define SPV_SPV_AsstOffset24                    3347      // int8_t
+#define SPV_SPV_AsstRef24                       3349      // float (4 Byte)
+#define SPV_SPV_AsstReg25                       3353      // uint16_t
+#define SPV_SPV_AsstRaw25                       3355      // uint16_t
+#define SPV_SPV_AsstMeaning25                   3357      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType25                      3358      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType25Mask 0xE0
+#define     SPV_SPV_AsstType25Shift 5
+#define SPV_SPV_AsstScale25                     3358      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale25Mask 0x1C
+#define     SPV_SPV_AsstScale25Shift 2
+#define SPV_SPV_AsstOffset25                    3359      // int8_t
+#define SPV_SPV_AsstRef25                       3361      // float (4 Byte)
+#define SPV_SPV_AsstReg26                       3365      // uint16_t
+#define SPV_SPV_AsstRaw26                       3367      // uint16_t
+#define SPV_SPV_AsstMeaning26                   3369      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType26                      3370      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType26Mask 0xE0
+#define     SPV_SPV_AsstType26Shift 5
+#define SPV_SPV_AsstScale26                     3370      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale26Mask 0x1C
+#define     SPV_SPV_AsstScale26Shift 2
+#define SPV_SPV_AsstOffset26                    3371      // int8_t
+#define SPV_SPV_AsstRef26                       3373      // float (4 Byte)
+#define SPV_SPV_AsstReg27                       3377      // uint16_t
+#define SPV_SPV_AsstRaw27                       3379      // uint16_t
+#define SPV_SPV_AsstMeaning27                   3381      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType27                      3382      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType27Mask 0xE0
+#define     SPV_SPV_AsstType27Shift 5
+#define SPV_SPV_AsstScale27                     3382      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale27Mask 0x1C
+#define     SPV_SPV_AsstScale27Shift 2
+#define SPV_SPV_AsstOffset27                    3383      // int8_t
+#define SPV_SPV_AsstRef27                       3385      // float (4 Byte)
+#define SPV_SPV_AsstReg28                       3389      // uint16_t
+#define SPV_SPV_AsstRaw28                       3391      // uint16_t
+#define SPV_SPV_AsstMeaning28                   3393      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType28                      3394      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType28Mask 0xE0
+#define     SPV_SPV_AsstType28Shift 5
+#define SPV_SPV_AsstScale28                     3394      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale28Mask 0x1C
+#define     SPV_SPV_AsstScale28Shift 2
+#define SPV_SPV_AsstOffset28                    3395      // int8_t
+#define SPV_SPV_AsstRef28                       3397      // float (4 Byte)
+#define SPV_SPV_AsstReg29                       3401      // uint16_t
+#define SPV_SPV_AsstRaw29                       3403      // uint16_t
+#define SPV_SPV_AsstMeaning29                   3405      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType29                      3406      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType29Mask 0xE0
+#define     SPV_SPV_AsstType29Shift 5
+#define SPV_SPV_AsstScale29                     3406      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale29Mask 0x1C
+#define     SPV_SPV_AsstScale29Shift 2
+#define SPV_SPV_AsstOffset29                    3407      // int8_t
+#define SPV_SPV_AsstRef29                       3409      // float (4 Byte)
+#define SPV_SPV_AsstReg30                       3413      // uint16_t
+#define SPV_SPV_AsstRaw30                       3415      // uint16_t
+#define SPV_SPV_AsstMeaning30                   3417      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType30                      3418      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType30Mask 0xE0
+#define     SPV_SPV_AsstType30Shift 5
+#define SPV_SPV_AsstScale30                     3418      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale30Mask 0x1C
+#define     SPV_SPV_AsstScale30Shift 2
+#define SPV_SPV_AsstOffset30                    3419      // int8_t
+#define SPV_SPV_AsstRef30                       3421      // float (4 Byte)
+#define SPV_SPV_AsstReg31                       3425      // uint16_t
+#define SPV_SPV_AsstRaw31                       3427      // uint16_t
+#define SPV_SPV_AsstMeaning31                   3429      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType31                      3430      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType31Mask 0xE0
+#define     SPV_SPV_AsstType31Shift 5
+#define SPV_SPV_AsstScale31                     3430      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale31Mask 0x1C
+#define     SPV_SPV_AsstScale31Shift 2
+#define SPV_SPV_AsstOffset31                    3431      // int8_t
+#define SPV_SPV_AsstRef31                       3433      // float (4 Byte)
+#define SPV_SPV_AsstReg32                       3437      // uint16_t
+#define SPV_SPV_AsstRaw32                       3439      // uint16_t
+#define SPV_SPV_AsstMeaning32                   3441      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType32                      3442      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType32Mask 0xE0
+#define     SPV_SPV_AsstType32Shift 5
+#define SPV_SPV_AsstScale32                     3442      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale32Mask 0x1C
+#define     SPV_SPV_AsstScale32Shift 2
+#define SPV_SPV_AsstOffset32                    3443      // int8_t
+#define SPV_SPV_AsstRef32                       3445      // float (4 Byte)
+#define SPV_SPV_AsstReg33                       3449      // uint16_t
+#define SPV_SPV_AsstRaw33                       3451      // uint16_t
+#define SPV_SPV_AsstMeaning33                   3453      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType33                      3454      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType33Mask 0xE0
+#define     SPV_SPV_AsstType33Shift 5
+#define SPV_SPV_AsstScale33                     3454      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale33Mask 0x1C
+#define     SPV_SPV_AsstScale33Shift 2
+#define SPV_SPV_AsstOffset33                    3455      // int8_t
+#define SPV_SPV_AsstRef33                       3457      // float (4 Byte)
+#define SPV_SPV_AsstReg34                       3461      // uint16_t
+#define SPV_SPV_AsstRaw34                       3463      // uint16_t
+#define SPV_SPV_AsstMeaning34                   3465      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType34                      3466      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType34Mask 0xE0
+#define     SPV_SPV_AsstType34Shift 5
+#define SPV_SPV_AsstScale34                     3466      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale34Mask 0x1C
+#define     SPV_SPV_AsstScale34Shift 2
+#define SPV_SPV_AsstOffset34                    3467      // int8_t
+#define SPV_SPV_AsstRef34                       3469      // float (4 Byte)
+#define SPV_SPV_AsstReg35                       3473      // uint16_t
+#define SPV_SPV_AsstRaw35                       3475      // uint16_t
+#define SPV_SPV_AsstMeaning35                   3477      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType35                      3478      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType35Mask 0xE0
+#define     SPV_SPV_AsstType35Shift 5
+#define SPV_SPV_AsstScale35                     3478      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale35Mask 0x1C
+#define     SPV_SPV_AsstScale35Shift 2
+#define SPV_SPV_AsstOffset35                    3479      // int8_t
+#define SPV_SPV_AsstRef35                       3481      // float (4 Byte)
+#define SPV_SPV_AsstReg36                       3485      // uint16_t
+#define SPV_SPV_AsstRaw36                       3487      // uint16_t
+#define SPV_SPV_AsstMeaning36                   3489      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType36                      3490      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType36Mask 0xE0
+#define     SPV_SPV_AsstType36Shift 5
+#define SPV_SPV_AsstScale36                     3490      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale36Mask 0x1C
+#define     SPV_SPV_AsstScale36Shift 2
+#define SPV_SPV_AsstOffset36                    3491      // int8_t
+#define SPV_SPV_AsstRef36                       3493      // float (4 Byte)
+#define SPV_SPV_AsstReg37                       3497      // uint16_t
+#define SPV_SPV_AsstRaw37                       3499      // uint16_t
+#define SPV_SPV_AsstMeaning37                   3501      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType37                      3502      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType37Mask 0xE0
+#define     SPV_SPV_AsstType37Shift 5
+#define SPV_SPV_AsstScale37                     3502      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale37Mask 0x1C
+#define     SPV_SPV_AsstScale37Shift 2
+#define SPV_SPV_AsstOffset37                    3503      // int8_t
+#define SPV_SPV_AsstRef37                       3505      // float (4 Byte)
+#define SPV_SPV_AsstReg38                       3509      // uint16_t
+#define SPV_SPV_AsstRaw38                       3511      // uint16_t
+#define SPV_SPV_AsstMeaning38                   3513      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType38                      3514      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType38Mask 0xE0
+#define     SPV_SPV_AsstType38Shift 5
+#define SPV_SPV_AsstScale38                     3514      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale38Mask 0x1C
+#define     SPV_SPV_AsstScale38Shift 2
+#define SPV_SPV_AsstOffset38                    3515      // int8_t
+#define SPV_SPV_AsstRef38                       3517      // float (4 Byte)
+#define SPV_SPV_AsstReg39                       3521      // uint16_t
+#define SPV_SPV_AsstRaw39                       3523      // uint16_t
+#define SPV_SPV_AsstMeaning39                   3525      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType39                      3526      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType39Mask 0xE0
+#define     SPV_SPV_AsstType39Shift 5
+#define SPV_SPV_AsstScale39                     3526      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale39Mask 0x1C
+#define     SPV_SPV_AsstScale39Shift 2
+#define SPV_SPV_AsstOffset39                    3527      // int8_t
+#define SPV_SPV_AsstRef39                       3529      // float (4 Byte)
+#define SPV_SPV_AsstReg40                       3533      // uint16_t
+#define SPV_SPV_AsstRaw40                       3535      // uint16_t
+#define SPV_SPV_AsstMeaning40                   3537      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType40                      3538      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType40Mask 0xE0
+#define     SPV_SPV_AsstType40Shift 5
+#define SPV_SPV_AsstScale40                     3538      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale40Mask 0x1C
+#define     SPV_SPV_AsstScale40Shift 2
+#define SPV_SPV_AsstOffset40                    3539      // int8_t
+#define SPV_SPV_AsstRef40                       3541      // float (4 Byte)
+#define SPV_SPV_AsstReg41                       3545      // uint16_t
+#define SPV_SPV_AsstRaw41                       3547      // uint16_t
+#define SPV_SPV_AsstMeaning41                   3549      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType41                      3550      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType41Mask 0xE0
+#define     SPV_SPV_AsstType41Shift 5
+#define SPV_SPV_AsstScale41                     3550      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale41Mask 0x1C
+#define     SPV_SPV_AsstScale41Shift 2
+#define SPV_SPV_AsstOffset41                    3551      // int8_t
+#define SPV_SPV_AsstRef41                       3553      // float (4 Byte)
+#define SPV_SPV_AsstReg42                       3557      // uint16_t
+#define SPV_SPV_AsstRaw42                       3559      // uint16_t
+#define SPV_SPV_AsstMeaning42                   3561      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType42                      3562      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType42Mask 0xE0
+#define     SPV_SPV_AsstType42Shift 5
+#define SPV_SPV_AsstScale42                     3562      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale42Mask 0x1C
+#define     SPV_SPV_AsstScale42Shift 2
+#define SPV_SPV_AsstOffset42                    3563      // int8_t
+#define SPV_SPV_AsstRef42                       3565      // float (4 Byte)
+#define SPV_SPV_AsstReg43                       3569      // uint16_t
+#define SPV_SPV_AsstRaw43                       3571      // uint16_t
+#define SPV_SPV_AsstMeaning43                   3573      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType43                      3574      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType43Mask 0xE0
+#define     SPV_SPV_AsstType43Shift 5
+#define SPV_SPV_AsstScale43                     3574      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale43Mask 0x1C
+#define     SPV_SPV_AsstScale43Shift 2
+#define SPV_SPV_AsstOffset43                    3575      // int8_t
+#define SPV_SPV_AsstRef43                       3577      // float (4 Byte)
+#define SPV_SPV_AsstReg44                       3581      // uint16_t
+#define SPV_SPV_AsstRaw44                       3583      // uint16_t
+#define SPV_SPV_AsstMeaning44                   3585      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType44                      3586      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType44Mask 0xE0
+#define     SPV_SPV_AsstType44Shift 5
+#define SPV_SPV_AsstScale44                     3586      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale44Mask 0x1C
+#define     SPV_SPV_AsstScale44Shift 2
+#define SPV_SPV_AsstOffset44                    3587      // int8_t
+#define SPV_SPV_AsstRef44                       3589      // float (4 Byte)
+#define SPV_SPV_AsstReg45                       3593      // uint16_t
+#define SPV_SPV_AsstRaw45                       3595      // uint16_t
+#define SPV_SPV_AsstMeaning45                   3597      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType45                      3598      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType45Mask 0xE0
+#define     SPV_SPV_AsstType45Shift 5
+#define SPV_SPV_AsstScale45                     3598      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale45Mask 0x1C
+#define     SPV_SPV_AsstScale45Shift 2
+#define SPV_SPV_AsstOffset45                    3599      // int8_t
+#define SPV_SPV_AsstRef45                       3601      // float (4 Byte)
+#define SPV_SPV_AsstReg46                       3605      // uint16_t
+#define SPV_SPV_AsstRaw46                       3607      // uint16_t
+#define SPV_SPV_AsstMeaning46                   3609      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType46                      3610      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType46Mask 0xE0
+#define     SPV_SPV_AsstType46Shift 5
+#define SPV_SPV_AsstScale46                     3610      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale46Mask 0x1C
+#define     SPV_SPV_AsstScale46Shift 2
+#define SPV_SPV_AsstOffset46                    3611      // int8_t
+#define SPV_SPV_AsstRef46                       3613      // float (4 Byte)
+#define SPV_SPV_AsstReg47                       3617      // uint16_t
+#define SPV_SPV_AsstRaw47                       3619      // uint16_t
+#define SPV_SPV_AsstMeaning47                   3621      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType47                      3622      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType47Mask 0xE0
+#define     SPV_SPV_AsstType47Shift 5
+#define SPV_SPV_AsstScale47                     3622      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale47Mask 0x1C
+#define     SPV_SPV_AsstScale47Shift 2
+#define SPV_SPV_AsstOffset47                    3623      // int8_t
+#define SPV_SPV_AsstRef47                       3625      // float (4 Byte)
+#define SPV_SPV_AsstReg48                       3629      // uint16_t
+#define SPV_SPV_AsstRaw48                       3631      // uint16_t
+#define SPV_SPV_AsstMeaning48                   3633      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType48                      3634      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType48Mask 0xE0
+#define     SPV_SPV_AsstType48Shift 5
+#define SPV_SPV_AsstScale48                     3634      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale48Mask 0x1C
+#define     SPV_SPV_AsstScale48Shift 2
+#define SPV_SPV_AsstOffset48                    3635      // int8_t
+#define SPV_SPV_AsstRef48                       3637      // float (4 Byte)
+#define SPV_SPV_AsstReg49                       3641      // uint16_t
+#define SPV_SPV_AsstRaw49                       3643      // uint16_t
+#define SPV_SPV_AsstMeaning49                   3645      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType49                      3646      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType49Mask 0xE0
+#define     SPV_SPV_AsstType49Shift 5
+#define SPV_SPV_AsstScale49                     3646      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale49Mask 0x1C
+#define     SPV_SPV_AsstScale49Shift 2
+#define SPV_SPV_AsstOffset49                    3647      // int8_t
+#define SPV_SPV_AsstRef49                       3649      // float (4 Byte)
+#define SPV_SPV_AsstReg50                       3653      // uint16_t
+#define SPV_SPV_AsstRaw50                       3655      // uint16_t
+#define SPV_SPV_AsstMeaning50                   3657      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType50                      3658      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType50Mask 0xE0
+#define     SPV_SPV_AsstType50Shift 5
+#define SPV_SPV_AsstScale50                     3658      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale50Mask 0x1C
+#define     SPV_SPV_AsstScale50Shift 2
+#define SPV_SPV_AsstOffset50                    3659      // int8_t
+#define SPV_SPV_AsstRef50                       3661      // float (4 Byte)
+#define SPV_SPV_AsstReg51                       3665      // uint16_t
+#define SPV_SPV_AsstRaw51                       3667      // uint16_t
+#define SPV_SPV_AsstMeaning51                   3669      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType51                      3670      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType51Mask 0xE0
+#define     SPV_SPV_AsstType51Shift 5
+#define SPV_SPV_AsstScale51                     3670      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale51Mask 0x1C
+#define     SPV_SPV_AsstScale51Shift 2
+#define SPV_SPV_AsstOffset51                    3671      // int8_t
+#define SPV_SPV_AsstRef51                       3673      // float (4 Byte)
+#define SPV_SPV_AsstReg52                       3677      // uint16_t
+#define SPV_SPV_AsstRaw52                       3679      // uint16_t
+#define SPV_SPV_AsstMeaning52                   3681      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType52                      3682      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType52Mask 0xE0
+#define     SPV_SPV_AsstType52Shift 5
+#define SPV_SPV_AsstScale52                     3682      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale52Mask 0x1C
+#define     SPV_SPV_AsstScale52Shift 2
+#define SPV_SPV_AsstOffset52                    3683      // int8_t
+#define SPV_SPV_AsstRef52                       3685      // float (4 Byte)
+#define SPV_SPV_AsstReg53                       3689      // uint16_t
+#define SPV_SPV_AsstRaw53                       3691      // uint16_t
+#define SPV_SPV_AsstMeaning53                   3693      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType53                      3694      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType53Mask 0xE0
+#define     SPV_SPV_AsstType53Shift 5
+#define SPV_SPV_AsstScale53                     3694      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale53Mask 0x1C
+#define     SPV_SPV_AsstScale53Shift 2
+#define SPV_SPV_AsstOffset53                    3695      // int8_t
+#define SPV_SPV_AsstRef53                       3697      // float (4 Byte)
+#define SPV_SPV_AsstReg54                       3701      // uint16_t
+#define SPV_SPV_AsstRaw54                       3703      // uint16_t
+#define SPV_SPV_AsstMeaning54                   3705      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType54                      3706      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType54Mask 0xE0
+#define     SPV_SPV_AsstType54Shift 5
+#define SPV_SPV_AsstScale54                     3706      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale54Mask 0x1C
+#define     SPV_SPV_AsstScale54Shift 2
+#define SPV_SPV_AsstOffset54                    3707      // int8_t
+#define SPV_SPV_AsstRef54                       3709      // float (4 Byte)
+#define SPV_SPV_AsstReg55                       3713      // uint16_t
+#define SPV_SPV_AsstRaw55                       3715      // uint16_t
+#define SPV_SPV_AsstMeaning55                   3717      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType55                      3718      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType55Mask 0xE0
+#define     SPV_SPV_AsstType55Shift 5
+#define SPV_SPV_AsstScale55                     3718      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale55Mask 0x1C
+#define     SPV_SPV_AsstScale55Shift 2
+#define SPV_SPV_AsstOffset55                    3719      // int8_t
+#define SPV_SPV_AsstRef55                       3721      // float (4 Byte)
+#define SPV_SPV_AsstReg56                       3725      // uint16_t
+#define SPV_SPV_AsstRaw56                       3727      // uint16_t
+#define SPV_SPV_AsstMeaning56                   3729      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType56                      3730      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType56Mask 0xE0
+#define     SPV_SPV_AsstType56Shift 5
+#define SPV_SPV_AsstScale56                     3730      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale56Mask 0x1C
+#define     SPV_SPV_AsstScale56Shift 2
+#define SPV_SPV_AsstOffset56                    3731      // int8_t
+#define SPV_SPV_AsstRef56                       3733      // float (4 Byte)
+#define SPV_SPV_AsstReg57                       3737      // uint16_t
+#define SPV_SPV_AsstRaw57                       3739      // uint16_t
+#define SPV_SPV_AsstMeaning57                   3741      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType57                      3742      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType57Mask 0xE0
+#define     SPV_SPV_AsstType57Shift 5
+#define SPV_SPV_AsstScale57                     3742      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale57Mask 0x1C
+#define     SPV_SPV_AsstScale57Shift 2
+#define SPV_SPV_AsstOffset57                    3743      // int8_t
+#define SPV_SPV_AsstRef57                       3745      // float (4 Byte)
+#define SPV_SPV_AsstReg58                       3749      // uint16_t
+#define SPV_SPV_AsstRaw58                       3751      // uint16_t
+#define SPV_SPV_AsstMeaning58                   3753      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType58                      3754      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType58Mask 0xE0
+#define     SPV_SPV_AsstType58Shift 5
+#define SPV_SPV_AsstScale58                     3754      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale58Mask 0x1C
+#define     SPV_SPV_AsstScale58Shift 2
+#define SPV_SPV_AsstOffset58                    3755      // int8_t
+#define SPV_SPV_AsstRef58                       3757      // float (4 Byte)
+#define SPV_SPV_AsstReg59                       3761      // uint16_t
+#define SPV_SPV_AsstRaw59                       3763      // uint16_t
+#define SPV_SPV_AsstMeaning59                   3765      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType59                      3766      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType59Mask 0xE0
+#define     SPV_SPV_AsstType59Shift 5
+#define SPV_SPV_AsstScale59                     3766      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale59Mask 0x1C
+#define     SPV_SPV_AsstScale59Shift 2
+#define SPV_SPV_AsstOffset59                    3767      // int8_t
+#define SPV_SPV_AsstRef59                       3769      // float (4 Byte)
+#define SPV_SPV_AsstReg60                       3773      // uint16_t
+#define SPV_SPV_AsstRaw60                       3775      // uint16_t
+#define SPV_SPV_AsstMeaning60                   3777      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType60                      3778      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType60Mask 0xE0
+#define     SPV_SPV_AsstType60Shift 5
+#define SPV_SPV_AsstScale60                     3778      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale60Mask 0x1C
+#define     SPV_SPV_AsstScale60Shift 2
+#define SPV_SPV_AsstOffset60                    3779      // int8_t
+#define SPV_SPV_AsstRef60                       3781      // float (4 Byte)
+#define SPV_SPV_AsstReg61                       3785      // uint16_t
+#define SPV_SPV_AsstRaw61                       3787      // uint16_t
+#define SPV_SPV_AsstMeaning61                   3789      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType61                      3790      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType61Mask 0xE0
+#define     SPV_SPV_AsstType61Shift 5
+#define SPV_SPV_AsstScale61                     3790      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale61Mask 0x1C
+#define     SPV_SPV_AsstScale61Shift 2
+#define SPV_SPV_AsstOffset61                    3791      // int8_t
+#define SPV_SPV_AsstRef61                       3793      // float (4 Byte)
+#define SPV_SPV_AsstReg62                       3797      // uint16_t
+#define SPV_SPV_AsstRaw62                       3799      // uint16_t
+#define SPV_SPV_AsstMeaning62                   3801      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType62                      3802      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType62Mask 0xE0
+#define     SPV_SPV_AsstType62Shift 5
+#define SPV_SPV_AsstScale62                     3802      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale62Mask 0x1C
+#define     SPV_SPV_AsstScale62Shift 2
+#define SPV_SPV_AsstOffset62                    3803      // int8_t
+#define SPV_SPV_AsstRef62                       3805      // float (4 Byte)
+#define SPV_SPV_AsstReg63                       3809      // uint16_t
+#define SPV_SPV_AsstRaw63                       3811      // uint16_t
+#define SPV_SPV_AsstMeaning63                   3813      // 8 Bits, Bit 7-0
+#define SPV_SPV_AsstType63                      3814      // 3 Bits, Bit 7-5
+#define     SPV_SPV_AsstType63Mask 0xE0
+#define     SPV_SPV_AsstType63Shift 5
+#define SPV_SPV_AsstScale63                     3814      // 3 Bits, Bit 4-2
+#define     SPV_SPV_AsstScale63Mask 0x1C
+#define     SPV_SPV_AsstScale63Shift 2
+#define SPV_SPV_AsstOffset63                    3815      // int8_t
+#define SPV_SPV_AsstRef63                       3817      // float (4 Byte)
 
-// Aktive Geräte
-#define ParamSPV_SPVVisibleChannels                  (knx.paramByte(SPV_SPVVisibleChannels))
+// IP-Adresse
+#define ParamSPV_SPV_AsstIp                          (knx.paramData(SPV_SPV_AsstIp))
+#define ParamSPV_SPV_AsstIpStr                       (knx.paramString(SPV_SPV_AsstIp, SPV_SPV_AsstIpLength))
+// Port
+#define ParamSPV_SPV_AsstPort                        (knx.paramWord(SPV_SPV_AsstPort))
+// Modbus-Slave-ID
+#define ParamSPV_SPV_AsstSlaveId                     (knx.paramByte(SPV_SPV_AsstSlaveId))
+// ab Register
+#define ParamSPV_SPV_AsstStartReg                    (knx.paramWord(SPV_SPV_AsstStartReg))
+// Anzahl Register
+#define ParamSPV_SPV_AsstReadCount                   (knx.paramByte(SPV_SPV_AsstReadCount))
+// erkannter Transport
+#define ParamSPV_SPV_AsstTransport                   (knx.paramByte(SPV_SPV_AsstTransport))
+// Zielgerät
+#define ParamSPV_SPV_AsstTargetChannel               (knx.paramByte(SPV_SPV_AsstTargetChannel))
+// gelesene Zeilen
+#define ParamSPV_SPV_AsstRowCount                    (knx.paramByte(SPV_SPV_AsstRowCount))
+// Seriennummer
+#define ParamSPV_SPV_AsstSerial                      (knx.paramData(SPV_SPV_AsstSerial))
+#define ParamSPV_SPV_AsstSerialStr                   (knx.paramString(SPV_SPV_AsstSerial, SPV_SPV_AsstSerialLength))
+// Ergebnis
+#define ParamSPV_SPV_AsstResultText                  (knx.paramData(SPV_SPV_AsstResultText))
+#define ParamSPV_SPV_AsstResultTextStr               (knx.paramString(SPV_SPV_AsstResultText, SPV_SPV_AsstResultTextLength))
+// Register
+#define ParamSPV_SPV_AsstReg00                       (knx.paramWord(SPV_SPV_AsstReg00))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw00                       (knx.paramWord(SPV_SPV_AsstRaw00))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning00                   (knx.paramByte(SPV_SPV_AsstMeaning00))
+// Datentyp
+#define ParamSPV_SPV_AsstType00                      ((knx.paramByte(SPV_SPV_AsstType00) & SPV_SPV_AsstType00Mask) >> SPV_SPV_AsstType00Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale00                     ((knx.paramByte(SPV_SPV_AsstScale00) & SPV_SPV_AsstScale00Mask) >> SPV_SPV_AsstScale00Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset00                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset00))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef00                       (knx.paramFloat(SPV_SPV_AsstRef00, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg01                       (knx.paramWord(SPV_SPV_AsstReg01))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw01                       (knx.paramWord(SPV_SPV_AsstRaw01))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning01                   (knx.paramByte(SPV_SPV_AsstMeaning01))
+// Datentyp
+#define ParamSPV_SPV_AsstType01                      ((knx.paramByte(SPV_SPV_AsstType01) & SPV_SPV_AsstType01Mask) >> SPV_SPV_AsstType01Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale01                     ((knx.paramByte(SPV_SPV_AsstScale01) & SPV_SPV_AsstScale01Mask) >> SPV_SPV_AsstScale01Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset01                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset01))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef01                       (knx.paramFloat(SPV_SPV_AsstRef01, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg02                       (knx.paramWord(SPV_SPV_AsstReg02))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw02                       (knx.paramWord(SPV_SPV_AsstRaw02))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning02                   (knx.paramByte(SPV_SPV_AsstMeaning02))
+// Datentyp
+#define ParamSPV_SPV_AsstType02                      ((knx.paramByte(SPV_SPV_AsstType02) & SPV_SPV_AsstType02Mask) >> SPV_SPV_AsstType02Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale02                     ((knx.paramByte(SPV_SPV_AsstScale02) & SPV_SPV_AsstScale02Mask) >> SPV_SPV_AsstScale02Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset02                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset02))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef02                       (knx.paramFloat(SPV_SPV_AsstRef02, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg03                       (knx.paramWord(SPV_SPV_AsstReg03))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw03                       (knx.paramWord(SPV_SPV_AsstRaw03))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning03                   (knx.paramByte(SPV_SPV_AsstMeaning03))
+// Datentyp
+#define ParamSPV_SPV_AsstType03                      ((knx.paramByte(SPV_SPV_AsstType03) & SPV_SPV_AsstType03Mask) >> SPV_SPV_AsstType03Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale03                     ((knx.paramByte(SPV_SPV_AsstScale03) & SPV_SPV_AsstScale03Mask) >> SPV_SPV_AsstScale03Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset03                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset03))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef03                       (knx.paramFloat(SPV_SPV_AsstRef03, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg04                       (knx.paramWord(SPV_SPV_AsstReg04))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw04                       (knx.paramWord(SPV_SPV_AsstRaw04))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning04                   (knx.paramByte(SPV_SPV_AsstMeaning04))
+// Datentyp
+#define ParamSPV_SPV_AsstType04                      ((knx.paramByte(SPV_SPV_AsstType04) & SPV_SPV_AsstType04Mask) >> SPV_SPV_AsstType04Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale04                     ((knx.paramByte(SPV_SPV_AsstScale04) & SPV_SPV_AsstScale04Mask) >> SPV_SPV_AsstScale04Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset04                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset04))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef04                       (knx.paramFloat(SPV_SPV_AsstRef04, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg05                       (knx.paramWord(SPV_SPV_AsstReg05))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw05                       (knx.paramWord(SPV_SPV_AsstRaw05))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning05                   (knx.paramByte(SPV_SPV_AsstMeaning05))
+// Datentyp
+#define ParamSPV_SPV_AsstType05                      ((knx.paramByte(SPV_SPV_AsstType05) & SPV_SPV_AsstType05Mask) >> SPV_SPV_AsstType05Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale05                     ((knx.paramByte(SPV_SPV_AsstScale05) & SPV_SPV_AsstScale05Mask) >> SPV_SPV_AsstScale05Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset05                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset05))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef05                       (knx.paramFloat(SPV_SPV_AsstRef05, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg06                       (knx.paramWord(SPV_SPV_AsstReg06))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw06                       (knx.paramWord(SPV_SPV_AsstRaw06))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning06                   (knx.paramByte(SPV_SPV_AsstMeaning06))
+// Datentyp
+#define ParamSPV_SPV_AsstType06                      ((knx.paramByte(SPV_SPV_AsstType06) & SPV_SPV_AsstType06Mask) >> SPV_SPV_AsstType06Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale06                     ((knx.paramByte(SPV_SPV_AsstScale06) & SPV_SPV_AsstScale06Mask) >> SPV_SPV_AsstScale06Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset06                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset06))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef06                       (knx.paramFloat(SPV_SPV_AsstRef06, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg07                       (knx.paramWord(SPV_SPV_AsstReg07))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw07                       (knx.paramWord(SPV_SPV_AsstRaw07))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning07                   (knx.paramByte(SPV_SPV_AsstMeaning07))
+// Datentyp
+#define ParamSPV_SPV_AsstType07                      ((knx.paramByte(SPV_SPV_AsstType07) & SPV_SPV_AsstType07Mask) >> SPV_SPV_AsstType07Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale07                     ((knx.paramByte(SPV_SPV_AsstScale07) & SPV_SPV_AsstScale07Mask) >> SPV_SPV_AsstScale07Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset07                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset07))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef07                       (knx.paramFloat(SPV_SPV_AsstRef07, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg08                       (knx.paramWord(SPV_SPV_AsstReg08))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw08                       (knx.paramWord(SPV_SPV_AsstRaw08))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning08                   (knx.paramByte(SPV_SPV_AsstMeaning08))
+// Datentyp
+#define ParamSPV_SPV_AsstType08                      ((knx.paramByte(SPV_SPV_AsstType08) & SPV_SPV_AsstType08Mask) >> SPV_SPV_AsstType08Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale08                     ((knx.paramByte(SPV_SPV_AsstScale08) & SPV_SPV_AsstScale08Mask) >> SPV_SPV_AsstScale08Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset08                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset08))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef08                       (knx.paramFloat(SPV_SPV_AsstRef08, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg09                       (knx.paramWord(SPV_SPV_AsstReg09))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw09                       (knx.paramWord(SPV_SPV_AsstRaw09))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning09                   (knx.paramByte(SPV_SPV_AsstMeaning09))
+// Datentyp
+#define ParamSPV_SPV_AsstType09                      ((knx.paramByte(SPV_SPV_AsstType09) & SPV_SPV_AsstType09Mask) >> SPV_SPV_AsstType09Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale09                     ((knx.paramByte(SPV_SPV_AsstScale09) & SPV_SPV_AsstScale09Mask) >> SPV_SPV_AsstScale09Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset09                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset09))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef09                       (knx.paramFloat(SPV_SPV_AsstRef09, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg10                       (knx.paramWord(SPV_SPV_AsstReg10))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw10                       (knx.paramWord(SPV_SPV_AsstRaw10))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning10                   (knx.paramByte(SPV_SPV_AsstMeaning10))
+// Datentyp
+#define ParamSPV_SPV_AsstType10                      ((knx.paramByte(SPV_SPV_AsstType10) & SPV_SPV_AsstType10Mask) >> SPV_SPV_AsstType10Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale10                     ((knx.paramByte(SPV_SPV_AsstScale10) & SPV_SPV_AsstScale10Mask) >> SPV_SPV_AsstScale10Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset10                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset10))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef10                       (knx.paramFloat(SPV_SPV_AsstRef10, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg11                       (knx.paramWord(SPV_SPV_AsstReg11))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw11                       (knx.paramWord(SPV_SPV_AsstRaw11))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning11                   (knx.paramByte(SPV_SPV_AsstMeaning11))
+// Datentyp
+#define ParamSPV_SPV_AsstType11                      ((knx.paramByte(SPV_SPV_AsstType11) & SPV_SPV_AsstType11Mask) >> SPV_SPV_AsstType11Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale11                     ((knx.paramByte(SPV_SPV_AsstScale11) & SPV_SPV_AsstScale11Mask) >> SPV_SPV_AsstScale11Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset11                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset11))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef11                       (knx.paramFloat(SPV_SPV_AsstRef11, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg12                       (knx.paramWord(SPV_SPV_AsstReg12))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw12                       (knx.paramWord(SPV_SPV_AsstRaw12))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning12                   (knx.paramByte(SPV_SPV_AsstMeaning12))
+// Datentyp
+#define ParamSPV_SPV_AsstType12                      ((knx.paramByte(SPV_SPV_AsstType12) & SPV_SPV_AsstType12Mask) >> SPV_SPV_AsstType12Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale12                     ((knx.paramByte(SPV_SPV_AsstScale12) & SPV_SPV_AsstScale12Mask) >> SPV_SPV_AsstScale12Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset12                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset12))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef12                       (knx.paramFloat(SPV_SPV_AsstRef12, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg13                       (knx.paramWord(SPV_SPV_AsstReg13))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw13                       (knx.paramWord(SPV_SPV_AsstRaw13))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning13                   (knx.paramByte(SPV_SPV_AsstMeaning13))
+// Datentyp
+#define ParamSPV_SPV_AsstType13                      ((knx.paramByte(SPV_SPV_AsstType13) & SPV_SPV_AsstType13Mask) >> SPV_SPV_AsstType13Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale13                     ((knx.paramByte(SPV_SPV_AsstScale13) & SPV_SPV_AsstScale13Mask) >> SPV_SPV_AsstScale13Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset13                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset13))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef13                       (knx.paramFloat(SPV_SPV_AsstRef13, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg14                       (knx.paramWord(SPV_SPV_AsstReg14))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw14                       (knx.paramWord(SPV_SPV_AsstRaw14))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning14                   (knx.paramByte(SPV_SPV_AsstMeaning14))
+// Datentyp
+#define ParamSPV_SPV_AsstType14                      ((knx.paramByte(SPV_SPV_AsstType14) & SPV_SPV_AsstType14Mask) >> SPV_SPV_AsstType14Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale14                     ((knx.paramByte(SPV_SPV_AsstScale14) & SPV_SPV_AsstScale14Mask) >> SPV_SPV_AsstScale14Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset14                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset14))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef14                       (knx.paramFloat(SPV_SPV_AsstRef14, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg15                       (knx.paramWord(SPV_SPV_AsstReg15))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw15                       (knx.paramWord(SPV_SPV_AsstRaw15))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning15                   (knx.paramByte(SPV_SPV_AsstMeaning15))
+// Datentyp
+#define ParamSPV_SPV_AsstType15                      ((knx.paramByte(SPV_SPV_AsstType15) & SPV_SPV_AsstType15Mask) >> SPV_SPV_AsstType15Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale15                     ((knx.paramByte(SPV_SPV_AsstScale15) & SPV_SPV_AsstScale15Mask) >> SPV_SPV_AsstScale15Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset15                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset15))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef15                       (knx.paramFloat(SPV_SPV_AsstRef15, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg16                       (knx.paramWord(SPV_SPV_AsstReg16))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw16                       (knx.paramWord(SPV_SPV_AsstRaw16))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning16                   (knx.paramByte(SPV_SPV_AsstMeaning16))
+// Datentyp
+#define ParamSPV_SPV_AsstType16                      ((knx.paramByte(SPV_SPV_AsstType16) & SPV_SPV_AsstType16Mask) >> SPV_SPV_AsstType16Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale16                     ((knx.paramByte(SPV_SPV_AsstScale16) & SPV_SPV_AsstScale16Mask) >> SPV_SPV_AsstScale16Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset16                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset16))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef16                       (knx.paramFloat(SPV_SPV_AsstRef16, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg17                       (knx.paramWord(SPV_SPV_AsstReg17))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw17                       (knx.paramWord(SPV_SPV_AsstRaw17))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning17                   (knx.paramByte(SPV_SPV_AsstMeaning17))
+// Datentyp
+#define ParamSPV_SPV_AsstType17                      ((knx.paramByte(SPV_SPV_AsstType17) & SPV_SPV_AsstType17Mask) >> SPV_SPV_AsstType17Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale17                     ((knx.paramByte(SPV_SPV_AsstScale17) & SPV_SPV_AsstScale17Mask) >> SPV_SPV_AsstScale17Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset17                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset17))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef17                       (knx.paramFloat(SPV_SPV_AsstRef17, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg18                       (knx.paramWord(SPV_SPV_AsstReg18))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw18                       (knx.paramWord(SPV_SPV_AsstRaw18))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning18                   (knx.paramByte(SPV_SPV_AsstMeaning18))
+// Datentyp
+#define ParamSPV_SPV_AsstType18                      ((knx.paramByte(SPV_SPV_AsstType18) & SPV_SPV_AsstType18Mask) >> SPV_SPV_AsstType18Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale18                     ((knx.paramByte(SPV_SPV_AsstScale18) & SPV_SPV_AsstScale18Mask) >> SPV_SPV_AsstScale18Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset18                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset18))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef18                       (knx.paramFloat(SPV_SPV_AsstRef18, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg19                       (knx.paramWord(SPV_SPV_AsstReg19))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw19                       (knx.paramWord(SPV_SPV_AsstRaw19))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning19                   (knx.paramByte(SPV_SPV_AsstMeaning19))
+// Datentyp
+#define ParamSPV_SPV_AsstType19                      ((knx.paramByte(SPV_SPV_AsstType19) & SPV_SPV_AsstType19Mask) >> SPV_SPV_AsstType19Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale19                     ((knx.paramByte(SPV_SPV_AsstScale19) & SPV_SPV_AsstScale19Mask) >> SPV_SPV_AsstScale19Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset19                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset19))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef19                       (knx.paramFloat(SPV_SPV_AsstRef19, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg20                       (knx.paramWord(SPV_SPV_AsstReg20))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw20                       (knx.paramWord(SPV_SPV_AsstRaw20))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning20                   (knx.paramByte(SPV_SPV_AsstMeaning20))
+// Datentyp
+#define ParamSPV_SPV_AsstType20                      ((knx.paramByte(SPV_SPV_AsstType20) & SPV_SPV_AsstType20Mask) >> SPV_SPV_AsstType20Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale20                     ((knx.paramByte(SPV_SPV_AsstScale20) & SPV_SPV_AsstScale20Mask) >> SPV_SPV_AsstScale20Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset20                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset20))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef20                       (knx.paramFloat(SPV_SPV_AsstRef20, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg21                       (knx.paramWord(SPV_SPV_AsstReg21))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw21                       (knx.paramWord(SPV_SPV_AsstRaw21))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning21                   (knx.paramByte(SPV_SPV_AsstMeaning21))
+// Datentyp
+#define ParamSPV_SPV_AsstType21                      ((knx.paramByte(SPV_SPV_AsstType21) & SPV_SPV_AsstType21Mask) >> SPV_SPV_AsstType21Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale21                     ((knx.paramByte(SPV_SPV_AsstScale21) & SPV_SPV_AsstScale21Mask) >> SPV_SPV_AsstScale21Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset21                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset21))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef21                       (knx.paramFloat(SPV_SPV_AsstRef21, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg22                       (knx.paramWord(SPV_SPV_AsstReg22))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw22                       (knx.paramWord(SPV_SPV_AsstRaw22))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning22                   (knx.paramByte(SPV_SPV_AsstMeaning22))
+// Datentyp
+#define ParamSPV_SPV_AsstType22                      ((knx.paramByte(SPV_SPV_AsstType22) & SPV_SPV_AsstType22Mask) >> SPV_SPV_AsstType22Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale22                     ((knx.paramByte(SPV_SPV_AsstScale22) & SPV_SPV_AsstScale22Mask) >> SPV_SPV_AsstScale22Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset22                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset22))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef22                       (knx.paramFloat(SPV_SPV_AsstRef22, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg23                       (knx.paramWord(SPV_SPV_AsstReg23))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw23                       (knx.paramWord(SPV_SPV_AsstRaw23))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning23                   (knx.paramByte(SPV_SPV_AsstMeaning23))
+// Datentyp
+#define ParamSPV_SPV_AsstType23                      ((knx.paramByte(SPV_SPV_AsstType23) & SPV_SPV_AsstType23Mask) >> SPV_SPV_AsstType23Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale23                     ((knx.paramByte(SPV_SPV_AsstScale23) & SPV_SPV_AsstScale23Mask) >> SPV_SPV_AsstScale23Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset23                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset23))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef23                       (knx.paramFloat(SPV_SPV_AsstRef23, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg24                       (knx.paramWord(SPV_SPV_AsstReg24))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw24                       (knx.paramWord(SPV_SPV_AsstRaw24))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning24                   (knx.paramByte(SPV_SPV_AsstMeaning24))
+// Datentyp
+#define ParamSPV_SPV_AsstType24                      ((knx.paramByte(SPV_SPV_AsstType24) & SPV_SPV_AsstType24Mask) >> SPV_SPV_AsstType24Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale24                     ((knx.paramByte(SPV_SPV_AsstScale24) & SPV_SPV_AsstScale24Mask) >> SPV_SPV_AsstScale24Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset24                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset24))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef24                       (knx.paramFloat(SPV_SPV_AsstRef24, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg25                       (knx.paramWord(SPV_SPV_AsstReg25))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw25                       (knx.paramWord(SPV_SPV_AsstRaw25))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning25                   (knx.paramByte(SPV_SPV_AsstMeaning25))
+// Datentyp
+#define ParamSPV_SPV_AsstType25                      ((knx.paramByte(SPV_SPV_AsstType25) & SPV_SPV_AsstType25Mask) >> SPV_SPV_AsstType25Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale25                     ((knx.paramByte(SPV_SPV_AsstScale25) & SPV_SPV_AsstScale25Mask) >> SPV_SPV_AsstScale25Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset25                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset25))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef25                       (knx.paramFloat(SPV_SPV_AsstRef25, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg26                       (knx.paramWord(SPV_SPV_AsstReg26))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw26                       (knx.paramWord(SPV_SPV_AsstRaw26))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning26                   (knx.paramByte(SPV_SPV_AsstMeaning26))
+// Datentyp
+#define ParamSPV_SPV_AsstType26                      ((knx.paramByte(SPV_SPV_AsstType26) & SPV_SPV_AsstType26Mask) >> SPV_SPV_AsstType26Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale26                     ((knx.paramByte(SPV_SPV_AsstScale26) & SPV_SPV_AsstScale26Mask) >> SPV_SPV_AsstScale26Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset26                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset26))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef26                       (knx.paramFloat(SPV_SPV_AsstRef26, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg27                       (knx.paramWord(SPV_SPV_AsstReg27))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw27                       (knx.paramWord(SPV_SPV_AsstRaw27))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning27                   (knx.paramByte(SPV_SPV_AsstMeaning27))
+// Datentyp
+#define ParamSPV_SPV_AsstType27                      ((knx.paramByte(SPV_SPV_AsstType27) & SPV_SPV_AsstType27Mask) >> SPV_SPV_AsstType27Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale27                     ((knx.paramByte(SPV_SPV_AsstScale27) & SPV_SPV_AsstScale27Mask) >> SPV_SPV_AsstScale27Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset27                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset27))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef27                       (knx.paramFloat(SPV_SPV_AsstRef27, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg28                       (knx.paramWord(SPV_SPV_AsstReg28))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw28                       (knx.paramWord(SPV_SPV_AsstRaw28))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning28                   (knx.paramByte(SPV_SPV_AsstMeaning28))
+// Datentyp
+#define ParamSPV_SPV_AsstType28                      ((knx.paramByte(SPV_SPV_AsstType28) & SPV_SPV_AsstType28Mask) >> SPV_SPV_AsstType28Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale28                     ((knx.paramByte(SPV_SPV_AsstScale28) & SPV_SPV_AsstScale28Mask) >> SPV_SPV_AsstScale28Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset28                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset28))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef28                       (knx.paramFloat(SPV_SPV_AsstRef28, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg29                       (knx.paramWord(SPV_SPV_AsstReg29))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw29                       (knx.paramWord(SPV_SPV_AsstRaw29))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning29                   (knx.paramByte(SPV_SPV_AsstMeaning29))
+// Datentyp
+#define ParamSPV_SPV_AsstType29                      ((knx.paramByte(SPV_SPV_AsstType29) & SPV_SPV_AsstType29Mask) >> SPV_SPV_AsstType29Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale29                     ((knx.paramByte(SPV_SPV_AsstScale29) & SPV_SPV_AsstScale29Mask) >> SPV_SPV_AsstScale29Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset29                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset29))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef29                       (knx.paramFloat(SPV_SPV_AsstRef29, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg30                       (knx.paramWord(SPV_SPV_AsstReg30))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw30                       (knx.paramWord(SPV_SPV_AsstRaw30))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning30                   (knx.paramByte(SPV_SPV_AsstMeaning30))
+// Datentyp
+#define ParamSPV_SPV_AsstType30                      ((knx.paramByte(SPV_SPV_AsstType30) & SPV_SPV_AsstType30Mask) >> SPV_SPV_AsstType30Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale30                     ((knx.paramByte(SPV_SPV_AsstScale30) & SPV_SPV_AsstScale30Mask) >> SPV_SPV_AsstScale30Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset30                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset30))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef30                       (knx.paramFloat(SPV_SPV_AsstRef30, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg31                       (knx.paramWord(SPV_SPV_AsstReg31))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw31                       (knx.paramWord(SPV_SPV_AsstRaw31))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning31                   (knx.paramByte(SPV_SPV_AsstMeaning31))
+// Datentyp
+#define ParamSPV_SPV_AsstType31                      ((knx.paramByte(SPV_SPV_AsstType31) & SPV_SPV_AsstType31Mask) >> SPV_SPV_AsstType31Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale31                     ((knx.paramByte(SPV_SPV_AsstScale31) & SPV_SPV_AsstScale31Mask) >> SPV_SPV_AsstScale31Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset31                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset31))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef31                       (knx.paramFloat(SPV_SPV_AsstRef31, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg32                       (knx.paramWord(SPV_SPV_AsstReg32))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw32                       (knx.paramWord(SPV_SPV_AsstRaw32))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning32                   (knx.paramByte(SPV_SPV_AsstMeaning32))
+// Datentyp
+#define ParamSPV_SPV_AsstType32                      ((knx.paramByte(SPV_SPV_AsstType32) & SPV_SPV_AsstType32Mask) >> SPV_SPV_AsstType32Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale32                     ((knx.paramByte(SPV_SPV_AsstScale32) & SPV_SPV_AsstScale32Mask) >> SPV_SPV_AsstScale32Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset32                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset32))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef32                       (knx.paramFloat(SPV_SPV_AsstRef32, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg33                       (knx.paramWord(SPV_SPV_AsstReg33))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw33                       (knx.paramWord(SPV_SPV_AsstRaw33))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning33                   (knx.paramByte(SPV_SPV_AsstMeaning33))
+// Datentyp
+#define ParamSPV_SPV_AsstType33                      ((knx.paramByte(SPV_SPV_AsstType33) & SPV_SPV_AsstType33Mask) >> SPV_SPV_AsstType33Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale33                     ((knx.paramByte(SPV_SPV_AsstScale33) & SPV_SPV_AsstScale33Mask) >> SPV_SPV_AsstScale33Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset33                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset33))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef33                       (knx.paramFloat(SPV_SPV_AsstRef33, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg34                       (knx.paramWord(SPV_SPV_AsstReg34))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw34                       (knx.paramWord(SPV_SPV_AsstRaw34))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning34                   (knx.paramByte(SPV_SPV_AsstMeaning34))
+// Datentyp
+#define ParamSPV_SPV_AsstType34                      ((knx.paramByte(SPV_SPV_AsstType34) & SPV_SPV_AsstType34Mask) >> SPV_SPV_AsstType34Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale34                     ((knx.paramByte(SPV_SPV_AsstScale34) & SPV_SPV_AsstScale34Mask) >> SPV_SPV_AsstScale34Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset34                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset34))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef34                       (knx.paramFloat(SPV_SPV_AsstRef34, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg35                       (knx.paramWord(SPV_SPV_AsstReg35))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw35                       (knx.paramWord(SPV_SPV_AsstRaw35))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning35                   (knx.paramByte(SPV_SPV_AsstMeaning35))
+// Datentyp
+#define ParamSPV_SPV_AsstType35                      ((knx.paramByte(SPV_SPV_AsstType35) & SPV_SPV_AsstType35Mask) >> SPV_SPV_AsstType35Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale35                     ((knx.paramByte(SPV_SPV_AsstScale35) & SPV_SPV_AsstScale35Mask) >> SPV_SPV_AsstScale35Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset35                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset35))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef35                       (knx.paramFloat(SPV_SPV_AsstRef35, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg36                       (knx.paramWord(SPV_SPV_AsstReg36))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw36                       (knx.paramWord(SPV_SPV_AsstRaw36))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning36                   (knx.paramByte(SPV_SPV_AsstMeaning36))
+// Datentyp
+#define ParamSPV_SPV_AsstType36                      ((knx.paramByte(SPV_SPV_AsstType36) & SPV_SPV_AsstType36Mask) >> SPV_SPV_AsstType36Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale36                     ((knx.paramByte(SPV_SPV_AsstScale36) & SPV_SPV_AsstScale36Mask) >> SPV_SPV_AsstScale36Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset36                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset36))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef36                       (knx.paramFloat(SPV_SPV_AsstRef36, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg37                       (knx.paramWord(SPV_SPV_AsstReg37))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw37                       (knx.paramWord(SPV_SPV_AsstRaw37))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning37                   (knx.paramByte(SPV_SPV_AsstMeaning37))
+// Datentyp
+#define ParamSPV_SPV_AsstType37                      ((knx.paramByte(SPV_SPV_AsstType37) & SPV_SPV_AsstType37Mask) >> SPV_SPV_AsstType37Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale37                     ((knx.paramByte(SPV_SPV_AsstScale37) & SPV_SPV_AsstScale37Mask) >> SPV_SPV_AsstScale37Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset37                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset37))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef37                       (knx.paramFloat(SPV_SPV_AsstRef37, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg38                       (knx.paramWord(SPV_SPV_AsstReg38))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw38                       (knx.paramWord(SPV_SPV_AsstRaw38))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning38                   (knx.paramByte(SPV_SPV_AsstMeaning38))
+// Datentyp
+#define ParamSPV_SPV_AsstType38                      ((knx.paramByte(SPV_SPV_AsstType38) & SPV_SPV_AsstType38Mask) >> SPV_SPV_AsstType38Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale38                     ((knx.paramByte(SPV_SPV_AsstScale38) & SPV_SPV_AsstScale38Mask) >> SPV_SPV_AsstScale38Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset38                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset38))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef38                       (knx.paramFloat(SPV_SPV_AsstRef38, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg39                       (knx.paramWord(SPV_SPV_AsstReg39))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw39                       (knx.paramWord(SPV_SPV_AsstRaw39))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning39                   (knx.paramByte(SPV_SPV_AsstMeaning39))
+// Datentyp
+#define ParamSPV_SPV_AsstType39                      ((knx.paramByte(SPV_SPV_AsstType39) & SPV_SPV_AsstType39Mask) >> SPV_SPV_AsstType39Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale39                     ((knx.paramByte(SPV_SPV_AsstScale39) & SPV_SPV_AsstScale39Mask) >> SPV_SPV_AsstScale39Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset39                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset39))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef39                       (knx.paramFloat(SPV_SPV_AsstRef39, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg40                       (knx.paramWord(SPV_SPV_AsstReg40))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw40                       (knx.paramWord(SPV_SPV_AsstRaw40))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning40                   (knx.paramByte(SPV_SPV_AsstMeaning40))
+// Datentyp
+#define ParamSPV_SPV_AsstType40                      ((knx.paramByte(SPV_SPV_AsstType40) & SPV_SPV_AsstType40Mask) >> SPV_SPV_AsstType40Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale40                     ((knx.paramByte(SPV_SPV_AsstScale40) & SPV_SPV_AsstScale40Mask) >> SPV_SPV_AsstScale40Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset40                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset40))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef40                       (knx.paramFloat(SPV_SPV_AsstRef40, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg41                       (knx.paramWord(SPV_SPV_AsstReg41))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw41                       (knx.paramWord(SPV_SPV_AsstRaw41))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning41                   (knx.paramByte(SPV_SPV_AsstMeaning41))
+// Datentyp
+#define ParamSPV_SPV_AsstType41                      ((knx.paramByte(SPV_SPV_AsstType41) & SPV_SPV_AsstType41Mask) >> SPV_SPV_AsstType41Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale41                     ((knx.paramByte(SPV_SPV_AsstScale41) & SPV_SPV_AsstScale41Mask) >> SPV_SPV_AsstScale41Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset41                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset41))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef41                       (knx.paramFloat(SPV_SPV_AsstRef41, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg42                       (knx.paramWord(SPV_SPV_AsstReg42))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw42                       (knx.paramWord(SPV_SPV_AsstRaw42))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning42                   (knx.paramByte(SPV_SPV_AsstMeaning42))
+// Datentyp
+#define ParamSPV_SPV_AsstType42                      ((knx.paramByte(SPV_SPV_AsstType42) & SPV_SPV_AsstType42Mask) >> SPV_SPV_AsstType42Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale42                     ((knx.paramByte(SPV_SPV_AsstScale42) & SPV_SPV_AsstScale42Mask) >> SPV_SPV_AsstScale42Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset42                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset42))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef42                       (knx.paramFloat(SPV_SPV_AsstRef42, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg43                       (knx.paramWord(SPV_SPV_AsstReg43))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw43                       (knx.paramWord(SPV_SPV_AsstRaw43))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning43                   (knx.paramByte(SPV_SPV_AsstMeaning43))
+// Datentyp
+#define ParamSPV_SPV_AsstType43                      ((knx.paramByte(SPV_SPV_AsstType43) & SPV_SPV_AsstType43Mask) >> SPV_SPV_AsstType43Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale43                     ((knx.paramByte(SPV_SPV_AsstScale43) & SPV_SPV_AsstScale43Mask) >> SPV_SPV_AsstScale43Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset43                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset43))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef43                       (knx.paramFloat(SPV_SPV_AsstRef43, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg44                       (knx.paramWord(SPV_SPV_AsstReg44))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw44                       (knx.paramWord(SPV_SPV_AsstRaw44))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning44                   (knx.paramByte(SPV_SPV_AsstMeaning44))
+// Datentyp
+#define ParamSPV_SPV_AsstType44                      ((knx.paramByte(SPV_SPV_AsstType44) & SPV_SPV_AsstType44Mask) >> SPV_SPV_AsstType44Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale44                     ((knx.paramByte(SPV_SPV_AsstScale44) & SPV_SPV_AsstScale44Mask) >> SPV_SPV_AsstScale44Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset44                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset44))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef44                       (knx.paramFloat(SPV_SPV_AsstRef44, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg45                       (knx.paramWord(SPV_SPV_AsstReg45))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw45                       (knx.paramWord(SPV_SPV_AsstRaw45))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning45                   (knx.paramByte(SPV_SPV_AsstMeaning45))
+// Datentyp
+#define ParamSPV_SPV_AsstType45                      ((knx.paramByte(SPV_SPV_AsstType45) & SPV_SPV_AsstType45Mask) >> SPV_SPV_AsstType45Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale45                     ((knx.paramByte(SPV_SPV_AsstScale45) & SPV_SPV_AsstScale45Mask) >> SPV_SPV_AsstScale45Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset45                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset45))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef45                       (knx.paramFloat(SPV_SPV_AsstRef45, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg46                       (knx.paramWord(SPV_SPV_AsstReg46))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw46                       (knx.paramWord(SPV_SPV_AsstRaw46))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning46                   (knx.paramByte(SPV_SPV_AsstMeaning46))
+// Datentyp
+#define ParamSPV_SPV_AsstType46                      ((knx.paramByte(SPV_SPV_AsstType46) & SPV_SPV_AsstType46Mask) >> SPV_SPV_AsstType46Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale46                     ((knx.paramByte(SPV_SPV_AsstScale46) & SPV_SPV_AsstScale46Mask) >> SPV_SPV_AsstScale46Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset46                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset46))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef46                       (knx.paramFloat(SPV_SPV_AsstRef46, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg47                       (knx.paramWord(SPV_SPV_AsstReg47))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw47                       (knx.paramWord(SPV_SPV_AsstRaw47))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning47                   (knx.paramByte(SPV_SPV_AsstMeaning47))
+// Datentyp
+#define ParamSPV_SPV_AsstType47                      ((knx.paramByte(SPV_SPV_AsstType47) & SPV_SPV_AsstType47Mask) >> SPV_SPV_AsstType47Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale47                     ((knx.paramByte(SPV_SPV_AsstScale47) & SPV_SPV_AsstScale47Mask) >> SPV_SPV_AsstScale47Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset47                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset47))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef47                       (knx.paramFloat(SPV_SPV_AsstRef47, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg48                       (knx.paramWord(SPV_SPV_AsstReg48))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw48                       (knx.paramWord(SPV_SPV_AsstRaw48))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning48                   (knx.paramByte(SPV_SPV_AsstMeaning48))
+// Datentyp
+#define ParamSPV_SPV_AsstType48                      ((knx.paramByte(SPV_SPV_AsstType48) & SPV_SPV_AsstType48Mask) >> SPV_SPV_AsstType48Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale48                     ((knx.paramByte(SPV_SPV_AsstScale48) & SPV_SPV_AsstScale48Mask) >> SPV_SPV_AsstScale48Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset48                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset48))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef48                       (knx.paramFloat(SPV_SPV_AsstRef48, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg49                       (knx.paramWord(SPV_SPV_AsstReg49))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw49                       (knx.paramWord(SPV_SPV_AsstRaw49))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning49                   (knx.paramByte(SPV_SPV_AsstMeaning49))
+// Datentyp
+#define ParamSPV_SPV_AsstType49                      ((knx.paramByte(SPV_SPV_AsstType49) & SPV_SPV_AsstType49Mask) >> SPV_SPV_AsstType49Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale49                     ((knx.paramByte(SPV_SPV_AsstScale49) & SPV_SPV_AsstScale49Mask) >> SPV_SPV_AsstScale49Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset49                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset49))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef49                       (knx.paramFloat(SPV_SPV_AsstRef49, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg50                       (knx.paramWord(SPV_SPV_AsstReg50))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw50                       (knx.paramWord(SPV_SPV_AsstRaw50))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning50                   (knx.paramByte(SPV_SPV_AsstMeaning50))
+// Datentyp
+#define ParamSPV_SPV_AsstType50                      ((knx.paramByte(SPV_SPV_AsstType50) & SPV_SPV_AsstType50Mask) >> SPV_SPV_AsstType50Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale50                     ((knx.paramByte(SPV_SPV_AsstScale50) & SPV_SPV_AsstScale50Mask) >> SPV_SPV_AsstScale50Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset50                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset50))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef50                       (knx.paramFloat(SPV_SPV_AsstRef50, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg51                       (knx.paramWord(SPV_SPV_AsstReg51))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw51                       (knx.paramWord(SPV_SPV_AsstRaw51))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning51                   (knx.paramByte(SPV_SPV_AsstMeaning51))
+// Datentyp
+#define ParamSPV_SPV_AsstType51                      ((knx.paramByte(SPV_SPV_AsstType51) & SPV_SPV_AsstType51Mask) >> SPV_SPV_AsstType51Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale51                     ((knx.paramByte(SPV_SPV_AsstScale51) & SPV_SPV_AsstScale51Mask) >> SPV_SPV_AsstScale51Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset51                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset51))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef51                       (knx.paramFloat(SPV_SPV_AsstRef51, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg52                       (knx.paramWord(SPV_SPV_AsstReg52))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw52                       (knx.paramWord(SPV_SPV_AsstRaw52))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning52                   (knx.paramByte(SPV_SPV_AsstMeaning52))
+// Datentyp
+#define ParamSPV_SPV_AsstType52                      ((knx.paramByte(SPV_SPV_AsstType52) & SPV_SPV_AsstType52Mask) >> SPV_SPV_AsstType52Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale52                     ((knx.paramByte(SPV_SPV_AsstScale52) & SPV_SPV_AsstScale52Mask) >> SPV_SPV_AsstScale52Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset52                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset52))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef52                       (knx.paramFloat(SPV_SPV_AsstRef52, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg53                       (knx.paramWord(SPV_SPV_AsstReg53))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw53                       (knx.paramWord(SPV_SPV_AsstRaw53))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning53                   (knx.paramByte(SPV_SPV_AsstMeaning53))
+// Datentyp
+#define ParamSPV_SPV_AsstType53                      ((knx.paramByte(SPV_SPV_AsstType53) & SPV_SPV_AsstType53Mask) >> SPV_SPV_AsstType53Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale53                     ((knx.paramByte(SPV_SPV_AsstScale53) & SPV_SPV_AsstScale53Mask) >> SPV_SPV_AsstScale53Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset53                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset53))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef53                       (knx.paramFloat(SPV_SPV_AsstRef53, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg54                       (knx.paramWord(SPV_SPV_AsstReg54))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw54                       (knx.paramWord(SPV_SPV_AsstRaw54))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning54                   (knx.paramByte(SPV_SPV_AsstMeaning54))
+// Datentyp
+#define ParamSPV_SPV_AsstType54                      ((knx.paramByte(SPV_SPV_AsstType54) & SPV_SPV_AsstType54Mask) >> SPV_SPV_AsstType54Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale54                     ((knx.paramByte(SPV_SPV_AsstScale54) & SPV_SPV_AsstScale54Mask) >> SPV_SPV_AsstScale54Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset54                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset54))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef54                       (knx.paramFloat(SPV_SPV_AsstRef54, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg55                       (knx.paramWord(SPV_SPV_AsstReg55))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw55                       (knx.paramWord(SPV_SPV_AsstRaw55))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning55                   (knx.paramByte(SPV_SPV_AsstMeaning55))
+// Datentyp
+#define ParamSPV_SPV_AsstType55                      ((knx.paramByte(SPV_SPV_AsstType55) & SPV_SPV_AsstType55Mask) >> SPV_SPV_AsstType55Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale55                     ((knx.paramByte(SPV_SPV_AsstScale55) & SPV_SPV_AsstScale55Mask) >> SPV_SPV_AsstScale55Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset55                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset55))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef55                       (knx.paramFloat(SPV_SPV_AsstRef55, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg56                       (knx.paramWord(SPV_SPV_AsstReg56))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw56                       (knx.paramWord(SPV_SPV_AsstRaw56))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning56                   (knx.paramByte(SPV_SPV_AsstMeaning56))
+// Datentyp
+#define ParamSPV_SPV_AsstType56                      ((knx.paramByte(SPV_SPV_AsstType56) & SPV_SPV_AsstType56Mask) >> SPV_SPV_AsstType56Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale56                     ((knx.paramByte(SPV_SPV_AsstScale56) & SPV_SPV_AsstScale56Mask) >> SPV_SPV_AsstScale56Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset56                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset56))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef56                       (knx.paramFloat(SPV_SPV_AsstRef56, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg57                       (knx.paramWord(SPV_SPV_AsstReg57))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw57                       (knx.paramWord(SPV_SPV_AsstRaw57))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning57                   (knx.paramByte(SPV_SPV_AsstMeaning57))
+// Datentyp
+#define ParamSPV_SPV_AsstType57                      ((knx.paramByte(SPV_SPV_AsstType57) & SPV_SPV_AsstType57Mask) >> SPV_SPV_AsstType57Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale57                     ((knx.paramByte(SPV_SPV_AsstScale57) & SPV_SPV_AsstScale57Mask) >> SPV_SPV_AsstScale57Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset57                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset57))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef57                       (knx.paramFloat(SPV_SPV_AsstRef57, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg58                       (knx.paramWord(SPV_SPV_AsstReg58))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw58                       (knx.paramWord(SPV_SPV_AsstRaw58))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning58                   (knx.paramByte(SPV_SPV_AsstMeaning58))
+// Datentyp
+#define ParamSPV_SPV_AsstType58                      ((knx.paramByte(SPV_SPV_AsstType58) & SPV_SPV_AsstType58Mask) >> SPV_SPV_AsstType58Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale58                     ((knx.paramByte(SPV_SPV_AsstScale58) & SPV_SPV_AsstScale58Mask) >> SPV_SPV_AsstScale58Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset58                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset58))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef58                       (knx.paramFloat(SPV_SPV_AsstRef58, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg59                       (knx.paramWord(SPV_SPV_AsstReg59))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw59                       (knx.paramWord(SPV_SPV_AsstRaw59))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning59                   (knx.paramByte(SPV_SPV_AsstMeaning59))
+// Datentyp
+#define ParamSPV_SPV_AsstType59                      ((knx.paramByte(SPV_SPV_AsstType59) & SPV_SPV_AsstType59Mask) >> SPV_SPV_AsstType59Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale59                     ((knx.paramByte(SPV_SPV_AsstScale59) & SPV_SPV_AsstScale59Mask) >> SPV_SPV_AsstScale59Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset59                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset59))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef59                       (knx.paramFloat(SPV_SPV_AsstRef59, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg60                       (knx.paramWord(SPV_SPV_AsstReg60))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw60                       (knx.paramWord(SPV_SPV_AsstRaw60))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning60                   (knx.paramByte(SPV_SPV_AsstMeaning60))
+// Datentyp
+#define ParamSPV_SPV_AsstType60                      ((knx.paramByte(SPV_SPV_AsstType60) & SPV_SPV_AsstType60Mask) >> SPV_SPV_AsstType60Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale60                     ((knx.paramByte(SPV_SPV_AsstScale60) & SPV_SPV_AsstScale60Mask) >> SPV_SPV_AsstScale60Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset60                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset60))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef60                       (knx.paramFloat(SPV_SPV_AsstRef60, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg61                       (knx.paramWord(SPV_SPV_AsstReg61))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw61                       (knx.paramWord(SPV_SPV_AsstRaw61))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning61                   (knx.paramByte(SPV_SPV_AsstMeaning61))
+// Datentyp
+#define ParamSPV_SPV_AsstType61                      ((knx.paramByte(SPV_SPV_AsstType61) & SPV_SPV_AsstType61Mask) >> SPV_SPV_AsstType61Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale61                     ((knx.paramByte(SPV_SPV_AsstScale61) & SPV_SPV_AsstScale61Mask) >> SPV_SPV_AsstScale61Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset61                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset61))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef61                       (knx.paramFloat(SPV_SPV_AsstRef61, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg62                       (knx.paramWord(SPV_SPV_AsstReg62))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw62                       (knx.paramWord(SPV_SPV_AsstRaw62))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning62                   (knx.paramByte(SPV_SPV_AsstMeaning62))
+// Datentyp
+#define ParamSPV_SPV_AsstType62                      ((knx.paramByte(SPV_SPV_AsstType62) & SPV_SPV_AsstType62Mask) >> SPV_SPV_AsstType62Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale62                     ((knx.paramByte(SPV_SPV_AsstScale62) & SPV_SPV_AsstScale62Mask) >> SPV_SPV_AsstScale62Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset62                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset62))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef62                       (knx.paramFloat(SPV_SPV_AsstRef62, Float_Enc_IEEE754Single))
+// Register
+#define ParamSPV_SPV_AsstReg63                       (knx.paramWord(SPV_SPV_AsstReg63))
+// Rohwert
+#define ParamSPV_SPV_AsstRaw63                       (knx.paramWord(SPV_SPV_AsstRaw63))
+// Bedeutung
+#define ParamSPV_SPV_AsstMeaning63                   (knx.paramByte(SPV_SPV_AsstMeaning63))
+// Datentyp
+#define ParamSPV_SPV_AsstType63                      ((knx.paramByte(SPV_SPV_AsstType63) & SPV_SPV_AsstType63Mask) >> SPV_SPV_AsstType63Shift)
+// Skalierung
+#define ParamSPV_SPV_AsstScale63                     ((knx.paramByte(SPV_SPV_AsstScale63) & SPV_SPV_AsstScale63Mask) >> SPV_SPV_AsstScale63Shift)
+// Offset
+#define ParamSPV_SPV_AsstOffset63                    ((int8_t)knx.paramByte(SPV_SPV_AsstOffset63))
+// abgelesener Wert
+#define ParamSPV_SPV_AsstRef63                       (knx.paramFloat(SPV_SPV_AsstRef63, Float_Enc_IEEE754Single))
 
 #define SPV_ChannelCount 6
 
 // Parameter per channel
-#define SPV_ParamBlockOffset 5035
-#define SPV_ParamBlockSize 89
+#define SPV_ParamBlockOffset 3821
+#define SPV_ParamBlockSize 365
 #define SPV_ParamCalcIndex(index) (index + SPV_ParamBlockOffset + _channelIndex * SPV_ParamBlockSize)
 
 #define SPV_CHLoggerIp                           0      // char*, 32 Byte
@@ -810,100 +2381,728 @@
 #define SPV_CHPollInterval                      38      // uint16_t
 #define SPV_CHLoggerSerialText                  40      // char*, 16 Byte
 #define     SPV_CHLoggerSerialTextLength 16
-#define SPV_CHEnDPower                          56      // 1 Bit, Bit 7
-#define     SPV_CHEnDPowerMask 0x80
-#define     SPV_CHEnDPowerShift 7
-#define SPV_CHEnDToday                          56      // 1 Bit, Bit 6
-#define     SPV_CHEnDTodayMask 0x40
-#define     SPV_CHEnDTodayShift 6
-#define SPV_CHEnDTotal                          56      // 1 Bit, Bit 5
-#define     SPV_CHEnDTotalMask 0x20
-#define     SPV_CHEnDTotalShift 5
-#define SPV_CHEnDGridVoltage                    56      // 1 Bit, Bit 4
-#define     SPV_CHEnDGridVoltageMask 0x10
-#define     SPV_CHEnDGridVoltageShift 4
-#define SPV_CHEnDGridCurrent                    56      // 1 Bit, Bit 3
-#define     SPV_CHEnDGridCurrentMask 0x08
-#define     SPV_CHEnDGridCurrentShift 3
-#define SPV_CHEnDGridFrequency                  56      // 1 Bit, Bit 2
-#define     SPV_CHEnDGridFrequencyMask 0x04
-#define     SPV_CHEnDGridFrequencyShift 2
-#define SPV_CHEnDTemperature                    56      // 1 Bit, Bit 1
-#define     SPV_CHEnDTemperatureMask 0x02
-#define     SPV_CHEnDTemperatureShift 1
-#define SPV_CHEnDPv1Voltage                     56      // 1 Bit, Bit 0
-#define     SPV_CHEnDPv1VoltageMask 0x01
-#define     SPV_CHEnDPv1VoltageShift 0
-#define SPV_CHEnDPv1Current                     57      // 1 Bit, Bit 7
-#define     SPV_CHEnDPv1CurrentMask 0x80
-#define     SPV_CHEnDPv1CurrentShift 7
-#define SPV_CHEnDPv1Power                       57      // 1 Bit, Bit 6
-#define     SPV_CHEnDPv1PowerMask 0x40
-#define     SPV_CHEnDPv1PowerShift 6
-#define SPV_CHEnDPv2Voltage                     57      // 1 Bit, Bit 5
-#define     SPV_CHEnDPv2VoltageMask 0x20
-#define     SPV_CHEnDPv2VoltageShift 5
-#define SPV_CHEnDPv2Current                     57      // 1 Bit, Bit 4
-#define     SPV_CHEnDPv2CurrentMask 0x10
-#define     SPV_CHEnDPv2CurrentShift 4
-#define SPV_CHEnDPv2Power                       57      // 1 Bit, Bit 3
-#define     SPV_CHEnDPv2PowerMask 0x08
-#define     SPV_CHEnDPv2PowerShift 3
-#define SPV_CHEnDToday1                         57      // 1 Bit, Bit 2
-#define     SPV_CHEnDToday1Mask 0x04
-#define     SPV_CHEnDToday1Shift 2
-#define SPV_CHEnDToday2                         57      // 1 Bit, Bit 1
-#define     SPV_CHEnDToday2Mask 0x02
-#define     SPV_CHEnDToday2Shift 1
-#define SPV_CHEnDTotal1                         57      // 1 Bit, Bit 0
-#define     SPV_CHEnDTotal1Mask 0x01
-#define     SPV_CHEnDTotal1Shift 0
-#define SPV_CHEnDTotal2                         58      // 1 Bit, Bit 7
-#define     SPV_CHEnDTotal2Mask 0x80
-#define     SPV_CHEnDTotal2Shift 7
-#define SPV_CHEnPSoc                            59      // 1 Bit, Bit 7
-#define     SPV_CHEnPSocMask 0x80
-#define     SPV_CHEnPSocShift 7
-#define SPV_CHEnPVoltage                        59      // 1 Bit, Bit 6
-#define     SPV_CHEnPVoltageMask 0x40
-#define     SPV_CHEnPVoltageShift 6
-#define SPV_CHEnPCurrent                        59      // 1 Bit, Bit 5
-#define     SPV_CHEnPCurrentMask 0x20
-#define     SPV_CHEnPCurrentShift 5
-#define SPV_CHEnPPower                          59      // 1 Bit, Bit 4
-#define     SPV_CHEnPPowerMask 0x10
-#define     SPV_CHEnPPowerShift 4
-#define SPV_CHEnPTemperature                    59      // 1 Bit, Bit 3
-#define     SPV_CHEnPTemperatureMask 0x08
-#define     SPV_CHEnPTemperatureShift 3
-#define SPV_CHEnPSoh                            59      // 1 Bit, Bit 2
-#define     SPV_CHEnPSohMask 0x04
-#define     SPV_CHEnPSohShift 2
-#define SPV_CHEnPRemainingCapacity              59      // 1 Bit, Bit 1
-#define     SPV_CHEnPRemainingCapacityMask 0x02
-#define     SPV_CHEnPRemainingCapacityShift 1
-#define SPV_CHEnPCycleTimes                     59      // 1 Bit, Bit 0
-#define     SPV_CHEnPCycleTimesMask 0x01
-#define     SPV_CHEnPCycleTimesShift 0
-#define SPV_CHEnPTodayCharge                    60      // 1 Bit, Bit 7
-#define     SPV_CHEnPTodayChargeMask 0x80
-#define     SPV_CHEnPTodayChargeShift 7
-#define SPV_CHEnPTodayDischarge                 60      // 1 Bit, Bit 6
-#define     SPV_CHEnPTodayDischargeMask 0x40
-#define     SPV_CHEnPTodayDischargeShift 6
-#define SPV_CHEnPTotalCharge                    60      // 1 Bit, Bit 5
-#define     SPV_CHEnPTotalChargeMask 0x20
-#define     SPV_CHEnPTotalChargeShift 5
-#define SPV_CHEnPTotalDischarge                 60      // 1 Bit, Bit 4
-#define     SPV_CHEnPTotalDischargeMask 0x10
-#define     SPV_CHEnPTotalDischargeShift 4
-#define SPV_CHSendDelayBase                     86      // 2 Bits, Bit 7-6
+#define SPV_CHView                              56      // 1 Bit, Bit 7
+#define     SPV_CHViewMask 0x80
+#define     SPV_CHViewShift 7
+#define SPV_CHRegPower                          57      // uint16_t
+#define SPV_CHTypePower                         59      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePowerMask 0xE0
+#define     SPV_CHTypePowerShift 5
+#define SPV_CHScalePower                        59      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePowerMask 0x1C
+#define     SPV_CHScalePowerShift 2
+#define SPV_CHEnPower                           59      // 1 Bit, Bit 1
+#define     SPV_CHEnPowerMask 0x02
+#define     SPV_CHEnPowerShift 1
+#define SPV_CHOffsetPower                       60      // int8_t
+#define SPV_CHRegApparentPower                  61      // uint16_t
+#define SPV_CHTypeApparentPower                 63      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeApparentPowerMask 0xE0
+#define     SPV_CHTypeApparentPowerShift 5
+#define SPV_CHScaleApparentPower                63      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleApparentPowerMask 0x1C
+#define     SPV_CHScaleApparentPowerShift 2
+#define SPV_CHEnApparentPower                   63      // 1 Bit, Bit 1
+#define     SPV_CHEnApparentPowerMask 0x02
+#define     SPV_CHEnApparentPowerShift 1
+#define SPV_CHOffsetApparentPower               64      // int8_t
+#define SPV_CHRegGridVoltage                    65      // uint16_t
+#define SPV_CHTypeGridVoltage                   67      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeGridVoltageMask 0xE0
+#define     SPV_CHTypeGridVoltageShift 5
+#define SPV_CHScaleGridVoltage                  67      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleGridVoltageMask 0x1C
+#define     SPV_CHScaleGridVoltageShift 2
+#define SPV_CHEnGridVoltage                     67      // 1 Bit, Bit 1
+#define     SPV_CHEnGridVoltageMask 0x02
+#define     SPV_CHEnGridVoltageShift 1
+#define SPV_CHOffsetGridVoltage                 68      // int8_t
+#define SPV_CHRegGridVoltageL2                  69      // uint16_t
+#define SPV_CHTypeGridVoltageL2                 71      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeGridVoltageL2Mask 0xE0
+#define     SPV_CHTypeGridVoltageL2Shift 5
+#define SPV_CHScaleGridVoltageL2                71      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleGridVoltageL2Mask 0x1C
+#define     SPV_CHScaleGridVoltageL2Shift 2
+#define SPV_CHEnGridVoltageL2                   71      // 1 Bit, Bit 1
+#define     SPV_CHEnGridVoltageL2Mask 0x02
+#define     SPV_CHEnGridVoltageL2Shift 1
+#define SPV_CHOffsetGridVoltageL2               72      // int8_t
+#define SPV_CHRegGridVoltageL3                  73      // uint16_t
+#define SPV_CHTypeGridVoltageL3                 75      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeGridVoltageL3Mask 0xE0
+#define     SPV_CHTypeGridVoltageL3Shift 5
+#define SPV_CHScaleGridVoltageL3                75      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleGridVoltageL3Mask 0x1C
+#define     SPV_CHScaleGridVoltageL3Shift 2
+#define SPV_CHEnGridVoltageL3                   75      // 1 Bit, Bit 1
+#define     SPV_CHEnGridVoltageL3Mask 0x02
+#define     SPV_CHEnGridVoltageL3Shift 1
+#define SPV_CHOffsetGridVoltageL3               76      // int8_t
+#define SPV_CHRegGridCurrent                    77      // uint16_t
+#define SPV_CHTypeGridCurrent                   79      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeGridCurrentMask 0xE0
+#define     SPV_CHTypeGridCurrentShift 5
+#define SPV_CHScaleGridCurrent                  79      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleGridCurrentMask 0x1C
+#define     SPV_CHScaleGridCurrentShift 2
+#define SPV_CHEnGridCurrent                     79      // 1 Bit, Bit 1
+#define     SPV_CHEnGridCurrentMask 0x02
+#define     SPV_CHEnGridCurrentShift 1
+#define SPV_CHOffsetGridCurrent                 80      // int8_t
+#define SPV_CHRegGridFrequency                  81      // uint16_t
+#define SPV_CHTypeGridFrequency                 83      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeGridFrequencyMask 0xE0
+#define     SPV_CHTypeGridFrequencyShift 5
+#define SPV_CHScaleGridFrequency                83      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleGridFrequencyMask 0x1C
+#define     SPV_CHScaleGridFrequencyShift 2
+#define SPV_CHEnGridFrequency                   83      // 1 Bit, Bit 1
+#define     SPV_CHEnGridFrequencyMask 0x02
+#define     SPV_CHEnGridFrequencyShift 1
+#define SPV_CHOffsetGridFrequency               84      // int8_t
+#define SPV_CHRegOperatingState                 85      // uint16_t
+#define SPV_CHTypeOperatingState                87      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeOperatingStateMask 0xE0
+#define     SPV_CHTypeOperatingStateShift 5
+#define SPV_CHScaleOperatingState               87      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleOperatingStateMask 0x1C
+#define     SPV_CHScaleOperatingStateShift 2
+#define SPV_CHEnOperatingState                  87      // 1 Bit, Bit 1
+#define     SPV_CHEnOperatingStateMask 0x02
+#define     SPV_CHEnOperatingStateShift 1
+#define SPV_CHOffsetOperatingState              88      // int8_t
+#define SPV_CHRegToday                          89      // uint16_t
+#define SPV_CHTypeToday                         91      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTodayMask 0xE0
+#define     SPV_CHTypeTodayShift 5
+#define SPV_CHScaleToday                        91      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTodayMask 0x1C
+#define     SPV_CHScaleTodayShift 2
+#define SPV_CHEnToday                           91      // 1 Bit, Bit 1
+#define     SPV_CHEnTodayMask 0x02
+#define     SPV_CHEnTodayShift 1
+#define SPV_CHOffsetToday                       92      // int8_t
+#define SPV_CHRegTotal                          93      // uint16_t
+#define SPV_CHTypeTotal                         95      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTotalMask 0xE0
+#define     SPV_CHTypeTotalShift 5
+#define SPV_CHScaleTotal                        95      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTotalMask 0x1C
+#define     SPV_CHScaleTotalShift 2
+#define SPV_CHEnTotal                           95      // 1 Bit, Bit 1
+#define     SPV_CHEnTotalMask 0x02
+#define     SPV_CHEnTotalShift 1
+#define SPV_CHOffsetTotal                       96      // int8_t
+#define SPV_CHRegMonth                          97      // uint16_t
+#define SPV_CHTypeMonth                         99      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeMonthMask 0xE0
+#define     SPV_CHTypeMonthShift 5
+#define SPV_CHScaleMonth                        99      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleMonthMask 0x1C
+#define     SPV_CHScaleMonthShift 2
+#define SPV_CHEnMonth                           99      // 1 Bit, Bit 1
+#define     SPV_CHEnMonthMask 0x02
+#define     SPV_CHEnMonthShift 1
+#define SPV_CHOffsetMonth                       100      // int8_t
+#define SPV_CHRegYear                           101      // uint16_t
+#define SPV_CHTypeYear                          103      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeYearMask 0xE0
+#define     SPV_CHTypeYearShift 5
+#define SPV_CHScaleYear                         103      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleYearMask 0x1C
+#define     SPV_CHScaleYearShift 2
+#define SPV_CHEnYear                            103      // 1 Bit, Bit 1
+#define     SPV_CHEnYearMask 0x02
+#define     SPV_CHEnYearShift 1
+#define SPV_CHOffsetYear                        104      // int8_t
+#define SPV_CHRegToday1                         105      // uint16_t
+#define SPV_CHTypeToday1                        107      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeToday1Mask 0xE0
+#define     SPV_CHTypeToday1Shift 5
+#define SPV_CHScaleToday1                       107      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleToday1Mask 0x1C
+#define     SPV_CHScaleToday1Shift 2
+#define SPV_CHEnToday1                          107      // 1 Bit, Bit 1
+#define     SPV_CHEnToday1Mask 0x02
+#define     SPV_CHEnToday1Shift 1
+#define SPV_CHOffsetToday1                      108      // int8_t
+#define SPV_CHRegToday2                         109      // uint16_t
+#define SPV_CHTypeToday2                        111      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeToday2Mask 0xE0
+#define     SPV_CHTypeToday2Shift 5
+#define SPV_CHScaleToday2                       111      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleToday2Mask 0x1C
+#define     SPV_CHScaleToday2Shift 2
+#define SPV_CHEnToday2                          111      // 1 Bit, Bit 1
+#define     SPV_CHEnToday2Mask 0x02
+#define     SPV_CHEnToday2Shift 1
+#define SPV_CHOffsetToday2                      112      // int8_t
+#define SPV_CHRegTotal1                         113      // uint16_t
+#define SPV_CHTypeTotal1                        115      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTotal1Mask 0xE0
+#define     SPV_CHTypeTotal1Shift 5
+#define SPV_CHScaleTotal1                       115      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTotal1Mask 0x1C
+#define     SPV_CHScaleTotal1Shift 2
+#define SPV_CHEnTotal1                          115      // 1 Bit, Bit 1
+#define     SPV_CHEnTotal1Mask 0x02
+#define     SPV_CHEnTotal1Shift 1
+#define SPV_CHOffsetTotal1                      116      // int8_t
+#define SPV_CHRegTotal2                         117      // uint16_t
+#define SPV_CHTypeTotal2                        119      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTotal2Mask 0xE0
+#define     SPV_CHTypeTotal2Shift 5
+#define SPV_CHScaleTotal2                       119      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTotal2Mask 0x1C
+#define     SPV_CHScaleTotal2Shift 2
+#define SPV_CHEnTotal2                          119      // 1 Bit, Bit 1
+#define     SPV_CHEnTotal2Mask 0x02
+#define     SPV_CHEnTotal2Shift 1
+#define SPV_CHOffsetTotal2                      120      // int8_t
+#define SPV_CHRegPv1Voltage                     121      // uint16_t
+#define SPV_CHTypePv1Voltage                    123      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv1VoltageMask 0xE0
+#define     SPV_CHTypePv1VoltageShift 5
+#define SPV_CHScalePv1Voltage                   123      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv1VoltageMask 0x1C
+#define     SPV_CHScalePv1VoltageShift 2
+#define SPV_CHEnPv1Voltage                      123      // 1 Bit, Bit 1
+#define     SPV_CHEnPv1VoltageMask 0x02
+#define     SPV_CHEnPv1VoltageShift 1
+#define SPV_CHOffsetPv1Voltage                  124      // int8_t
+#define SPV_CHRegPv1Current                     125      // uint16_t
+#define SPV_CHTypePv1Current                    127      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv1CurrentMask 0xE0
+#define     SPV_CHTypePv1CurrentShift 5
+#define SPV_CHScalePv1Current                   127      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv1CurrentMask 0x1C
+#define     SPV_CHScalePv1CurrentShift 2
+#define SPV_CHEnPv1Current                      127      // 1 Bit, Bit 1
+#define     SPV_CHEnPv1CurrentMask 0x02
+#define     SPV_CHEnPv1CurrentShift 1
+#define SPV_CHOffsetPv1Current                  128      // int8_t
+#define SPV_CHRegPv1Power                       129      // uint16_t
+#define SPV_CHTypePv1Power                      131      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv1PowerMask 0xE0
+#define     SPV_CHTypePv1PowerShift 5
+#define SPV_CHScalePv1Power                     131      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv1PowerMask 0x1C
+#define     SPV_CHScalePv1PowerShift 2
+#define SPV_CHEnPv1Power                        131      // 1 Bit, Bit 1
+#define     SPV_CHEnPv1PowerMask 0x02
+#define     SPV_CHEnPv1PowerShift 1
+#define SPV_CHOffsetPv1Power                    132      // int8_t
+#define SPV_CHRegPv1Today                       133      // uint16_t
+#define SPV_CHTypePv1Today                      135      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv1TodayMask 0xE0
+#define     SPV_CHTypePv1TodayShift 5
+#define SPV_CHScalePv1Today                     135      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv1TodayMask 0x1C
+#define     SPV_CHScalePv1TodayShift 2
+#define SPV_CHEnPv1Today                        135      // 1 Bit, Bit 1
+#define     SPV_CHEnPv1TodayMask 0x02
+#define     SPV_CHEnPv1TodayShift 1
+#define SPV_CHOffsetPv1Today                    136      // int8_t
+#define SPV_CHRegPv2Voltage                     137      // uint16_t
+#define SPV_CHTypePv2Voltage                    139      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv2VoltageMask 0xE0
+#define     SPV_CHTypePv2VoltageShift 5
+#define SPV_CHScalePv2Voltage                   139      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv2VoltageMask 0x1C
+#define     SPV_CHScalePv2VoltageShift 2
+#define SPV_CHEnPv2Voltage                      139      // 1 Bit, Bit 1
+#define     SPV_CHEnPv2VoltageMask 0x02
+#define     SPV_CHEnPv2VoltageShift 1
+#define SPV_CHOffsetPv2Voltage                  140      // int8_t
+#define SPV_CHRegPv2Current                     141      // uint16_t
+#define SPV_CHTypePv2Current                    143      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv2CurrentMask 0xE0
+#define     SPV_CHTypePv2CurrentShift 5
+#define SPV_CHScalePv2Current                   143      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv2CurrentMask 0x1C
+#define     SPV_CHScalePv2CurrentShift 2
+#define SPV_CHEnPv2Current                      143      // 1 Bit, Bit 1
+#define     SPV_CHEnPv2CurrentMask 0x02
+#define     SPV_CHEnPv2CurrentShift 1
+#define SPV_CHOffsetPv2Current                  144      // int8_t
+#define SPV_CHRegPv2Power                       145      // uint16_t
+#define SPV_CHTypePv2Power                      147      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv2PowerMask 0xE0
+#define     SPV_CHTypePv2PowerShift 5
+#define SPV_CHScalePv2Power                     147      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv2PowerMask 0x1C
+#define     SPV_CHScalePv2PowerShift 2
+#define SPV_CHEnPv2Power                        147      // 1 Bit, Bit 1
+#define     SPV_CHEnPv2PowerMask 0x02
+#define     SPV_CHEnPv2PowerShift 1
+#define SPV_CHOffsetPv2Power                    148      // int8_t
+#define SPV_CHRegPv2Today                       149      // uint16_t
+#define SPV_CHTypePv2Today                      151      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv2TodayMask 0xE0
+#define     SPV_CHTypePv2TodayShift 5
+#define SPV_CHScalePv2Today                     151      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv2TodayMask 0x1C
+#define     SPV_CHScalePv2TodayShift 2
+#define SPV_CHEnPv2Today                        151      // 1 Bit, Bit 1
+#define     SPV_CHEnPv2TodayMask 0x02
+#define     SPV_CHEnPv2TodayShift 1
+#define SPV_CHOffsetPv2Today                    152      // int8_t
+#define SPV_CHRegPv3Voltage                     153      // uint16_t
+#define SPV_CHTypePv3Voltage                    155      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv3VoltageMask 0xE0
+#define     SPV_CHTypePv3VoltageShift 5
+#define SPV_CHScalePv3Voltage                   155      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv3VoltageMask 0x1C
+#define     SPV_CHScalePv3VoltageShift 2
+#define SPV_CHEnPv3Voltage                      155      // 1 Bit, Bit 1
+#define     SPV_CHEnPv3VoltageMask 0x02
+#define     SPV_CHEnPv3VoltageShift 1
+#define SPV_CHOffsetPv3Voltage                  156      // int8_t
+#define SPV_CHRegPv3Current                     157      // uint16_t
+#define SPV_CHTypePv3Current                    159      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv3CurrentMask 0xE0
+#define     SPV_CHTypePv3CurrentShift 5
+#define SPV_CHScalePv3Current                   159      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv3CurrentMask 0x1C
+#define     SPV_CHScalePv3CurrentShift 2
+#define SPV_CHEnPv3Current                      159      // 1 Bit, Bit 1
+#define     SPV_CHEnPv3CurrentMask 0x02
+#define     SPV_CHEnPv3CurrentShift 1
+#define SPV_CHOffsetPv3Current                  160      // int8_t
+#define SPV_CHRegPv3Power                       161      // uint16_t
+#define SPV_CHTypePv3Power                      163      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv3PowerMask 0xE0
+#define     SPV_CHTypePv3PowerShift 5
+#define SPV_CHScalePv3Power                     163      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv3PowerMask 0x1C
+#define     SPV_CHScalePv3PowerShift 2
+#define SPV_CHEnPv3Power                        163      // 1 Bit, Bit 1
+#define     SPV_CHEnPv3PowerMask 0x02
+#define     SPV_CHEnPv3PowerShift 1
+#define SPV_CHOffsetPv3Power                    164      // int8_t
+#define SPV_CHRegPv3Today                       165      // uint16_t
+#define SPV_CHTypePv3Today                      167      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv3TodayMask 0xE0
+#define     SPV_CHTypePv3TodayShift 5
+#define SPV_CHScalePv3Today                     167      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv3TodayMask 0x1C
+#define     SPV_CHScalePv3TodayShift 2
+#define SPV_CHEnPv3Today                        167      // 1 Bit, Bit 1
+#define     SPV_CHEnPv3TodayMask 0x02
+#define     SPV_CHEnPv3TodayShift 1
+#define SPV_CHOffsetPv3Today                    168      // int8_t
+#define SPV_CHRegPv4Voltage                     169      // uint16_t
+#define SPV_CHTypePv4Voltage                    171      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv4VoltageMask 0xE0
+#define     SPV_CHTypePv4VoltageShift 5
+#define SPV_CHScalePv4Voltage                   171      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv4VoltageMask 0x1C
+#define     SPV_CHScalePv4VoltageShift 2
+#define SPV_CHEnPv4Voltage                      171      // 1 Bit, Bit 1
+#define     SPV_CHEnPv4VoltageMask 0x02
+#define     SPV_CHEnPv4VoltageShift 1
+#define SPV_CHOffsetPv4Voltage                  172      // int8_t
+#define SPV_CHRegPv4Current                     173      // uint16_t
+#define SPV_CHTypePv4Current                    175      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv4CurrentMask 0xE0
+#define     SPV_CHTypePv4CurrentShift 5
+#define SPV_CHScalePv4Current                   175      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv4CurrentMask 0x1C
+#define     SPV_CHScalePv4CurrentShift 2
+#define SPV_CHEnPv4Current                      175      // 1 Bit, Bit 1
+#define     SPV_CHEnPv4CurrentMask 0x02
+#define     SPV_CHEnPv4CurrentShift 1
+#define SPV_CHOffsetPv4Current                  176      // int8_t
+#define SPV_CHRegPv4Power                       177      // uint16_t
+#define SPV_CHTypePv4Power                      179      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv4PowerMask 0xE0
+#define     SPV_CHTypePv4PowerShift 5
+#define SPV_CHScalePv4Power                     179      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv4PowerMask 0x1C
+#define     SPV_CHScalePv4PowerShift 2
+#define SPV_CHEnPv4Power                        179      // 1 Bit, Bit 1
+#define     SPV_CHEnPv4PowerMask 0x02
+#define     SPV_CHEnPv4PowerShift 1
+#define SPV_CHOffsetPv4Power                    180      // int8_t
+#define SPV_CHRegPv4Today                       181      // uint16_t
+#define SPV_CHTypePv4Today                      183      // 3 Bits, Bit 7-5
+#define     SPV_CHTypePv4TodayMask 0xE0
+#define     SPV_CHTypePv4TodayShift 5
+#define SPV_CHScalePv4Today                     183      // 3 Bits, Bit 4-2
+#define     SPV_CHScalePv4TodayMask 0x1C
+#define     SPV_CHScalePv4TodayShift 2
+#define SPV_CHEnPv4Today                        183      // 1 Bit, Bit 1
+#define     SPV_CHEnPv4TodayMask 0x02
+#define     SPV_CHEnPv4TodayShift 1
+#define SPV_CHOffsetPv4Today                    184      // int8_t
+#define SPV_CHRegSoc                            185      // uint16_t
+#define SPV_CHTypeSoc                           187      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeSocMask 0xE0
+#define     SPV_CHTypeSocShift 5
+#define SPV_CHScaleSoc                          187      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleSocMask 0x1C
+#define     SPV_CHScaleSocShift 2
+#define SPV_CHEnSoc                             187      // 1 Bit, Bit 1
+#define     SPV_CHEnSocMask 0x02
+#define     SPV_CHEnSocShift 1
+#define SPV_CHOffsetSoc                         188      // int8_t
+#define SPV_CHRegSoh                            189      // uint16_t
+#define SPV_CHTypeSoh                           191      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeSohMask 0xE0
+#define     SPV_CHTypeSohShift 5
+#define SPV_CHScaleSoh                          191      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleSohMask 0x1C
+#define     SPV_CHScaleSohShift 2
+#define SPV_CHEnSoh                             191      // 1 Bit, Bit 1
+#define     SPV_CHEnSohMask 0x02
+#define     SPV_CHEnSohShift 1
+#define SPV_CHOffsetSoh                         192      // int8_t
+#define SPV_CHRegBattVoltage                    193      // uint16_t
+#define SPV_CHTypeBattVoltage                   195      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeBattVoltageMask 0xE0
+#define     SPV_CHTypeBattVoltageShift 5
+#define SPV_CHScaleBattVoltage                  195      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleBattVoltageMask 0x1C
+#define     SPV_CHScaleBattVoltageShift 2
+#define SPV_CHEnBattVoltage                     195      // 1 Bit, Bit 1
+#define     SPV_CHEnBattVoltageMask 0x02
+#define     SPV_CHEnBattVoltageShift 1
+#define SPV_CHOffsetBattVoltage                 196      // int8_t
+#define SPV_CHRegBattCurrent                    197      // uint16_t
+#define SPV_CHTypeBattCurrent                   199      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeBattCurrentMask 0xE0
+#define     SPV_CHTypeBattCurrentShift 5
+#define SPV_CHScaleBattCurrent                  199      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleBattCurrentMask 0x1C
+#define     SPV_CHScaleBattCurrentShift 2
+#define SPV_CHEnBattCurrent                     199      // 1 Bit, Bit 1
+#define     SPV_CHEnBattCurrentMask 0x02
+#define     SPV_CHEnBattCurrentShift 1
+#define SPV_CHOffsetBattCurrent                 200      // int8_t
+#define SPV_CHRegBattPower                      201      // uint16_t
+#define SPV_CHTypeBattPower                     203      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeBattPowerMask 0xE0
+#define     SPV_CHTypeBattPowerShift 5
+#define SPV_CHScaleBattPower                    203      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleBattPowerMask 0x1C
+#define     SPV_CHScaleBattPowerShift 2
+#define SPV_CHEnBattPower                       203      // 1 Bit, Bit 1
+#define     SPV_CHEnBattPowerMask 0x02
+#define     SPV_CHEnBattPowerShift 1
+#define SPV_CHOffsetBattPower                   204      // int8_t
+#define SPV_CHRegBattTemperature                205      // uint16_t
+#define SPV_CHTypeBattTemperature               207      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeBattTemperatureMask 0xE0
+#define     SPV_CHTypeBattTemperatureShift 5
+#define SPV_CHScaleBattTemperature              207      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleBattTemperatureMask 0x1C
+#define     SPV_CHScaleBattTemperatureShift 2
+#define SPV_CHEnBattTemperature                 207      // 1 Bit, Bit 1
+#define     SPV_CHEnBattTemperatureMask 0x02
+#define     SPV_CHEnBattTemperatureShift 1
+#define SPV_CHOffsetBattTemperature             208      // int8_t
+#define SPV_CHRegCycleTimes                     209      // uint16_t
+#define SPV_CHTypeCycleTimes                    211      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeCycleTimesMask 0xE0
+#define     SPV_CHTypeCycleTimesShift 5
+#define SPV_CHScaleCycleTimes                   211      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleCycleTimesMask 0x1C
+#define     SPV_CHScaleCycleTimesShift 2
+#define SPV_CHEnCycleTimes                      211      // 1 Bit, Bit 1
+#define     SPV_CHEnCycleTimesMask 0x02
+#define     SPV_CHEnCycleTimesShift 1
+#define SPV_CHOffsetCycleTimes                  212      // int8_t
+#define SPV_CHRegRemainingCapacity              213      // uint16_t
+#define SPV_CHTypeRemainingCapacity             215      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeRemainingCapacityMask 0xE0
+#define     SPV_CHTypeRemainingCapacityShift 5
+#define SPV_CHScaleRemainingCapacity            215      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleRemainingCapacityMask 0x1C
+#define     SPV_CHScaleRemainingCapacityShift 2
+#define SPV_CHEnRemainingCapacity               215      // 1 Bit, Bit 1
+#define     SPV_CHEnRemainingCapacityMask 0x02
+#define     SPV_CHEnRemainingCapacityShift 1
+#define SPV_CHOffsetRemainingCapacity           216      // int8_t
+#define SPV_CHRegTodayCharge                    217      // uint16_t
+#define SPV_CHTypeTodayCharge                   219      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTodayChargeMask 0xE0
+#define     SPV_CHTypeTodayChargeShift 5
+#define SPV_CHScaleTodayCharge                  219      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTodayChargeMask 0x1C
+#define     SPV_CHScaleTodayChargeShift 2
+#define SPV_CHEnTodayCharge                     219      // 1 Bit, Bit 1
+#define     SPV_CHEnTodayChargeMask 0x02
+#define     SPV_CHEnTodayChargeShift 1
+#define SPV_CHOffsetTodayCharge                 220      // int8_t
+#define SPV_CHRegTodayDischarge                 221      // uint16_t
+#define SPV_CHTypeTodayDischarge                223      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTodayDischargeMask 0xE0
+#define     SPV_CHTypeTodayDischargeShift 5
+#define SPV_CHScaleTodayDischarge               223      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTodayDischargeMask 0x1C
+#define     SPV_CHScaleTodayDischargeShift 2
+#define SPV_CHEnTodayDischarge                  223      // 1 Bit, Bit 1
+#define     SPV_CHEnTodayDischargeMask 0x02
+#define     SPV_CHEnTodayDischargeShift 1
+#define SPV_CHOffsetTodayDischarge              224      // int8_t
+#define SPV_CHRegTotalCharge                    225      // uint16_t
+#define SPV_CHTypeTotalCharge                   227      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTotalChargeMask 0xE0
+#define     SPV_CHTypeTotalChargeShift 5
+#define SPV_CHScaleTotalCharge                  227      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTotalChargeMask 0x1C
+#define     SPV_CHScaleTotalChargeShift 2
+#define SPV_CHEnTotalCharge                     227      // 1 Bit, Bit 1
+#define     SPV_CHEnTotalChargeMask 0x02
+#define     SPV_CHEnTotalChargeShift 1
+#define SPV_CHOffsetTotalCharge                 228      // int8_t
+#define SPV_CHRegTotalDischarge                 229      // uint16_t
+#define SPV_CHTypeTotalDischarge                231      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTotalDischargeMask 0xE0
+#define     SPV_CHTypeTotalDischargeShift 5
+#define SPV_CHScaleTotalDischarge               231      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTotalDischargeMask 0x1C
+#define     SPV_CHScaleTotalDischargeShift 2
+#define SPV_CHEnTotalDischarge                  231      // 1 Bit, Bit 1
+#define     SPV_CHEnTotalDischargeMask 0x02
+#define     SPV_CHEnTotalDischargeShift 1
+#define SPV_CHOffsetTotalDischarge              232      // int8_t
+#define SPV_CHRegCellVoltageMax                 233      // uint16_t
+#define SPV_CHTypeCellVoltageMax                235      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeCellVoltageMaxMask 0xE0
+#define     SPV_CHTypeCellVoltageMaxShift 5
+#define SPV_CHScaleCellVoltageMax               235      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleCellVoltageMaxMask 0x1C
+#define     SPV_CHScaleCellVoltageMaxShift 2
+#define SPV_CHEnCellVoltageMax                  235      // 1 Bit, Bit 1
+#define     SPV_CHEnCellVoltageMaxMask 0x02
+#define     SPV_CHEnCellVoltageMaxShift 1
+#define SPV_CHOffsetCellVoltageMax              236      // int8_t
+#define SPV_CHRegCellVoltageMin                 237      // uint16_t
+#define SPV_CHTypeCellVoltageMin                239      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeCellVoltageMinMask 0xE0
+#define     SPV_CHTypeCellVoltageMinShift 5
+#define SPV_CHScaleCellVoltageMin               239      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleCellVoltageMinMask 0x1C
+#define     SPV_CHScaleCellVoltageMinShift 2
+#define SPV_CHEnCellVoltageMin                  239      // 1 Bit, Bit 1
+#define     SPV_CHEnCellVoltageMinMask 0x02
+#define     SPV_CHEnCellVoltageMinShift 1
+#define SPV_CHOffsetCellVoltageMin              240      // int8_t
+#define SPV_CHRegCellTempMax                    241      // uint16_t
+#define SPV_CHTypeCellTempMax                   243      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeCellTempMaxMask 0xE0
+#define     SPV_CHTypeCellTempMaxShift 5
+#define SPV_CHScaleCellTempMax                  243      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleCellTempMaxMask 0x1C
+#define     SPV_CHScaleCellTempMaxShift 2
+#define SPV_CHEnCellTempMax                     243      // 1 Bit, Bit 1
+#define     SPV_CHEnCellTempMaxMask 0x02
+#define     SPV_CHEnCellTempMaxShift 1
+#define SPV_CHOffsetCellTempMax                 244      // int8_t
+#define SPV_CHRegCellTempMin                    245      // uint16_t
+#define SPV_CHTypeCellTempMin                   247      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeCellTempMinMask 0xE0
+#define     SPV_CHTypeCellTempMinShift 5
+#define SPV_CHScaleCellTempMin                  247      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleCellTempMinMask 0x1C
+#define     SPV_CHScaleCellTempMinShift 2
+#define SPV_CHEnCellTempMin                     247      // 1 Bit, Bit 1
+#define     SPV_CHEnCellTempMinMask 0x02
+#define     SPV_CHEnCellTempMinShift 1
+#define SPV_CHOffsetCellTempMin                 248      // int8_t
+#define SPV_CHRegHousePower                     249      // uint16_t
+#define SPV_CHTypeHousePower                    251      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeHousePowerMask 0xE0
+#define     SPV_CHTypeHousePowerShift 5
+#define SPV_CHScaleHousePower                   251      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleHousePowerMask 0x1C
+#define     SPV_CHScaleHousePowerShift 2
+#define SPV_CHEnHousePower                      251      // 1 Bit, Bit 1
+#define     SPV_CHEnHousePowerMask 0x02
+#define     SPV_CHEnHousePowerShift 1
+#define SPV_CHOffsetHousePower                  252      // int8_t
+#define SPV_CHRegImportPower                    253      // uint16_t
+#define SPV_CHTypeImportPower                   255      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeImportPowerMask 0xE0
+#define     SPV_CHTypeImportPowerShift 5
+#define SPV_CHScaleImportPower                  255      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleImportPowerMask 0x1C
+#define     SPV_CHScaleImportPowerShift 2
+#define SPV_CHEnImportPower                     255      // 1 Bit, Bit 1
+#define     SPV_CHEnImportPowerMask 0x02
+#define     SPV_CHEnImportPowerShift 1
+#define SPV_CHOffsetImportPower                 256      // int8_t
+#define SPV_CHRegExportPower                    257      // uint16_t
+#define SPV_CHTypeExportPower                   259      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeExportPowerMask 0xE0
+#define     SPV_CHTypeExportPowerShift 5
+#define SPV_CHScaleExportPower                  259      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleExportPowerMask 0x1C
+#define     SPV_CHScaleExportPowerShift 2
+#define SPV_CHEnExportPower                     259      // 1 Bit, Bit 1
+#define     SPV_CHEnExportPowerMask 0x02
+#define     SPV_CHEnExportPowerShift 1
+#define SPV_CHOffsetExportPower                 260      // int8_t
+#define SPV_CHRegImportTotal                    261      // uint16_t
+#define SPV_CHTypeImportTotal                   263      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeImportTotalMask 0xE0
+#define     SPV_CHTypeImportTotalShift 5
+#define SPV_CHScaleImportTotal                  263      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleImportTotalMask 0x1C
+#define     SPV_CHScaleImportTotalShift 2
+#define SPV_CHEnImportTotal                     263      // 1 Bit, Bit 1
+#define     SPV_CHEnImportTotalMask 0x02
+#define     SPV_CHEnImportTotalShift 1
+#define SPV_CHOffsetImportTotal                 264      // int8_t
+#define SPV_CHRegExportTotal                    265      // uint16_t
+#define SPV_CHTypeExportTotal                   267      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeExportTotalMask 0xE0
+#define     SPV_CHTypeExportTotalShift 5
+#define SPV_CHScaleExportTotal                  267      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleExportTotalMask 0x1C
+#define     SPV_CHScaleExportTotalShift 2
+#define SPV_CHEnExportTotal                     267      // 1 Bit, Bit 1
+#define     SPV_CHEnExportTotalMask 0x02
+#define     SPV_CHEnExportTotalShift 1
+#define SPV_CHOffsetExportTotal                 268      // int8_t
+#define SPV_CHRegHouseToday                     269      // uint16_t
+#define SPV_CHTypeHouseToday                    271      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeHouseTodayMask 0xE0
+#define     SPV_CHTypeHouseTodayShift 5
+#define SPV_CHScaleHouseToday                   271      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleHouseTodayMask 0x1C
+#define     SPV_CHScaleHouseTodayShift 2
+#define SPV_CHEnHouseToday                      271      // 1 Bit, Bit 1
+#define     SPV_CHEnHouseTodayMask 0x02
+#define     SPV_CHEnHouseTodayShift 1
+#define SPV_CHOffsetHouseToday                  272      // int8_t
+#define SPV_CHRegImportToday                    273      // uint16_t
+#define SPV_CHTypeImportToday                   275      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeImportTodayMask 0xE0
+#define     SPV_CHTypeImportTodayShift 5
+#define SPV_CHScaleImportToday                  275      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleImportTodayMask 0x1C
+#define     SPV_CHScaleImportTodayShift 2
+#define SPV_CHEnImportToday                     275      // 1 Bit, Bit 1
+#define     SPV_CHEnImportTodayMask 0x02
+#define     SPV_CHEnImportTodayShift 1
+#define SPV_CHOffsetImportToday                 276      // int8_t
+#define SPV_CHRegExportToday                    277      // uint16_t
+#define SPV_CHTypeExportToday                   279      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeExportTodayMask 0xE0
+#define     SPV_CHTypeExportTodayShift 5
+#define SPV_CHScaleExportToday                  279      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleExportTodayMask 0x1C
+#define     SPV_CHScaleExportTodayShift 2
+#define SPV_CHEnExportToday                     279      // 1 Bit, Bit 1
+#define     SPV_CHEnExportTodayMask 0x02
+#define     SPV_CHEnExportTodayShift 1
+#define SPV_CHOffsetExportToday                 280      // int8_t
+#define SPV_CHRegTemperature                    281      // uint16_t
+#define SPV_CHTypeTemperature                   283      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeTemperatureMask 0xE0
+#define     SPV_CHTypeTemperatureShift 5
+#define SPV_CHScaleTemperature                  283      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleTemperatureMask 0x1C
+#define     SPV_CHScaleTemperatureShift 2
+#define SPV_CHEnTemperature                     283      // 1 Bit, Bit 1
+#define     SPV_CHEnTemperatureMask 0x02
+#define     SPV_CHEnTemperatureShift 1
+#define SPV_CHOffsetTemperature                 284      // int8_t
+#define SPV_CHRegHeatsinkTemp                   285      // uint16_t
+#define SPV_CHTypeHeatsinkTemp                  287      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeHeatsinkTempMask 0xE0
+#define     SPV_CHTypeHeatsinkTempShift 5
+#define SPV_CHScaleHeatsinkTemp                 287      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleHeatsinkTempMask 0x1C
+#define     SPV_CHScaleHeatsinkTempShift 2
+#define SPV_CHEnHeatsinkTemp                    287      // 1 Bit, Bit 1
+#define     SPV_CHEnHeatsinkTempMask 0x02
+#define     SPV_CHEnHeatsinkTempShift 1
+#define SPV_CHOffsetHeatsinkTemp                288      // int8_t
+#define SPV_CHRegErrorCode                      289      // uint16_t
+#define SPV_CHTypeErrorCode                     291      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeErrorCodeMask 0xE0
+#define     SPV_CHTypeErrorCodeShift 5
+#define SPV_CHScaleErrorCode                    291      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleErrorCodeMask 0x1C
+#define     SPV_CHScaleErrorCodeShift 2
+#define SPV_CHEnErrorCode                       291      // 1 Bit, Bit 1
+#define     SPV_CHEnErrorCodeMask 0x02
+#define     SPV_CHEnErrorCodeShift 1
+#define SPV_CHOffsetErrorCode                   292      // int8_t
+#define SPV_CHRegOperatingHours                 293      // uint16_t
+#define SPV_CHTypeOperatingHours                295      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeOperatingHoursMask 0xE0
+#define     SPV_CHTypeOperatingHoursShift 5
+#define SPV_CHScaleOperatingHours               295      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleOperatingHoursMask 0x1C
+#define     SPV_CHScaleOperatingHoursShift 2
+#define SPV_CHEnOperatingHours                  295      // 1 Bit, Bit 1
+#define     SPV_CHEnOperatingHoursMask 0x02
+#define     SPV_CHEnOperatingHoursShift 1
+#define SPV_CHOffsetOperatingHours              296      // int8_t
+#define SPV_CHRegSpare1                         297      // uint16_t
+#define SPV_CHTypeSpare1                        299      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeSpare1Mask 0xE0
+#define     SPV_CHTypeSpare1Shift 5
+#define SPV_CHScaleSpare1                       299      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleSpare1Mask 0x1C
+#define     SPV_CHScaleSpare1Shift 2
+#define SPV_CHEnSpare1                          299      // 1 Bit, Bit 1
+#define     SPV_CHEnSpare1Mask 0x02
+#define     SPV_CHEnSpare1Shift 1
+#define SPV_CHOffsetSpare1                      300      // int8_t
+#define SPV_CHRegSpare2                         301      // uint16_t
+#define SPV_CHTypeSpare2                        303      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeSpare2Mask 0xE0
+#define     SPV_CHTypeSpare2Shift 5
+#define SPV_CHScaleSpare2                       303      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleSpare2Mask 0x1C
+#define     SPV_CHScaleSpare2Shift 2
+#define SPV_CHEnSpare2                          303      // 1 Bit, Bit 1
+#define     SPV_CHEnSpare2Mask 0x02
+#define     SPV_CHEnSpare2Shift 1
+#define SPV_CHOffsetSpare2                      304      // int8_t
+#define SPV_CHRegSpare3                         305      // uint16_t
+#define SPV_CHTypeSpare3                        307      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeSpare3Mask 0xE0
+#define     SPV_CHTypeSpare3Shift 5
+#define SPV_CHScaleSpare3                       307      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleSpare3Mask 0x1C
+#define     SPV_CHScaleSpare3Shift 2
+#define SPV_CHEnSpare3                          307      // 1 Bit, Bit 1
+#define     SPV_CHEnSpare3Mask 0x02
+#define     SPV_CHEnSpare3Shift 1
+#define SPV_CHOffsetSpare3                      308      // int8_t
+#define SPV_CHRegSpare4                         309      // uint16_t
+#define SPV_CHTypeSpare4                        311      // 3 Bits, Bit 7-5
+#define     SPV_CHTypeSpare4Mask 0xE0
+#define     SPV_CHTypeSpare4Shift 5
+#define SPV_CHScaleSpare4                       311      // 3 Bits, Bit 4-2
+#define     SPV_CHScaleSpare4Mask 0x1C
+#define     SPV_CHScaleSpare4Shift 2
+#define SPV_CHEnSpare4                          311      // 1 Bit, Bit 1
+#define     SPV_CHEnSpare4Mask 0x02
+#define     SPV_CHEnSpare4Shift 1
+#define SPV_CHOffsetSpare4                      312      // int8_t
+#define SPV_CHSendDelayBase                     313      // 2 Bits, Bit 7-6
 #define     SPV_CHSendDelayBaseMask 0xC0
 #define     SPV_CHSendDelayBaseShift 6
-#define SPV_CHSendDelayTime                     86      // 14 Bits, Bit 13-0
+#define SPV_CHSendDelayTime                     313      // 14 Bits, Bit 13-0
 #define     SPV_CHSendDelayTimeMask 0x3FFF
 #define     SPV_CHSendDelayTimeShift 0
-#define SPV_CHSendChangePercent                 88      // uint8_t
+#define SPV_CHSendChangePercent                 315      // uint8_t
+#define SPV_CHProfileMsg                        316      // char*, 48 Byte
+#define     SPV_CHProfileMsgLength 48
+#define SPV_CHActive                            364      // 1 Bit, Bit 7
+#define     SPV_CHActiveMask 0x80
+#define     SPV_CHActiveShift 7
+#define SPV_CHSuspended                         364      // 1 Bit, Bit 6
+#define     SPV_CHSuspendedMask 0x40
+#define     SPV_CHSuspendedShift 6
 
 // IP-Adresse
 #define ParamSPV_CHLoggerIp                          (knx.paramData(SPV_ParamCalcIndex(SPV_CHLoggerIp)))
@@ -912,7 +3111,7 @@
 #define ParamSPV_CHLoggerPort                        (knx.paramWord(SPV_ParamCalcIndex(SPV_CHLoggerPort)))
 // Transportprotokoll
 #define ParamSPV_CHTransport                         (knx.paramByte(SPV_ParamCalcIndex(SPV_CHTransport)))
-// Geraeteprofil
+// Geräteprofil
 #define ParamSPV_CHProfile                           (knx.paramByte(SPV_ParamCalcIndex(SPV_CHProfile)))
 // Logger-Seriennummer
 #define ParamSPV_CHSerialMode                        (knx.paramByte(SPV_ParamCalcIndex(SPV_CHSerialMode)))
@@ -923,427 +3122,1536 @@
 // Seriennummer
 #define ParamSPV_CHLoggerSerialText                  (knx.paramData(SPV_ParamCalcIndex(SPV_CHLoggerSerialText)))
 #define ParamSPV_CHLoggerSerialTextStr               (knx.paramString(SPV_ParamCalcIndex(SPV_CHLoggerSerialText), SPV_CHLoggerSerialTextLength))
+// Erweiterter Modus: Register und Umrechnung anzeigen
+#define ParamSPV_CHView                              ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHView)) & SPV_CHViewMask))
+// Register
+#define ParamSPV_CHRegPower                          (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPower)))
+// Datentyp
+#define ParamSPV_CHTypePower                         ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePower)) & SPV_CHTypePowerMask) >> SPV_CHTypePowerShift)
+// Skalierung
+#define ParamSPV_CHScalePower                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePower)) & SPV_CHScalePowerMask) >> SPV_CHScalePowerShift)
 // Wirkleistung
-#define ParamSPV_CHEnDPower                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPower)) & SPV_CHEnDPowerMask))
-// Tagesertrag
-#define ParamSPV_CHEnDToday                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDToday)) & SPV_CHEnDTodayMask))
-// Gesamtertrag
-#define ParamSPV_CHEnDTotal                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDTotal)) & SPV_CHEnDTotalMask))
+#define ParamSPV_CHEnPower                           ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPower)) & SPV_CHEnPowerMask))
+// Offset
+#define ParamSPV_CHOffsetPower                       ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPower)))
+// Register
+#define ParamSPV_CHRegApparentPower                  (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegApparentPower)))
+// Datentyp
+#define ParamSPV_CHTypeApparentPower                 ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeApparentPower)) & SPV_CHTypeApparentPowerMask) >> SPV_CHTypeApparentPowerShift)
+// Skalierung
+#define ParamSPV_CHScaleApparentPower                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleApparentPower)) & SPV_CHScaleApparentPowerMask) >> SPV_CHScaleApparentPowerShift)
+// Scheinleistung
+#define ParamSPV_CHEnApparentPower                   ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnApparentPower)) & SPV_CHEnApparentPowerMask))
+// Offset
+#define ParamSPV_CHOffsetApparentPower               ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetApparentPower)))
+// Register
+#define ParamSPV_CHRegGridVoltage                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegGridVoltage)))
+// Datentyp
+#define ParamSPV_CHTypeGridVoltage                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeGridVoltage)) & SPV_CHTypeGridVoltageMask) >> SPV_CHTypeGridVoltageShift)
+// Skalierung
+#define ParamSPV_CHScaleGridVoltage                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleGridVoltage)) & SPV_CHScaleGridVoltageMask) >> SPV_CHScaleGridVoltageShift)
 // Netzspannung
-#define ParamSPV_CHEnDGridVoltage                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDGridVoltage)) & SPV_CHEnDGridVoltageMask))
+#define ParamSPV_CHEnGridVoltage                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnGridVoltage)) & SPV_CHEnGridVoltageMask))
+// Offset
+#define ParamSPV_CHOffsetGridVoltage                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetGridVoltage)))
+// Register
+#define ParamSPV_CHRegGridVoltageL2                  (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegGridVoltageL2)))
+// Datentyp
+#define ParamSPV_CHTypeGridVoltageL2                 ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeGridVoltageL2)) & SPV_CHTypeGridVoltageL2Mask) >> SPV_CHTypeGridVoltageL2Shift)
+// Skalierung
+#define ParamSPV_CHScaleGridVoltageL2                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleGridVoltageL2)) & SPV_CHScaleGridVoltageL2Mask) >> SPV_CHScaleGridVoltageL2Shift)
+// Netzspannung L2
+#define ParamSPV_CHEnGridVoltageL2                   ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnGridVoltageL2)) & SPV_CHEnGridVoltageL2Mask))
+// Offset
+#define ParamSPV_CHOffsetGridVoltageL2               ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetGridVoltageL2)))
+// Register
+#define ParamSPV_CHRegGridVoltageL3                  (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegGridVoltageL3)))
+// Datentyp
+#define ParamSPV_CHTypeGridVoltageL3                 ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeGridVoltageL3)) & SPV_CHTypeGridVoltageL3Mask) >> SPV_CHTypeGridVoltageL3Shift)
+// Skalierung
+#define ParamSPV_CHScaleGridVoltageL3                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleGridVoltageL3)) & SPV_CHScaleGridVoltageL3Mask) >> SPV_CHScaleGridVoltageL3Shift)
+// Netzspannung L3
+#define ParamSPV_CHEnGridVoltageL3                   ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnGridVoltageL3)) & SPV_CHEnGridVoltageL3Mask))
+// Offset
+#define ParamSPV_CHOffsetGridVoltageL3               ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetGridVoltageL3)))
+// Register
+#define ParamSPV_CHRegGridCurrent                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegGridCurrent)))
+// Datentyp
+#define ParamSPV_CHTypeGridCurrent                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeGridCurrent)) & SPV_CHTypeGridCurrentMask) >> SPV_CHTypeGridCurrentShift)
+// Skalierung
+#define ParamSPV_CHScaleGridCurrent                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleGridCurrent)) & SPV_CHScaleGridCurrentMask) >> SPV_CHScaleGridCurrentShift)
 // Netzstrom
-#define ParamSPV_CHEnDGridCurrent                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDGridCurrent)) & SPV_CHEnDGridCurrentMask))
+#define ParamSPV_CHEnGridCurrent                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnGridCurrent)) & SPV_CHEnGridCurrentMask))
+// Offset
+#define ParamSPV_CHOffsetGridCurrent                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetGridCurrent)))
+// Register
+#define ParamSPV_CHRegGridFrequency                  (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegGridFrequency)))
+// Datentyp
+#define ParamSPV_CHTypeGridFrequency                 ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeGridFrequency)) & SPV_CHTypeGridFrequencyMask) >> SPV_CHTypeGridFrequencyShift)
+// Skalierung
+#define ParamSPV_CHScaleGridFrequency                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleGridFrequency)) & SPV_CHScaleGridFrequencyMask) >> SPV_CHScaleGridFrequencyShift)
 // Netzfrequenz
-#define ParamSPV_CHEnDGridFrequency                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDGridFrequency)) & SPV_CHEnDGridFrequencyMask))
-// Temperatur
-#define ParamSPV_CHEnDTemperature                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDTemperature)) & SPV_CHEnDTemperatureMask))
-// PV1 Spannung
-#define ParamSPV_CHEnDPv1Voltage                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPv1Voltage)) & SPV_CHEnDPv1VoltageMask))
-// PV1 Strom
-#define ParamSPV_CHEnDPv1Current                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPv1Current)) & SPV_CHEnDPv1CurrentMask))
-// PV1 Leistung
-#define ParamSPV_CHEnDPv1Power                       ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPv1Power)) & SPV_CHEnDPv1PowerMask))
-// PV2 Spannung
-#define ParamSPV_CHEnDPv2Voltage                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPv2Voltage)) & SPV_CHEnDPv2VoltageMask))
-// PV2 Strom
-#define ParamSPV_CHEnDPv2Current                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPv2Current)) & SPV_CHEnDPv2CurrentMask))
-// PV2 Leistung
-#define ParamSPV_CHEnDPv2Power                       ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDPv2Power)) & SPV_CHEnDPv2PowerMask))
+#define ParamSPV_CHEnGridFrequency                   ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnGridFrequency)) & SPV_CHEnGridFrequencyMask))
+// Offset
+#define ParamSPV_CHOffsetGridFrequency               ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetGridFrequency)))
+// Register
+#define ParamSPV_CHRegOperatingState                 (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegOperatingState)))
+// Datentyp
+#define ParamSPV_CHTypeOperatingState                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeOperatingState)) & SPV_CHTypeOperatingStateMask) >> SPV_CHTypeOperatingStateShift)
+// Skalierung
+#define ParamSPV_CHScaleOperatingState               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleOperatingState)) & SPV_CHScaleOperatingStateMask) >> SPV_CHScaleOperatingStateShift)
+// Betriebszustand
+#define ParamSPV_CHEnOperatingState                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnOperatingState)) & SPV_CHEnOperatingStateMask))
+// Offset
+#define ParamSPV_CHOffsetOperatingState              ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetOperatingState)))
+// Register
+#define ParamSPV_CHRegToday                          (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegToday)))
+// Datentyp
+#define ParamSPV_CHTypeToday                         ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeToday)) & SPV_CHTypeTodayMask) >> SPV_CHTypeTodayShift)
+// Skalierung
+#define ParamSPV_CHScaleToday                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleToday)) & SPV_CHScaleTodayMask) >> SPV_CHScaleTodayShift)
+// Tagesertrag
+#define ParamSPV_CHEnToday                           ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnToday)) & SPV_CHEnTodayMask))
+// Offset
+#define ParamSPV_CHOffsetToday                       ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetToday)))
+// Register
+#define ParamSPV_CHRegTotal                          (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTotal)))
+// Datentyp
+#define ParamSPV_CHTypeTotal                         ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTotal)) & SPV_CHTypeTotalMask) >> SPV_CHTypeTotalShift)
+// Skalierung
+#define ParamSPV_CHScaleTotal                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTotal)) & SPV_CHScaleTotalMask) >> SPV_CHScaleTotalShift)
+// Gesamtertrag
+#define ParamSPV_CHEnTotal                           ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTotal)) & SPV_CHEnTotalMask))
+// Offset
+#define ParamSPV_CHOffsetTotal                       ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTotal)))
+// Register
+#define ParamSPV_CHRegMonth                          (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegMonth)))
+// Datentyp
+#define ParamSPV_CHTypeMonth                         ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeMonth)) & SPV_CHTypeMonthMask) >> SPV_CHTypeMonthShift)
+// Skalierung
+#define ParamSPV_CHScaleMonth                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleMonth)) & SPV_CHScaleMonthMask) >> SPV_CHScaleMonthShift)
+// Monatsertrag
+#define ParamSPV_CHEnMonth                           ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnMonth)) & SPV_CHEnMonthMask))
+// Offset
+#define ParamSPV_CHOffsetMonth                       ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetMonth)))
+// Register
+#define ParamSPV_CHRegYear                           (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegYear)))
+// Datentyp
+#define ParamSPV_CHTypeYear                          ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeYear)) & SPV_CHTypeYearMask) >> SPV_CHTypeYearShift)
+// Skalierung
+#define ParamSPV_CHScaleYear                         ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleYear)) & SPV_CHScaleYearMask) >> SPV_CHScaleYearShift)
+// Jahresertrag
+#define ParamSPV_CHEnYear                            ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnYear)) & SPV_CHEnYearMask))
+// Offset
+#define ParamSPV_CHOffsetYear                        ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetYear)))
+// Register
+#define ParamSPV_CHRegToday1                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegToday1)))
+// Datentyp
+#define ParamSPV_CHTypeToday1                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeToday1)) & SPV_CHTypeToday1Mask) >> SPV_CHTypeToday1Shift)
+// Skalierung
+#define ParamSPV_CHScaleToday1                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleToday1)) & SPV_CHScaleToday1Mask) >> SPV_CHScaleToday1Shift)
 // Tagesertrag String 1
-#define ParamSPV_CHEnDToday1                         ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDToday1)) & SPV_CHEnDToday1Mask))
+#define ParamSPV_CHEnToday1                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnToday1)) & SPV_CHEnToday1Mask))
+// Offset
+#define ParamSPV_CHOffsetToday1                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetToday1)))
+// Register
+#define ParamSPV_CHRegToday2                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegToday2)))
+// Datentyp
+#define ParamSPV_CHTypeToday2                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeToday2)) & SPV_CHTypeToday2Mask) >> SPV_CHTypeToday2Shift)
+// Skalierung
+#define ParamSPV_CHScaleToday2                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleToday2)) & SPV_CHScaleToday2Mask) >> SPV_CHScaleToday2Shift)
 // Tagesertrag String 2
-#define ParamSPV_CHEnDToday2                         ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDToday2)) & SPV_CHEnDToday2Mask))
+#define ParamSPV_CHEnToday2                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnToday2)) & SPV_CHEnToday2Mask))
+// Offset
+#define ParamSPV_CHOffsetToday2                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetToday2)))
+// Register
+#define ParamSPV_CHRegTotal1                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTotal1)))
+// Datentyp
+#define ParamSPV_CHTypeTotal1                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTotal1)) & SPV_CHTypeTotal1Mask) >> SPV_CHTypeTotal1Shift)
+// Skalierung
+#define ParamSPV_CHScaleTotal1                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTotal1)) & SPV_CHScaleTotal1Mask) >> SPV_CHScaleTotal1Shift)
 // Gesamtertrag String 1
-#define ParamSPV_CHEnDTotal1                         ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDTotal1)) & SPV_CHEnDTotal1Mask))
+#define ParamSPV_CHEnTotal1                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTotal1)) & SPV_CHEnTotal1Mask))
+// Offset
+#define ParamSPV_CHOffsetTotal1                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTotal1)))
+// Register
+#define ParamSPV_CHRegTotal2                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTotal2)))
+// Datentyp
+#define ParamSPV_CHTypeTotal2                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTotal2)) & SPV_CHTypeTotal2Mask) >> SPV_CHTypeTotal2Shift)
+// Skalierung
+#define ParamSPV_CHScaleTotal2                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTotal2)) & SPV_CHScaleTotal2Mask) >> SPV_CHScaleTotal2Shift)
 // Gesamtertrag String 2
-#define ParamSPV_CHEnDTotal2                         ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnDTotal2)) & SPV_CHEnDTotal2Mask))
-// Ladezustand
-#define ParamSPV_CHEnPSoc                            ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPSoc)) & SPV_CHEnPSocMask))
+#define ParamSPV_CHEnTotal2                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTotal2)) & SPV_CHEnTotal2Mask))
+// Offset
+#define ParamSPV_CHOffsetTotal2                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTotal2)))
+// Register
+#define ParamSPV_CHRegPv1Voltage                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv1Voltage)))
+// Datentyp
+#define ParamSPV_CHTypePv1Voltage                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv1Voltage)) & SPV_CHTypePv1VoltageMask) >> SPV_CHTypePv1VoltageShift)
+// Skalierung
+#define ParamSPV_CHScalePv1Voltage                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv1Voltage)) & SPV_CHScalePv1VoltageMask) >> SPV_CHScalePv1VoltageShift)
+// PV1 Spannung
+#define ParamSPV_CHEnPv1Voltage                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv1Voltage)) & SPV_CHEnPv1VoltageMask))
+// Offset
+#define ParamSPV_CHOffsetPv1Voltage                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv1Voltage)))
+// Register
+#define ParamSPV_CHRegPv1Current                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv1Current)))
+// Datentyp
+#define ParamSPV_CHTypePv1Current                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv1Current)) & SPV_CHTypePv1CurrentMask) >> SPV_CHTypePv1CurrentShift)
+// Skalierung
+#define ParamSPV_CHScalePv1Current                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv1Current)) & SPV_CHScalePv1CurrentMask) >> SPV_CHScalePv1CurrentShift)
+// PV1 Strom
+#define ParamSPV_CHEnPv1Current                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv1Current)) & SPV_CHEnPv1CurrentMask))
+// Offset
+#define ParamSPV_CHOffsetPv1Current                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv1Current)))
+// Register
+#define ParamSPV_CHRegPv1Power                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv1Power)))
+// Datentyp
+#define ParamSPV_CHTypePv1Power                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv1Power)) & SPV_CHTypePv1PowerMask) >> SPV_CHTypePv1PowerShift)
+// Skalierung
+#define ParamSPV_CHScalePv1Power                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv1Power)) & SPV_CHScalePv1PowerMask) >> SPV_CHScalePv1PowerShift)
+// PV1 Leistung
+#define ParamSPV_CHEnPv1Power                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv1Power)) & SPV_CHEnPv1PowerMask))
+// Offset
+#define ParamSPV_CHOffsetPv1Power                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv1Power)))
+// Register
+#define ParamSPV_CHRegPv1Today                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv1Today)))
+// Datentyp
+#define ParamSPV_CHTypePv1Today                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv1Today)) & SPV_CHTypePv1TodayMask) >> SPV_CHTypePv1TodayShift)
+// Skalierung
+#define ParamSPV_CHScalePv1Today                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv1Today)) & SPV_CHScalePv1TodayMask) >> SPV_CHScalePv1TodayShift)
+// PV1 Tagesertrag
+#define ParamSPV_CHEnPv1Today                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv1Today)) & SPV_CHEnPv1TodayMask))
+// Offset
+#define ParamSPV_CHOffsetPv1Today                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv1Today)))
+// Register
+#define ParamSPV_CHRegPv2Voltage                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv2Voltage)))
+// Datentyp
+#define ParamSPV_CHTypePv2Voltage                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv2Voltage)) & SPV_CHTypePv2VoltageMask) >> SPV_CHTypePv2VoltageShift)
+// Skalierung
+#define ParamSPV_CHScalePv2Voltage                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv2Voltage)) & SPV_CHScalePv2VoltageMask) >> SPV_CHScalePv2VoltageShift)
+// PV2 Spannung
+#define ParamSPV_CHEnPv2Voltage                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv2Voltage)) & SPV_CHEnPv2VoltageMask))
+// Offset
+#define ParamSPV_CHOffsetPv2Voltage                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv2Voltage)))
+// Register
+#define ParamSPV_CHRegPv2Current                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv2Current)))
+// Datentyp
+#define ParamSPV_CHTypePv2Current                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv2Current)) & SPV_CHTypePv2CurrentMask) >> SPV_CHTypePv2CurrentShift)
+// Skalierung
+#define ParamSPV_CHScalePv2Current                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv2Current)) & SPV_CHScalePv2CurrentMask) >> SPV_CHScalePv2CurrentShift)
+// PV2 Strom
+#define ParamSPV_CHEnPv2Current                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv2Current)) & SPV_CHEnPv2CurrentMask))
+// Offset
+#define ParamSPV_CHOffsetPv2Current                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv2Current)))
+// Register
+#define ParamSPV_CHRegPv2Power                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv2Power)))
+// Datentyp
+#define ParamSPV_CHTypePv2Power                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv2Power)) & SPV_CHTypePv2PowerMask) >> SPV_CHTypePv2PowerShift)
+// Skalierung
+#define ParamSPV_CHScalePv2Power                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv2Power)) & SPV_CHScalePv2PowerMask) >> SPV_CHScalePv2PowerShift)
+// PV2 Leistung
+#define ParamSPV_CHEnPv2Power                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv2Power)) & SPV_CHEnPv2PowerMask))
+// Offset
+#define ParamSPV_CHOffsetPv2Power                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv2Power)))
+// Register
+#define ParamSPV_CHRegPv2Today                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv2Today)))
+// Datentyp
+#define ParamSPV_CHTypePv2Today                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv2Today)) & SPV_CHTypePv2TodayMask) >> SPV_CHTypePv2TodayShift)
+// Skalierung
+#define ParamSPV_CHScalePv2Today                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv2Today)) & SPV_CHScalePv2TodayMask) >> SPV_CHScalePv2TodayShift)
+// PV2 Tagesertrag
+#define ParamSPV_CHEnPv2Today                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv2Today)) & SPV_CHEnPv2TodayMask))
+// Offset
+#define ParamSPV_CHOffsetPv2Today                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv2Today)))
+// Register
+#define ParamSPV_CHRegPv3Voltage                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv3Voltage)))
+// Datentyp
+#define ParamSPV_CHTypePv3Voltage                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv3Voltage)) & SPV_CHTypePv3VoltageMask) >> SPV_CHTypePv3VoltageShift)
+// Skalierung
+#define ParamSPV_CHScalePv3Voltage                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv3Voltage)) & SPV_CHScalePv3VoltageMask) >> SPV_CHScalePv3VoltageShift)
+// PV3 Spannung
+#define ParamSPV_CHEnPv3Voltage                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv3Voltage)) & SPV_CHEnPv3VoltageMask))
+// Offset
+#define ParamSPV_CHOffsetPv3Voltage                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv3Voltage)))
+// Register
+#define ParamSPV_CHRegPv3Current                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv3Current)))
+// Datentyp
+#define ParamSPV_CHTypePv3Current                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv3Current)) & SPV_CHTypePv3CurrentMask) >> SPV_CHTypePv3CurrentShift)
+// Skalierung
+#define ParamSPV_CHScalePv3Current                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv3Current)) & SPV_CHScalePv3CurrentMask) >> SPV_CHScalePv3CurrentShift)
+// PV3 Strom
+#define ParamSPV_CHEnPv3Current                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv3Current)) & SPV_CHEnPv3CurrentMask))
+// Offset
+#define ParamSPV_CHOffsetPv3Current                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv3Current)))
+// Register
+#define ParamSPV_CHRegPv3Power                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv3Power)))
+// Datentyp
+#define ParamSPV_CHTypePv3Power                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv3Power)) & SPV_CHTypePv3PowerMask) >> SPV_CHTypePv3PowerShift)
+// Skalierung
+#define ParamSPV_CHScalePv3Power                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv3Power)) & SPV_CHScalePv3PowerMask) >> SPV_CHScalePv3PowerShift)
+// PV3 Leistung
+#define ParamSPV_CHEnPv3Power                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv3Power)) & SPV_CHEnPv3PowerMask))
+// Offset
+#define ParamSPV_CHOffsetPv3Power                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv3Power)))
+// Register
+#define ParamSPV_CHRegPv3Today                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv3Today)))
+// Datentyp
+#define ParamSPV_CHTypePv3Today                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv3Today)) & SPV_CHTypePv3TodayMask) >> SPV_CHTypePv3TodayShift)
+// Skalierung
+#define ParamSPV_CHScalePv3Today                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv3Today)) & SPV_CHScalePv3TodayMask) >> SPV_CHScalePv3TodayShift)
+// PV3 Tagesertrag
+#define ParamSPV_CHEnPv3Today                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv3Today)) & SPV_CHEnPv3TodayMask))
+// Offset
+#define ParamSPV_CHOffsetPv3Today                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv3Today)))
+// Register
+#define ParamSPV_CHRegPv4Voltage                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv4Voltage)))
+// Datentyp
+#define ParamSPV_CHTypePv4Voltage                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv4Voltage)) & SPV_CHTypePv4VoltageMask) >> SPV_CHTypePv4VoltageShift)
+// Skalierung
+#define ParamSPV_CHScalePv4Voltage                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv4Voltage)) & SPV_CHScalePv4VoltageMask) >> SPV_CHScalePv4VoltageShift)
+// PV4 Spannung
+#define ParamSPV_CHEnPv4Voltage                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv4Voltage)) & SPV_CHEnPv4VoltageMask))
+// Offset
+#define ParamSPV_CHOffsetPv4Voltage                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv4Voltage)))
+// Register
+#define ParamSPV_CHRegPv4Current                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv4Current)))
+// Datentyp
+#define ParamSPV_CHTypePv4Current                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv4Current)) & SPV_CHTypePv4CurrentMask) >> SPV_CHTypePv4CurrentShift)
+// Skalierung
+#define ParamSPV_CHScalePv4Current                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv4Current)) & SPV_CHScalePv4CurrentMask) >> SPV_CHScalePv4CurrentShift)
+// PV4 Strom
+#define ParamSPV_CHEnPv4Current                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv4Current)) & SPV_CHEnPv4CurrentMask))
+// Offset
+#define ParamSPV_CHOffsetPv4Current                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv4Current)))
+// Register
+#define ParamSPV_CHRegPv4Power                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv4Power)))
+// Datentyp
+#define ParamSPV_CHTypePv4Power                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv4Power)) & SPV_CHTypePv4PowerMask) >> SPV_CHTypePv4PowerShift)
+// Skalierung
+#define ParamSPV_CHScalePv4Power                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv4Power)) & SPV_CHScalePv4PowerMask) >> SPV_CHScalePv4PowerShift)
+// PV4 Leistung
+#define ParamSPV_CHEnPv4Power                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv4Power)) & SPV_CHEnPv4PowerMask))
+// Offset
+#define ParamSPV_CHOffsetPv4Power                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv4Power)))
+// Register
+#define ParamSPV_CHRegPv4Today                       (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegPv4Today)))
+// Datentyp
+#define ParamSPV_CHTypePv4Today                      ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypePv4Today)) & SPV_CHTypePv4TodayMask) >> SPV_CHTypePv4TodayShift)
+// Skalierung
+#define ParamSPV_CHScalePv4Today                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScalePv4Today)) & SPV_CHScalePv4TodayMask) >> SPV_CHScalePv4TodayShift)
+// PV4 Tagesertrag
+#define ParamSPV_CHEnPv4Today                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPv4Today)) & SPV_CHEnPv4TodayMask))
+// Offset
+#define ParamSPV_CHOffsetPv4Today                    ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetPv4Today)))
+// Register
+#define ParamSPV_CHRegSoc                            (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegSoc)))
+// Datentyp
+#define ParamSPV_CHTypeSoc                           ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeSoc)) & SPV_CHTypeSocMask) >> SPV_CHTypeSocShift)
+// Skalierung
+#define ParamSPV_CHScaleSoc                          ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleSoc)) & SPV_CHScaleSocMask) >> SPV_CHScaleSocShift)
+// Batterie Ladezustand
+#define ParamSPV_CHEnSoc                             ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnSoc)) & SPV_CHEnSocMask))
+// Offset
+#define ParamSPV_CHOffsetSoc                         ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetSoc)))
+// Register
+#define ParamSPV_CHRegSoh                            (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegSoh)))
+// Datentyp
+#define ParamSPV_CHTypeSoh                           ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeSoh)) & SPV_CHTypeSohMask) >> SPV_CHTypeSohShift)
+// Skalierung
+#define ParamSPV_CHScaleSoh                          ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleSoh)) & SPV_CHScaleSohMask) >> SPV_CHScaleSohShift)
+// Batterie Alterungszustand
+#define ParamSPV_CHEnSoh                             ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnSoh)) & SPV_CHEnSohMask))
+// Offset
+#define ParamSPV_CHOffsetSoh                         ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetSoh)))
+// Register
+#define ParamSPV_CHRegBattVoltage                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegBattVoltage)))
+// Datentyp
+#define ParamSPV_CHTypeBattVoltage                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeBattVoltage)) & SPV_CHTypeBattVoltageMask) >> SPV_CHTypeBattVoltageShift)
+// Skalierung
+#define ParamSPV_CHScaleBattVoltage                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleBattVoltage)) & SPV_CHScaleBattVoltageMask) >> SPV_CHScaleBattVoltageShift)
 // Batteriespannung
-#define ParamSPV_CHEnPVoltage                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPVoltage)) & SPV_CHEnPVoltageMask))
+#define ParamSPV_CHEnBattVoltage                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnBattVoltage)) & SPV_CHEnBattVoltageMask))
+// Offset
+#define ParamSPV_CHOffsetBattVoltage                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetBattVoltage)))
+// Register
+#define ParamSPV_CHRegBattCurrent                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegBattCurrent)))
+// Datentyp
+#define ParamSPV_CHTypeBattCurrent                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeBattCurrent)) & SPV_CHTypeBattCurrentMask) >> SPV_CHTypeBattCurrentShift)
+// Skalierung
+#define ParamSPV_CHScaleBattCurrent                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleBattCurrent)) & SPV_CHScaleBattCurrentMask) >> SPV_CHScaleBattCurrentShift)
 // Batteriestrom
-#define ParamSPV_CHEnPCurrent                        ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPCurrent)) & SPV_CHEnPCurrentMask))
+#define ParamSPV_CHEnBattCurrent                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnBattCurrent)) & SPV_CHEnBattCurrentMask))
+// Offset
+#define ParamSPV_CHOffsetBattCurrent                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetBattCurrent)))
+// Register
+#define ParamSPV_CHRegBattPower                      (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegBattPower)))
+// Datentyp
+#define ParamSPV_CHTypeBattPower                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeBattPower)) & SPV_CHTypeBattPowerMask) >> SPV_CHTypeBattPowerShift)
+// Skalierung
+#define ParamSPV_CHScaleBattPower                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleBattPower)) & SPV_CHScaleBattPowerMask) >> SPV_CHScaleBattPowerShift)
 // Batterieleistung
-#define ParamSPV_CHEnPPower                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPPower)) & SPV_CHEnPPowerMask))
+#define ParamSPV_CHEnBattPower                       ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnBattPower)) & SPV_CHEnBattPowerMask))
+// Offset
+#define ParamSPV_CHOffsetBattPower                   ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetBattPower)))
+// Register
+#define ParamSPV_CHRegBattTemperature                (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegBattTemperature)))
+// Datentyp
+#define ParamSPV_CHTypeBattTemperature               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeBattTemperature)) & SPV_CHTypeBattTemperatureMask) >> SPV_CHTypeBattTemperatureShift)
+// Skalierung
+#define ParamSPV_CHScaleBattTemperature              ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleBattTemperature)) & SPV_CHScaleBattTemperatureMask) >> SPV_CHScaleBattTemperatureShift)
 // Batterietemperatur
-#define ParamSPV_CHEnPTemperature                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPTemperature)) & SPV_CHEnPTemperatureMask))
-// Alterungszustand
-#define ParamSPV_CHEnPSoh                            ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPSoh)) & SPV_CHEnPSohMask))
-// Restkapazitaet
-#define ParamSPV_CHEnPRemainingCapacity              ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPRemainingCapacity)) & SPV_CHEnPRemainingCapacityMask))
+#define ParamSPV_CHEnBattTemperature                 ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnBattTemperature)) & SPV_CHEnBattTemperatureMask))
+// Offset
+#define ParamSPV_CHOffsetBattTemperature             ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetBattTemperature)))
+// Register
+#define ParamSPV_CHRegCycleTimes                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegCycleTimes)))
+// Datentyp
+#define ParamSPV_CHTypeCycleTimes                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeCycleTimes)) & SPV_CHTypeCycleTimesMask) >> SPV_CHTypeCycleTimesShift)
+// Skalierung
+#define ParamSPV_CHScaleCycleTimes                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleCycleTimes)) & SPV_CHScaleCycleTimesMask) >> SPV_CHScaleCycleTimesShift)
 // Ladezyklen
-#define ParamSPV_CHEnPCycleTimes                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPCycleTimes)) & SPV_CHEnPCycleTimesMask))
+#define ParamSPV_CHEnCycleTimes                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnCycleTimes)) & SPV_CHEnCycleTimesMask))
+// Offset
+#define ParamSPV_CHOffsetCycleTimes                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetCycleTimes)))
+// Register
+#define ParamSPV_CHRegRemainingCapacity              (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegRemainingCapacity)))
+// Datentyp
+#define ParamSPV_CHTypeRemainingCapacity             ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeRemainingCapacity)) & SPV_CHTypeRemainingCapacityMask) >> SPV_CHTypeRemainingCapacityShift)
+// Skalierung
+#define ParamSPV_CHScaleRemainingCapacity            ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleRemainingCapacity)) & SPV_CHScaleRemainingCapacityMask) >> SPV_CHScaleRemainingCapacityShift)
+// Restkapazität
+#define ParamSPV_CHEnRemainingCapacity               ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnRemainingCapacity)) & SPV_CHEnRemainingCapacityMask))
+// Offset
+#define ParamSPV_CHOffsetRemainingCapacity           ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetRemainingCapacity)))
+// Register
+#define ParamSPV_CHRegTodayCharge                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTodayCharge)))
+// Datentyp
+#define ParamSPV_CHTypeTodayCharge                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTodayCharge)) & SPV_CHTypeTodayChargeMask) >> SPV_CHTypeTodayChargeShift)
+// Skalierung
+#define ParamSPV_CHScaleTodayCharge                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTodayCharge)) & SPV_CHScaleTodayChargeMask) >> SPV_CHScaleTodayChargeShift)
 // Heute geladen
-#define ParamSPV_CHEnPTodayCharge                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPTodayCharge)) & SPV_CHEnPTodayChargeMask))
+#define ParamSPV_CHEnTodayCharge                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTodayCharge)) & SPV_CHEnTodayChargeMask))
+// Offset
+#define ParamSPV_CHOffsetTodayCharge                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTodayCharge)))
+// Register
+#define ParamSPV_CHRegTodayDischarge                 (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTodayDischarge)))
+// Datentyp
+#define ParamSPV_CHTypeTodayDischarge                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTodayDischarge)) & SPV_CHTypeTodayDischargeMask) >> SPV_CHTypeTodayDischargeShift)
+// Skalierung
+#define ParamSPV_CHScaleTodayDischarge               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTodayDischarge)) & SPV_CHScaleTodayDischargeMask) >> SPV_CHScaleTodayDischargeShift)
 // Heute entladen
-#define ParamSPV_CHEnPTodayDischarge                 ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPTodayDischarge)) & SPV_CHEnPTodayDischargeMask))
+#define ParamSPV_CHEnTodayDischarge                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTodayDischarge)) & SPV_CHEnTodayDischargeMask))
+// Offset
+#define ParamSPV_CHOffsetTodayDischarge              ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTodayDischarge)))
+// Register
+#define ParamSPV_CHRegTotalCharge                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTotalCharge)))
+// Datentyp
+#define ParamSPV_CHTypeTotalCharge                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTotalCharge)) & SPV_CHTypeTotalChargeMask) >> SPV_CHTypeTotalChargeShift)
+// Skalierung
+#define ParamSPV_CHScaleTotalCharge                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTotalCharge)) & SPV_CHScaleTotalChargeMask) >> SPV_CHScaleTotalChargeShift)
 // Gesamt geladen
-#define ParamSPV_CHEnPTotalCharge                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPTotalCharge)) & SPV_CHEnPTotalChargeMask))
+#define ParamSPV_CHEnTotalCharge                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTotalCharge)) & SPV_CHEnTotalChargeMask))
+// Offset
+#define ParamSPV_CHOffsetTotalCharge                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTotalCharge)))
+// Register
+#define ParamSPV_CHRegTotalDischarge                 (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTotalDischarge)))
+// Datentyp
+#define ParamSPV_CHTypeTotalDischarge                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTotalDischarge)) & SPV_CHTypeTotalDischargeMask) >> SPV_CHTypeTotalDischargeShift)
+// Skalierung
+#define ParamSPV_CHScaleTotalDischarge               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTotalDischarge)) & SPV_CHScaleTotalDischargeMask) >> SPV_CHScaleTotalDischargeShift)
 // Gesamt entladen
-#define ParamSPV_CHEnPTotalDischarge                 ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnPTotalDischarge)) & SPV_CHEnPTotalDischargeMask))
+#define ParamSPV_CHEnTotalDischarge                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTotalDischarge)) & SPV_CHEnTotalDischargeMask))
+// Offset
+#define ParamSPV_CHOffsetTotalDischarge              ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTotalDischarge)))
+// Register
+#define ParamSPV_CHRegCellVoltageMax                 (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegCellVoltageMax)))
+// Datentyp
+#define ParamSPV_CHTypeCellVoltageMax                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeCellVoltageMax)) & SPV_CHTypeCellVoltageMaxMask) >> SPV_CHTypeCellVoltageMaxShift)
+// Skalierung
+#define ParamSPV_CHScaleCellVoltageMax               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleCellVoltageMax)) & SPV_CHScaleCellVoltageMaxMask) >> SPV_CHScaleCellVoltageMaxShift)
+// Zellspannung maximal
+#define ParamSPV_CHEnCellVoltageMax                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnCellVoltageMax)) & SPV_CHEnCellVoltageMaxMask))
+// Offset
+#define ParamSPV_CHOffsetCellVoltageMax              ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetCellVoltageMax)))
+// Register
+#define ParamSPV_CHRegCellVoltageMin                 (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegCellVoltageMin)))
+// Datentyp
+#define ParamSPV_CHTypeCellVoltageMin                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeCellVoltageMin)) & SPV_CHTypeCellVoltageMinMask) >> SPV_CHTypeCellVoltageMinShift)
+// Skalierung
+#define ParamSPV_CHScaleCellVoltageMin               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleCellVoltageMin)) & SPV_CHScaleCellVoltageMinMask) >> SPV_CHScaleCellVoltageMinShift)
+// Zellspannung minimal
+#define ParamSPV_CHEnCellVoltageMin                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnCellVoltageMin)) & SPV_CHEnCellVoltageMinMask))
+// Offset
+#define ParamSPV_CHOffsetCellVoltageMin              ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetCellVoltageMin)))
+// Register
+#define ParamSPV_CHRegCellTempMax                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegCellTempMax)))
+// Datentyp
+#define ParamSPV_CHTypeCellTempMax                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeCellTempMax)) & SPV_CHTypeCellTempMaxMask) >> SPV_CHTypeCellTempMaxShift)
+// Skalierung
+#define ParamSPV_CHScaleCellTempMax                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleCellTempMax)) & SPV_CHScaleCellTempMaxMask) >> SPV_CHScaleCellTempMaxShift)
+// Zelltemperatur maximal
+#define ParamSPV_CHEnCellTempMax                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnCellTempMax)) & SPV_CHEnCellTempMaxMask))
+// Offset
+#define ParamSPV_CHOffsetCellTempMax                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetCellTempMax)))
+// Register
+#define ParamSPV_CHRegCellTempMin                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegCellTempMin)))
+// Datentyp
+#define ParamSPV_CHTypeCellTempMin                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeCellTempMin)) & SPV_CHTypeCellTempMinMask) >> SPV_CHTypeCellTempMinShift)
+// Skalierung
+#define ParamSPV_CHScaleCellTempMin                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleCellTempMin)) & SPV_CHScaleCellTempMinMask) >> SPV_CHScaleCellTempMinShift)
+// Zelltemperatur minimal
+#define ParamSPV_CHEnCellTempMin                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnCellTempMin)) & SPV_CHEnCellTempMinMask))
+// Offset
+#define ParamSPV_CHOffsetCellTempMin                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetCellTempMin)))
+// Register
+#define ParamSPV_CHRegHousePower                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegHousePower)))
+// Datentyp
+#define ParamSPV_CHTypeHousePower                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeHousePower)) & SPV_CHTypeHousePowerMask) >> SPV_CHTypeHousePowerShift)
+// Skalierung
+#define ParamSPV_CHScaleHousePower                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleHousePower)) & SPV_CHScaleHousePowerMask) >> SPV_CHScaleHousePowerShift)
+// Hausverbrauch
+#define ParamSPV_CHEnHousePower                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnHousePower)) & SPV_CHEnHousePowerMask))
+// Offset
+#define ParamSPV_CHOffsetHousePower                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetHousePower)))
+// Register
+#define ParamSPV_CHRegImportPower                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegImportPower)))
+// Datentyp
+#define ParamSPV_CHTypeImportPower                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeImportPower)) & SPV_CHTypeImportPowerMask) >> SPV_CHTypeImportPowerShift)
+// Skalierung
+#define ParamSPV_CHScaleImportPower                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleImportPower)) & SPV_CHScaleImportPowerMask) >> SPV_CHScaleImportPowerShift)
+// Netzbezug Leistung
+#define ParamSPV_CHEnImportPower                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnImportPower)) & SPV_CHEnImportPowerMask))
+// Offset
+#define ParamSPV_CHOffsetImportPower                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetImportPower)))
+// Register
+#define ParamSPV_CHRegExportPower                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegExportPower)))
+// Datentyp
+#define ParamSPV_CHTypeExportPower                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeExportPower)) & SPV_CHTypeExportPowerMask) >> SPV_CHTypeExportPowerShift)
+// Skalierung
+#define ParamSPV_CHScaleExportPower                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleExportPower)) & SPV_CHScaleExportPowerMask) >> SPV_CHScaleExportPowerShift)
+// Einspeisung Leistung
+#define ParamSPV_CHEnExportPower                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnExportPower)) & SPV_CHEnExportPowerMask))
+// Offset
+#define ParamSPV_CHOffsetExportPower                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetExportPower)))
+// Register
+#define ParamSPV_CHRegImportTotal                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegImportTotal)))
+// Datentyp
+#define ParamSPV_CHTypeImportTotal                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeImportTotal)) & SPV_CHTypeImportTotalMask) >> SPV_CHTypeImportTotalShift)
+// Skalierung
+#define ParamSPV_CHScaleImportTotal                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleImportTotal)) & SPV_CHScaleImportTotalMask) >> SPV_CHScaleImportTotalShift)
+// Netzbezug gesamt
+#define ParamSPV_CHEnImportTotal                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnImportTotal)) & SPV_CHEnImportTotalMask))
+// Offset
+#define ParamSPV_CHOffsetImportTotal                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetImportTotal)))
+// Register
+#define ParamSPV_CHRegExportTotal                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegExportTotal)))
+// Datentyp
+#define ParamSPV_CHTypeExportTotal                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeExportTotal)) & SPV_CHTypeExportTotalMask) >> SPV_CHTypeExportTotalShift)
+// Skalierung
+#define ParamSPV_CHScaleExportTotal                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleExportTotal)) & SPV_CHScaleExportTotalMask) >> SPV_CHScaleExportTotalShift)
+// Einspeisung gesamt
+#define ParamSPV_CHEnExportTotal                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnExportTotal)) & SPV_CHEnExportTotalMask))
+// Offset
+#define ParamSPV_CHOffsetExportTotal                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetExportTotal)))
+// Register
+#define ParamSPV_CHRegHouseToday                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegHouseToday)))
+// Datentyp
+#define ParamSPV_CHTypeHouseToday                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeHouseToday)) & SPV_CHTypeHouseTodayMask) >> SPV_CHTypeHouseTodayShift)
+// Skalierung
+#define ParamSPV_CHScaleHouseToday                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleHouseToday)) & SPV_CHScaleHouseTodayMask) >> SPV_CHScaleHouseTodayShift)
+// Hausverbrauch heute
+#define ParamSPV_CHEnHouseToday                      ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnHouseToday)) & SPV_CHEnHouseTodayMask))
+// Offset
+#define ParamSPV_CHOffsetHouseToday                  ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetHouseToday)))
+// Register
+#define ParamSPV_CHRegImportToday                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegImportToday)))
+// Datentyp
+#define ParamSPV_CHTypeImportToday                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeImportToday)) & SPV_CHTypeImportTodayMask) >> SPV_CHTypeImportTodayShift)
+// Skalierung
+#define ParamSPV_CHScaleImportToday                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleImportToday)) & SPV_CHScaleImportTodayMask) >> SPV_CHScaleImportTodayShift)
+// Netzbezug heute
+#define ParamSPV_CHEnImportToday                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnImportToday)) & SPV_CHEnImportTodayMask))
+// Offset
+#define ParamSPV_CHOffsetImportToday                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetImportToday)))
+// Register
+#define ParamSPV_CHRegExportToday                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegExportToday)))
+// Datentyp
+#define ParamSPV_CHTypeExportToday                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeExportToday)) & SPV_CHTypeExportTodayMask) >> SPV_CHTypeExportTodayShift)
+// Skalierung
+#define ParamSPV_CHScaleExportToday                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleExportToday)) & SPV_CHScaleExportTodayMask) >> SPV_CHScaleExportTodayShift)
+// Einspeisung heute
+#define ParamSPV_CHEnExportToday                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnExportToday)) & SPV_CHEnExportTodayMask))
+// Offset
+#define ParamSPV_CHOffsetExportToday                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetExportToday)))
+// Register
+#define ParamSPV_CHRegTemperature                    (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegTemperature)))
+// Datentyp
+#define ParamSPV_CHTypeTemperature                   ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeTemperature)) & SPV_CHTypeTemperatureMask) >> SPV_CHTypeTemperatureShift)
+// Skalierung
+#define ParamSPV_CHScaleTemperature                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleTemperature)) & SPV_CHScaleTemperatureMask) >> SPV_CHScaleTemperatureShift)
+// Gerätetemperatur
+#define ParamSPV_CHEnTemperature                     ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnTemperature)) & SPV_CHEnTemperatureMask))
+// Offset
+#define ParamSPV_CHOffsetTemperature                 ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetTemperature)))
+// Register
+#define ParamSPV_CHRegHeatsinkTemp                   (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegHeatsinkTemp)))
+// Datentyp
+#define ParamSPV_CHTypeHeatsinkTemp                  ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeHeatsinkTemp)) & SPV_CHTypeHeatsinkTempMask) >> SPV_CHTypeHeatsinkTempShift)
+// Skalierung
+#define ParamSPV_CHScaleHeatsinkTemp                 ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleHeatsinkTemp)) & SPV_CHScaleHeatsinkTempMask) >> SPV_CHScaleHeatsinkTempShift)
+// Kühlkörpertemperatur
+#define ParamSPV_CHEnHeatsinkTemp                    ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnHeatsinkTemp)) & SPV_CHEnHeatsinkTempMask))
+// Offset
+#define ParamSPV_CHOffsetHeatsinkTemp                ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetHeatsinkTemp)))
+// Register
+#define ParamSPV_CHRegErrorCode                      (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegErrorCode)))
+// Datentyp
+#define ParamSPV_CHTypeErrorCode                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeErrorCode)) & SPV_CHTypeErrorCodeMask) >> SPV_CHTypeErrorCodeShift)
+// Skalierung
+#define ParamSPV_CHScaleErrorCode                    ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleErrorCode)) & SPV_CHScaleErrorCodeMask) >> SPV_CHScaleErrorCodeShift)
+// Fehlercode
+#define ParamSPV_CHEnErrorCode                       ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnErrorCode)) & SPV_CHEnErrorCodeMask))
+// Offset
+#define ParamSPV_CHOffsetErrorCode                   ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetErrorCode)))
+// Register
+#define ParamSPV_CHRegOperatingHours                 (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegOperatingHours)))
+// Datentyp
+#define ParamSPV_CHTypeOperatingHours                ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeOperatingHours)) & SPV_CHTypeOperatingHoursMask) >> SPV_CHTypeOperatingHoursShift)
+// Skalierung
+#define ParamSPV_CHScaleOperatingHours               ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleOperatingHours)) & SPV_CHScaleOperatingHoursMask) >> SPV_CHScaleOperatingHoursShift)
+// Betriebsstunden
+#define ParamSPV_CHEnOperatingHours                  ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnOperatingHours)) & SPV_CHEnOperatingHoursMask))
+// Offset
+#define ParamSPV_CHOffsetOperatingHours              ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetOperatingHours)))
+// Register
+#define ParamSPV_CHRegSpare1                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegSpare1)))
+// Datentyp
+#define ParamSPV_CHTypeSpare1                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeSpare1)) & SPV_CHTypeSpare1Mask) >> SPV_CHTypeSpare1Shift)
+// Skalierung
+#define ParamSPV_CHScaleSpare1                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleSpare1)) & SPV_CHScaleSpare1Mask) >> SPV_CHScaleSpare1Shift)
+// Freier Wert 1
+#define ParamSPV_CHEnSpare1                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnSpare1)) & SPV_CHEnSpare1Mask))
+// Offset
+#define ParamSPV_CHOffsetSpare1                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetSpare1)))
+// Register
+#define ParamSPV_CHRegSpare2                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegSpare2)))
+// Datentyp
+#define ParamSPV_CHTypeSpare2                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeSpare2)) & SPV_CHTypeSpare2Mask) >> SPV_CHTypeSpare2Shift)
+// Skalierung
+#define ParamSPV_CHScaleSpare2                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleSpare2)) & SPV_CHScaleSpare2Mask) >> SPV_CHScaleSpare2Shift)
+// Freier Wert 2
+#define ParamSPV_CHEnSpare2                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnSpare2)) & SPV_CHEnSpare2Mask))
+// Offset
+#define ParamSPV_CHOffsetSpare2                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetSpare2)))
+// Register
+#define ParamSPV_CHRegSpare3                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegSpare3)))
+// Datentyp
+#define ParamSPV_CHTypeSpare3                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeSpare3)) & SPV_CHTypeSpare3Mask) >> SPV_CHTypeSpare3Shift)
+// Skalierung
+#define ParamSPV_CHScaleSpare3                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleSpare3)) & SPV_CHScaleSpare3Mask) >> SPV_CHScaleSpare3Shift)
+// Freier Wert 3
+#define ParamSPV_CHEnSpare3                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnSpare3)) & SPV_CHEnSpare3Mask))
+// Offset
+#define ParamSPV_CHOffsetSpare3                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetSpare3)))
+// Register
+#define ParamSPV_CHRegSpare4                         (knx.paramWord(SPV_ParamCalcIndex(SPV_CHRegSpare4)))
+// Datentyp
+#define ParamSPV_CHTypeSpare4                        ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHTypeSpare4)) & SPV_CHTypeSpare4Mask) >> SPV_CHTypeSpare4Shift)
+// Skalierung
+#define ParamSPV_CHScaleSpare4                       ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHScaleSpare4)) & SPV_CHScaleSpare4Mask) >> SPV_CHScaleSpare4Shift)
+// Freier Wert 4
+#define ParamSPV_CHEnSpare4                          ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHEnSpare4)) & SPV_CHEnSpare4Mask))
+// Offset
+#define ParamSPV_CHOffsetSpare4                      ((int8_t)knx.paramByte(SPV_ParamCalcIndex(SPV_CHOffsetSpare4)))
 // Zeitbasis
 #define ParamSPV_CHSendDelayBase                     ((knx.paramByte(SPV_ParamCalcIndex(SPV_CHSendDelayBase)) & SPV_CHSendDelayBaseMask) >> SPV_CHSendDelayBaseShift)
 // zyklisch senden alle (0 = aus)
 #define ParamSPV_CHSendDelayTime                     (knx.paramWord(SPV_ParamCalcIndex(SPV_CHSendDelayTime)) & SPV_CHSendDelayTimeMask)
 // zyklisch senden alle (0 = aus) (in Millisekunden)
 #define ParamSPV_CHSendDelayTimeMS                   (paramDelay(knx.paramWord(SPV_ParamCalcIndex(SPV_CHSendDelayTime))))
-// zusaetzlich bei Aenderung um (0 = aus)
+// zusätzlich bei Änderung um (0 = aus)
 #define ParamSPV_CHSendChangePercent                 (knx.paramByte(SPV_ParamCalcIndex(SPV_CHSendChangePercent)))
+// Meldung
+#define ParamSPV_CHProfileMsg                        (knx.paramData(SPV_ParamCalcIndex(SPV_CHProfileMsg)))
+#define ParamSPV_CHProfileMsgStr                     (knx.paramString(SPV_ParamCalcIndex(SPV_CHProfileMsg), SPV_CHProfileMsgLength))
+// Kanalaktivität
+#define ParamSPV_CHActive                            ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHActive)) & SPV_CHActiveMask))
+// Suspendiert
+#define ParamSPV_CHSuspended                         ((bool)(knx.paramByte(SPV_ParamCalcIndex(SPV_CHSuspended)) & SPV_CHSuspendedMask))
 
 // deprecated
-#define SPV_KoOffset 809
+#define SPV_KoOffset 600
 
 // Communication objects per channel (multiple occurrence)
-#define SPV_KoBlockOffset 809
-#define SPV_KoBlockSize 25
+#define SPV_KoBlockOffset 600
+#define SPV_KoBlockSize 65
 
 #define SPV_KoCalcNumber(index) (index + SPV_KoBlockOffset + _channelIndex * SPV_KoBlockSize)
 #define SPV_KoCalcIndex(number) ((number >= SPV_KoCalcNumber(0) && number < SPV_KoCalcNumber(SPV_KoBlockSize)) ? (number - SPV_KoBlockOffset) % SPV_KoBlockSize : -1)
 #define SPV_KoCalcChannel(number) ((number >= SPV_KoBlockOffset && number < SPV_KoBlockOffset + SPV_ChannelCount * SPV_KoBlockSize) ? (number - SPV_KoBlockOffset) / SPV_KoBlockSize : -1)
 
 #define SPV_KoCHReachable 0
-#define SPV_KoCHValue01 1
-#define SPV_KoCHValue02 2
-#define SPV_KoCHValue03 3
-#define SPV_KoCHValue04 4
-#define SPV_KoCHValue05 5
-#define SPV_KoCHValue06 6
-#define SPV_KoCHValue07 7
-#define SPV_KoCHValue08 8
-#define SPV_KoCHValue09 9
-#define SPV_KoCHValue10 10
-#define SPV_KoCHValue11 11
-#define SPV_KoCHValue12 12
-#define SPV_KoCHValue13 13
-#define SPV_KoCHValue14 14
-#define SPV_KoCHValue15 15
-#define SPV_KoCHValue16 16
-#define SPV_KoCHValue17 17
-#define SPV_KoCHValue18 18
-#define SPV_KoCHValue19 19
-#define SPV_KoCHValue20 20
-#define SPV_KoCHValue21 21
-#define SPV_KoCHValue22 22
-#define SPV_KoCHValue23 23
-#define SPV_KoCHValue24 24
+#define SPV_KoCHPower 1
+#define SPV_KoCHApparentPower 2
+#define SPV_KoCHGridVoltage 3
+#define SPV_KoCHGridVoltageL2 4
+#define SPV_KoCHGridVoltageL3 5
+#define SPV_KoCHGridCurrent 6
+#define SPV_KoCHGridFrequency 7
+#define SPV_KoCHOperatingState 8
+#define SPV_KoCHToday 9
+#define SPV_KoCHTotal 10
+#define SPV_KoCHMonth 11
+#define SPV_KoCHYear 12
+#define SPV_KoCHToday1 13
+#define SPV_KoCHToday2 14
+#define SPV_KoCHTotal1 15
+#define SPV_KoCHTotal2 16
+#define SPV_KoCHPv1Voltage 17
+#define SPV_KoCHPv1Current 18
+#define SPV_KoCHPv1Power 19
+#define SPV_KoCHPv1Today 20
+#define SPV_KoCHPv2Voltage 21
+#define SPV_KoCHPv2Current 22
+#define SPV_KoCHPv2Power 23
+#define SPV_KoCHPv2Today 24
+#define SPV_KoCHPv3Voltage 25
+#define SPV_KoCHPv3Current 26
+#define SPV_KoCHPv3Power 27
+#define SPV_KoCHPv3Today 28
+#define SPV_KoCHPv4Voltage 29
+#define SPV_KoCHPv4Current 30
+#define SPV_KoCHPv4Power 31
+#define SPV_KoCHPv4Today 32
+#define SPV_KoCHSoc 33
+#define SPV_KoCHSoh 34
+#define SPV_KoCHBattVoltage 35
+#define SPV_KoCHBattCurrent 36
+#define SPV_KoCHBattPower 37
+#define SPV_KoCHBattTemperature 38
+#define SPV_KoCHCycleTimes 39
+#define SPV_KoCHRemainingCapacity 40
+#define SPV_KoCHTodayCharge 41
+#define SPV_KoCHTodayDischarge 42
+#define SPV_KoCHTotalCharge 43
+#define SPV_KoCHTotalDischarge 44
+#define SPV_KoCHCellVoltageMax 45
+#define SPV_KoCHCellVoltageMin 46
+#define SPV_KoCHCellTempMax 47
+#define SPV_KoCHCellTempMin 48
+#define SPV_KoCHHousePower 49
+#define SPV_KoCHImportPower 50
+#define SPV_KoCHExportPower 51
+#define SPV_KoCHImportTotal 52
+#define SPV_KoCHExportTotal 53
+#define SPV_KoCHHouseToday 54
+#define SPV_KoCHImportToday 55
+#define SPV_KoCHExportToday 56
+#define SPV_KoCHTemperature 57
+#define SPV_KoCHHeatsinkTemp 58
+#define SPV_KoCHErrorCode 59
+#define SPV_KoCHOperatingHours 60
+#define SPV_KoCHSpare1 61
+#define SPV_KoCHSpare2 62
+#define SPV_KoCHSpare3 63
+#define SPV_KoCHSpare4 64
 
 // 
 #define KoSPV_CHReachable                         (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHReachable)))
 // 
-#define KoSPV_CHValue01                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue01)))
+#define KoSPV_CHPower                             (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPower)))
 // 
-#define KoSPV_CHValue02                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue02)))
+#define KoSPV_CHApparentPower                     (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHApparentPower)))
 // 
-#define KoSPV_CHValue03                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue03)))
+#define KoSPV_CHGridVoltage                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHGridVoltage)))
 // 
-#define KoSPV_CHValue04                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue04)))
+#define KoSPV_CHGridVoltageL2                     (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHGridVoltageL2)))
 // 
-#define KoSPV_CHValue05                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue05)))
+#define KoSPV_CHGridVoltageL3                     (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHGridVoltageL3)))
 // 
-#define KoSPV_CHValue06                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue06)))
+#define KoSPV_CHGridCurrent                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHGridCurrent)))
 // 
-#define KoSPV_CHValue07                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue07)))
+#define KoSPV_CHGridFrequency                     (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHGridFrequency)))
 // 
-#define KoSPV_CHValue08                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue08)))
+#define KoSPV_CHOperatingState                    (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHOperatingState)))
 // 
-#define KoSPV_CHValue09                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue09)))
+#define KoSPV_CHToday                             (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHToday)))
 // 
-#define KoSPV_CHValue10                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue10)))
+#define KoSPV_CHTotal                             (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTotal)))
 // 
-#define KoSPV_CHValue11                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue11)))
+#define KoSPV_CHMonth                             (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHMonth)))
 // 
-#define KoSPV_CHValue12                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue12)))
+#define KoSPV_CHYear                              (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHYear)))
 // 
-#define KoSPV_CHValue13                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue13)))
+#define KoSPV_CHToday1                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHToday1)))
 // 
-#define KoSPV_CHValue14                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue14)))
+#define KoSPV_CHToday2                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHToday2)))
 // 
-#define KoSPV_CHValue15                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue15)))
+#define KoSPV_CHTotal1                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTotal1)))
 // 
-#define KoSPV_CHValue16                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue16)))
+#define KoSPV_CHTotal2                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTotal2)))
 // 
-#define KoSPV_CHValue17                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue17)))
+#define KoSPV_CHPv1Voltage                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv1Voltage)))
 // 
-#define KoSPV_CHValue18                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue18)))
+#define KoSPV_CHPv1Current                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv1Current)))
 // 
-#define KoSPV_CHValue19                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue19)))
+#define KoSPV_CHPv1Power                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv1Power)))
 // 
-#define KoSPV_CHValue20                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue20)))
+#define KoSPV_CHPv1Today                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv1Today)))
 // 
-#define KoSPV_CHValue21                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue21)))
+#define KoSPV_CHPv2Voltage                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv2Voltage)))
 // 
-#define KoSPV_CHValue22                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue22)))
+#define KoSPV_CHPv2Current                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv2Current)))
 // 
-#define KoSPV_CHValue23                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue23)))
+#define KoSPV_CHPv2Power                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv2Power)))
 // 
-#define KoSPV_CHValue24                           (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHValue24)))
+#define KoSPV_CHPv2Today                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv2Today)))
+// 
+#define KoSPV_CHPv3Voltage                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv3Voltage)))
+// 
+#define KoSPV_CHPv3Current                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv3Current)))
+// 
+#define KoSPV_CHPv3Power                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv3Power)))
+// 
+#define KoSPV_CHPv3Today                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv3Today)))
+// 
+#define KoSPV_CHPv4Voltage                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv4Voltage)))
+// 
+#define KoSPV_CHPv4Current                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv4Current)))
+// 
+#define KoSPV_CHPv4Power                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv4Power)))
+// 
+#define KoSPV_CHPv4Today                          (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHPv4Today)))
+// 
+#define KoSPV_CHSoc                               (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHSoc)))
+// 
+#define KoSPV_CHSoh                               (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHSoh)))
+// 
+#define KoSPV_CHBattVoltage                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHBattVoltage)))
+// 
+#define KoSPV_CHBattCurrent                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHBattCurrent)))
+// 
+#define KoSPV_CHBattPower                         (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHBattPower)))
+// 
+#define KoSPV_CHBattTemperature                   (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHBattTemperature)))
+// 
+#define KoSPV_CHCycleTimes                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHCycleTimes)))
+// 
+#define KoSPV_CHRemainingCapacity                 (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHRemainingCapacity)))
+// 
+#define KoSPV_CHTodayCharge                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTodayCharge)))
+// 
+#define KoSPV_CHTodayDischarge                    (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTodayDischarge)))
+// 
+#define KoSPV_CHTotalCharge                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTotalCharge)))
+// 
+#define KoSPV_CHTotalDischarge                    (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTotalDischarge)))
+// 
+#define KoSPV_CHCellVoltageMax                    (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHCellVoltageMax)))
+// 
+#define KoSPV_CHCellVoltageMin                    (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHCellVoltageMin)))
+// 
+#define KoSPV_CHCellTempMax                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHCellTempMax)))
+// 
+#define KoSPV_CHCellTempMin                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHCellTempMin)))
+// 
+#define KoSPV_CHHousePower                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHHousePower)))
+// 
+#define KoSPV_CHImportPower                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHImportPower)))
+// 
+#define KoSPV_CHExportPower                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHExportPower)))
+// 
+#define KoSPV_CHImportTotal                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHImportTotal)))
+// 
+#define KoSPV_CHExportTotal                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHExportTotal)))
+// 
+#define KoSPV_CHHouseToday                        (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHHouseToday)))
+// 
+#define KoSPV_CHImportToday                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHImportToday)))
+// 
+#define KoSPV_CHExportToday                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHExportToday)))
+// 
+#define KoSPV_CHTemperature                       (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHTemperature)))
+// 
+#define KoSPV_CHHeatsinkTemp                      (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHHeatsinkTemp)))
+// 
+#define KoSPV_CHErrorCode                         (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHErrorCode)))
+// 
+#define KoSPV_CHOperatingHours                    (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHOperatingHours)))
+// 
+#define KoSPV_CHSpare1                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHSpare1)))
+// 
+#define KoSPV_CHSpare2                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHSpare2)))
+// 
+#define KoSPV_CHSpare3                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHSpare3)))
+// 
+#define KoSPV_CHSpare4                            (knx.getGroupObject(SPV_KoCalcNumber(SPV_KoCHSpare4)))
 
-#define LOG_VisibleChannels                     5569      // uint8_t
-#define LOG_VacationKo                          5570      // 1 Bit, Bit 7
+#define WIP_WIPTls                              6011      // 1 Bit, Bit 6
+#define     WIP_WIPTlsMask 0x40
+#define     WIP_WIPTlsShift 6
+#define WIP_WIPSapEnable                        6011      // 1 Bit, Bit 5
+#define     WIP_WIPSapEnableMask 0x20
+#define     WIP_WIPSapEnableShift 5
+#define WIP_WIPUseConnected                     6011      // 1 Bit, Bit 4
+#define     WIP_WIPUseConnectedMask 0x10
+#define     WIP_WIPUseConnectedShift 4
+#define WIP_WIPUseDiag                          6011      // 1 Bit, Bit 3
+#define     WIP_WIPUseDiagMask 0x08
+#define     WIP_WIPUseDiagShift 3
+#define WIP_WIPUseRingAny                       6011      // 1 Bit, Bit 2
+#define     WIP_WIPUseRingAnyMask 0x04
+#define     WIP_WIPUseRingAnyShift 2
+#define WIP_WIPUseLockAll                       6011      // 1 Bit, Bit 1
+#define     WIP_WIPUseLockAllMask 0x02
+#define     WIP_WIPUseLockAllShift 1
+#define WIP_WIPCertCheck                        6012      // 8 Bits, Bit 7-0
+#define WIP_WIPHost                             6013      // char*, 32 Byte
+#define     WIP_WIPHostLength 32
+#define WIP_WIPPort                             6045      // uint16_t
+#define WIP_WIPUser                             6047      // char*, 64 Byte
+#define     WIP_WIPUserLength 64
+#define WIP_WIPPass                             6111      // char*, 32 Byte
+#define     WIP_WIPPassLength 32
+#define WIP_WIPReconnect                        6143      // uint16_t
+#define WIP_WIPUseSapDoorbell                   6145      // 1 Bit, Bit 7
+#define     WIP_WIPUseSapDoorbellMask 0x80
+#define     WIP_WIPUseSapDoorbellShift 7
+#define WIP_WIPUseSapMute                       6145      // 1 Bit, Bit 6
+#define     WIP_WIPUseSapMuteMask 0x40
+#define     WIP_WIPUseSapMuteShift 6
+#define WIP_WIPUseSapDayNight                   6145      // 1 Bit, Bit 5
+#define     WIP_WIPUseSapDayNightMask 0x20
+#define     WIP_WIPUseSapDayNightShift 5
+#define WIP_WIPUseSapBinIn                      6145      // 1 Bit, Bit 4
+#define     WIP_WIPUseSapBinInMask 0x10
+#define     WIP_WIPUseSapBinInShift 4
+#define WIP_WIPUseSapBinOut                     6145      // 1 Bit, Bit 3
+#define     WIP_WIPUseSapBinOutMask 0x08
+#define     WIP_WIPUseSapBinOutShift 3
+#define WIP_WIPUseSapAlarm                      6145      // 1 Bit, Bit 2
+#define     WIP_WIPUseSapAlarmMask 0x04
+#define     WIP_WIPUseSapAlarmShift 2
+#define WIP_WIPUseSapTamper                     6145      // 1 Bit, Bit 1
+#define     WIP_WIPUseSapTamperMask 0x02
+#define     WIP_WIPUseSapTamperShift 1
+#define WIP_WIPReserve                          6154      // uint8_t
+
+// TLS verwenden
+#define ParamWIP_WIPTls                              ((bool)(knx.paramByte(WIP_WIPTls) & WIP_WIPTlsMask))
+// Funktionen des Smart Access Point verwenden
+#define ParamWIP_WIPSapEnable                        ((bool)(knx.paramByte(WIP_WIPSapEnable) & WIP_WIPSapEnableMask))
+// Verbindung
+#define ParamWIP_WIPUseConnected                     ((bool)(knx.paramByte(WIP_WIPUseConnected) & WIP_WIPUseConnectedMask))
+// Diagnose-Meldungstext
+#define ParamWIP_WIPUseDiag                          ((bool)(knx.paramByte(WIP_WIPUseDiag) & WIP_WIPUseDiagMask))
+// Klingeln (Sammel)
+#define ParamWIP_WIPUseRingAny                       ((bool)(knx.paramByte(WIP_WIPUseRingAny) & WIP_WIPUseRingAnyMask))
+// Sperre (alle)
+#define ParamWIP_WIPUseLockAll                       ((bool)(knx.paramByte(WIP_WIPUseLockAll) & WIP_WIPUseLockAllMask))
+// Zertifikatsprüfung
+#define ParamWIP_WIPCertCheck                        (knx.paramByte(WIP_WIPCertCheck))
+// Smart Access Point (IP-Adresse)
+#define ParamWIP_WIPHost                             (knx.paramData(WIP_WIPHost))
+#define ParamWIP_WIPHostStr                          (knx.paramString(WIP_WIPHost, WIP_WIPHostLength))
+// Port
+#define ParamWIP_WIPPort                             (knx.paramWord(WIP_WIPPort))
+// API-Benutzername
+#define ParamWIP_WIPUser                             (knx.paramData(WIP_WIPUser))
+#define ParamWIP_WIPUserStr                          (knx.paramString(WIP_WIPUser, WIP_WIPUserLength))
+// API-Passwort
+#define ParamWIP_WIPPass                             (knx.paramData(WIP_WIPPass))
+#define ParamWIP_WIPPassStr                          (knx.paramString(WIP_WIPPass, WIP_WIPPassLength))
+// Verbindung erneut aufbauen nach
+#define ParamWIP_WIPReconnect                        (knx.paramWord(WIP_WIPReconnect))
+// Klingeln
+#define ParamWIP_WIPUseSapDoorbell                   ((bool)(knx.paramByte(WIP_WIPUseSapDoorbell) & WIP_WIPUseSapDoorbellMask))
+// Stummschaltung
+#define ParamWIP_WIPUseSapMute                       ((bool)(knx.paramByte(WIP_WIPUseSapMute) & WIP_WIPUseSapMuteMask))
+// Tag/Nacht-Umschaltung
+#define ParamWIP_WIPUseSapDayNight                   ((bool)(knx.paramByte(WIP_WIPUseSapDayNight) & WIP_WIPUseSapDayNightMask))
+// Binäreingang
+#define ParamWIP_WIPUseSapBinIn                      ((bool)(knx.paramByte(WIP_WIPUseSapBinIn) & WIP_WIPUseSapBinInMask))
+// Binärausgang
+#define ParamWIP_WIPUseSapBinOut                     ((bool)(knx.paramByte(WIP_WIPUseSapBinOut) & WIP_WIPUseSapBinOutMask))
+// Alarm
+#define ParamWIP_WIPUseSapAlarm                      ((bool)(knx.paramByte(WIP_WIPUseSapAlarm) & WIP_WIPUseSapAlarmMask))
+// Sabotage
+#define ParamWIP_WIPUseSapTamper                     ((bool)(knx.paramByte(WIP_WIPUseSapTamper) & WIP_WIPUseSapTamperMask))
+// 
+#define ParamWIP_WIPReserve                          (knx.paramByte(WIP_WIPReserve))
+
+#define WIP_KoWIPConnected 1050
+#define WIP_KoWIPDiag 1051
+#define WIP_KoWIPRingAny 1052
+#define WIP_KoWIPLockAll 1053
+#define WIP_KoWIPSapDoorbell 1054
+#define WIP_KoWIPSapMute 1055
+#define WIP_KoWIPSapMuteStat 1056
+#define WIP_KoWIPSapDayNight 1057
+#define WIP_KoWIPSapBinIn 1058
+#define WIP_KoWIPSapBinOut 1059
+#define WIP_KoWIPSapAlarm 1060
+#define WIP_KoWIPSapTamper 1061
+
+// Verbindung
+#define KoWIP_WIPConnected                        (knx.getGroupObject(WIP_KoWIPConnected))
+// Diagnose
+#define KoWIP_WIPDiag                             (knx.getGroupObject(WIP_KoWIPDiag))
+// Klingeln (Sammel)
+#define KoWIP_WIPRingAny                          (knx.getGroupObject(WIP_KoWIPRingAny))
+// Sperre (alle)
+#define KoWIP_WIPLockAll                          (knx.getGroupObject(WIP_KoWIPLockAll))
+// SmartAP Klingeln
+#define KoWIP_WIPSapDoorbell                      (knx.getGroupObject(WIP_KoWIPSapDoorbell))
+// SmartAP Stummschaltung
+#define KoWIP_WIPSapMute                          (knx.getGroupObject(WIP_KoWIPSapMute))
+// Status SmartAP Stummschaltung
+#define KoWIP_WIPSapMuteStat                      (knx.getGroupObject(WIP_KoWIPSapMuteStat))
+// SmartAP Tag/Nacht
+#define KoWIP_WIPSapDayNight                      (knx.getGroupObject(WIP_KoWIPSapDayNight))
+// SmartAP Binäreingang
+#define KoWIP_WIPSapBinIn                         (knx.getGroupObject(WIP_KoWIPSapBinIn))
+// SmartAP Binärausgang
+#define KoWIP_WIPSapBinOut                        (knx.getGroupObject(WIP_KoWIPSapBinOut))
+// SmartAP Alarm
+#define KoWIP_WIPSapAlarm                         (knx.getGroupObject(WIP_KoWIPSapAlarm))
+// SmartAP Sabotage
+#define KoWIP_WIPSapTamper                        (knx.getGroupObject(WIP_KoWIPSapTamper))
+
+#define WIP_ChannelCount 8
+
+// Parameter per channel
+#define WIP_ParamBlockOffset 6155
+#define WIP_ParamBlockSize 62
+#define WIP_ParamCalcIndex(index) (index + WIP_ParamBlockOffset + _channelIndex * WIP_ParamBlockSize)
+
+#define WIP_CHSerial                             0      // char*, 20 Byte
+#define     WIP_CHSerialLength 20
+#define WIP_CHType                              20      // 8 Bits, Bit 7-0
+#define WIP_CHOpenPath                          21      // 8 Bits, Bit 7-0
+#define WIP_CHOpenTrigger                       22      // 8 Bits, Bit 7-0
+#define WIP_CHLockEnable                        23      // 1 Bit, Bit 7
+#define     WIP_CHLockEnableMask 0x80
+#define     WIP_CHLockEnableShift 7
+#define WIP_CHRingMode                          23      // 1 Bit, Bit 6
+#define     WIP_CHRingModeMask 0x40
+#define     WIP_CHRingModeShift 6
+#define WIP_CHExpert                            23      // 1 Bit, Bit 5
+#define     WIP_CHExpertMask 0x20
+#define     WIP_CHExpertShift 5
+#define WIP_CHLightEnable                       23      // 1 Bit, Bit 4
+#define     WIP_CHLightEnableMask 0x10
+#define     WIP_CHLightEnableShift 4
+#define WIP_CHStateEnable                       23      // 1 Bit, Bit 3
+#define     WIP_CHStateEnableMask 0x08
+#define     WIP_CHStateEnableShift 3
+#define WIP_CHRingPulse                         24      // uint16_t
+#define WIP_CHRingBlock                         26      // uint8_t
+#define WIP_CHRingCh                            27      // uint8_t
+#define WIP_CHRingDp                            28      // uint8_t
+#define WIP_CHOpenCh                            29      // uint8_t
+#define WIP_CHOpenDp                            30      // uint8_t
+#define WIP_CHStateCh                           31      // uint8_t
+#define WIP_CHStateDp                           32      // uint8_t
+#define WIP_CHSerialOutdoor                     33      // char*, 20 Byte
+#define     WIP_CHSerialOutdoorLength 20
+#define WIP_CHGenericDpt                        53      // 8 Bits, Bit 7-0
+#define WIP_CHGenericDir                        54      // 8 Bits, Bit 7-0
+#define WIP_CHActive                            61      // 1 Bit, Bit 7
+#define     WIP_CHActiveMask 0x80
+#define     WIP_CHActiveShift 7
+#define WIP_CHSuspended                         61      // 1 Bit, Bit 6
+#define     WIP_CHSuspendedMask 0x40
+#define     WIP_CHSuspendedShift 6
+
+// Seriennummer
+#define ParamWIP_CHSerial                            (knx.paramData(WIP_ParamCalcIndex(WIP_CHSerial)))
+#define ParamWIP_CHSerialStr                         (knx.paramString(WIP_ParamCalcIndex(WIP_CHSerial), WIP_CHSerialLength))
+// Gerätetyp
+#define ParamWIP_CHType                              (knx.paramByte(WIP_ParamCalcIndex(WIP_CHType)))
+// Öffnungsweg
+#define ParamWIP_CHOpenPath                          (knx.paramByte(WIP_ParamCalcIndex(WIP_CHOpenPath)))
+// Auslösen bei Wert
+#define ParamWIP_CHOpenTrigger                       (knx.paramByte(WIP_ParamCalcIndex(WIP_CHOpenTrigger)))
+// Sperrobjekt
+#define ParamWIP_CHLockEnable                        ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHLockEnable)) & WIP_CHLockEnableMask))
+// Klingelsignal
+#define ParamWIP_CHRingMode                          ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHRingMode)) & WIP_CHRingModeMask))
+// Experteneinstellungen
+#define ParamWIP_CHExpert                            ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHExpert)) & WIP_CHExpertMask))
+// Lichtkanal verwenden
+#define ParamWIP_CHLightEnable                       ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHLightEnable)) & WIP_CHLightEnableMask))
+// Türstatus verwenden
+#define ParamWIP_CHStateEnable                       ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHStateEnable)) & WIP_CHStateEnableMask))
+// Impulsdauer
+#define ParamWIP_CHRingPulse                         (knx.paramWord(WIP_ParamCalcIndex(WIP_CHRingPulse)))
+// Sperrzeit (0 = aus)
+#define ParamWIP_CHRingBlock                         (knx.paramByte(WIP_ParamCalcIndex(WIP_CHRingBlock)))
+// Klingeln: Kanal
+#define ParamWIP_CHRingCh                            (knx.paramByte(WIP_ParamCalcIndex(WIP_CHRingCh)))
+// Klingeln: Datenpunkt
+#define ParamWIP_CHRingDp                            (knx.paramByte(WIP_ParamCalcIndex(WIP_CHRingDp)))
+// Türöffner: Kanal
+#define ParamWIP_CHOpenCh                            (knx.paramByte(WIP_ParamCalcIndex(WIP_CHOpenCh)))
+// Türöffner: Datenpunkt
+#define ParamWIP_CHOpenDp                            (knx.paramByte(WIP_ParamCalcIndex(WIP_CHOpenDp)))
+// Türstatus: Kanal
+#define ParamWIP_CHStateCh                           (knx.paramByte(WIP_ParamCalcIndex(WIP_CHStateCh)))
+// Türstatus: Datenpunkt
+#define ParamWIP_CHStateDp                           (knx.paramByte(WIP_ParamCalcIndex(WIP_CHStateDp)))
+// Seriennummer Außenstation
+#define ParamWIP_CHSerialOutdoor                     (knx.paramData(WIP_ParamCalcIndex(WIP_CHSerialOutdoor)))
+#define ParamWIP_CHSerialOutdoorStr                  (knx.paramString(WIP_ParamCalcIndex(WIP_CHSerialOutdoor), WIP_CHSerialOutdoorLength))
+// Datentyp
+#define ParamWIP_CHGenericDpt                        (knx.paramByte(WIP_ParamCalcIndex(WIP_CHGenericDpt)))
+// Richtung
+#define ParamWIP_CHGenericDir                        (knx.paramByte(WIP_ParamCalcIndex(WIP_CHGenericDir)))
+// Kanalaktivität
+#define ParamWIP_CHActive                            ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHActive)) & WIP_CHActiveMask))
+// Suspendiert
+#define ParamWIP_CHSuspended                         ((bool)(knx.paramByte(WIP_ParamCalcIndex(WIP_CHSuspended)) & WIP_CHSuspendedMask))
+
+// deprecated
+#define WIP_KoOffset 1070
+
+// Communication objects per channel (multiple occurrence)
+#define WIP_KoBlockOffset 1070
+#define WIP_KoBlockSize 10
+
+#define WIP_KoCalcNumber(index) (index + WIP_KoBlockOffset + _channelIndex * WIP_KoBlockSize)
+#define WIP_KoCalcIndex(number) ((number >= WIP_KoCalcNumber(0) && number < WIP_KoCalcNumber(WIP_KoBlockSize)) ? (number - WIP_KoBlockOffset) % WIP_KoBlockSize : -1)
+#define WIP_KoCalcChannel(number) ((number >= WIP_KoBlockOffset && number < WIP_KoBlockOffset + WIP_ChannelCount * WIP_KoBlockSize) ? (number - WIP_KoBlockOffset) / WIP_KoBlockSize : -1)
+
+#define WIP_KoCHRing 0
+#define WIP_KoCHOpen 1
+#define WIP_KoCHOpenActive 2
+#define WIP_KoCHLock 3
+#define WIP_KoCHDoorState 4
+#define WIP_KoCHError 5
+#define WIP_KoCHLight 6
+#define WIP_KoCHLightStatus 7
+#define WIP_KoCHGenericOut 8
+#define WIP_KoCHGenericIn 9
+
+// Klingeln
+#define KoWIP_CHRing                              (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHRing)))
+// Tür öffnen
+#define KoWIP_CHOpen                              (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHOpen)))
+// Status Türöffner
+#define KoWIP_CHOpenActive                        (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHOpenActive)))
+// Sperre
+#define KoWIP_CHLock                              (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHLock)))
+// Türstatus
+#define KoWIP_CHDoorState                         (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHDoorState)))
+// Fehler
+#define KoWIP_CHError                             (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHError)))
+// Licht
+#define KoWIP_CHLight                             (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHLight)))
+// Status Licht
+#define KoWIP_CHLightStatus                       (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHLightStatus)))
+// Wert
+#define KoWIP_CHGenericOut                        (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHGenericOut)))
+// Wert setzen
+#define KoWIP_CHGenericIn                         (knx.getGroupObject(WIP_KoCalcNumber(WIP_KoCHGenericIn)))
+
+#define ROB_ROBUseDiag                          6651      // 1 Bit, Bit 6
+#define     ROB_ROBUseDiagMask 0x40
+#define     ROB_ROBUseDiagShift 6
+
+// Diagnose-Meldungstext
+#define ParamROB_ROBUseDiag                          ((bool)(knx.paramByte(ROB_ROBUseDiag) & ROB_ROBUseDiagMask))
+
+#define ROB_KoROBDiag 1200
+
+// Diagnose
+#define KoROB_ROBDiag                             (knx.getGroupObject(ROB_KoROBDiag))
+
+#define ROB_ChannelCount 2
+
+// Parameter per channel
+#define ROB_ParamBlockOffset 6652
+#define ROB_ParamBlockSize 55
+#define ROB_ParamCalcIndex(index) (index + ROB_ParamBlockOffset + _channelIndex * ROB_ParamBlockSize)
+
+#define ROB_CHType                               0      // 8 Bits, Bit 7-0
+#define ROB_CHSuspended                          1      // 1 Bit, Bit 7
+#define     ROB_CHSuspendedMask 0x80
+#define     ROB_CHSuspendedShift 7
+#define ROB_CHIp                                 2      // char*, 16 Byte
+#define     ROB_CHIpLength 16
+#define ROB_CHToken                             18      // char*, 33 Byte
+#define     ROB_CHTokenLength 33
+#define ROB_CHPollInterval                      51      // uint16_t
+#define ROB_CHConsumablePoll                    53      // uint8_t
+#define ROB_CHCyclicSend                        54      // uint8_t
+
+// Kanaltyp
+#define ParamROB_CHType                              (knx.paramByte(ROB_ParamCalcIndex(ROB_CHType)))
+// Suspendiert
+#define ParamROB_CHSuspended                         ((bool)(knx.paramByte(ROB_ParamCalcIndex(ROB_CHSuspended)) & ROB_CHSuspendedMask))
+// IP-Adresse
+#define ParamROB_CHIp                                (knx.paramData(ROB_ParamCalcIndex(ROB_CHIp)))
+#define ParamROB_CHIpStr                             (knx.paramString(ROB_ParamCalcIndex(ROB_CHIp), ROB_CHIpLength))
+// Token (32 Hex-Zeichen)
+#define ParamROB_CHToken                             (knx.paramData(ROB_ParamCalcIndex(ROB_CHToken)))
+#define ParamROB_CHTokenStr                          (knx.paramString(ROB_ParamCalcIndex(ROB_CHToken), ROB_CHTokenLength))
+// Zustand abfragen alle
+#define ParamROB_CHPollInterval                      (knx.paramWord(ROB_ParamCalcIndex(ROB_CHPollInterval)))
+// Verschleiß abfragen alle
+#define ParamROB_CHConsumablePoll                    (knx.paramByte(ROB_ParamCalcIndex(ROB_CHConsumablePoll)))
+// Statusobjekte zyklisch senden alle
+#define ParamROB_CHCyclicSend                        (knx.paramByte(ROB_ParamCalcIndex(ROB_CHCyclicSend)))
+
+// deprecated
+#define ROB_KoOffset 1210
+
+// Communication objects per channel (multiple occurrence)
+#define ROB_KoBlockOffset 1210
+#define ROB_KoBlockSize 23
+
+#define ROB_KoCalcNumber(index) (index + ROB_KoBlockOffset + _channelIndex * ROB_KoBlockSize)
+#define ROB_KoCalcIndex(number) ((number >= ROB_KoCalcNumber(0) && number < ROB_KoCalcNumber(ROB_KoBlockSize)) ? (number - ROB_KoBlockOffset) % ROB_KoBlockSize : -1)
+#define ROB_KoCalcChannel(number) ((number >= ROB_KoBlockOffset && number < ROB_KoBlockOffset + ROB_ChannelCount * ROB_KoBlockSize) ? (number - ROB_KoBlockOffset) / ROB_KoBlockSize : -1)
+
+#define ROB_KoCHReachable 0
+#define ROB_KoCHStart 1
+#define ROB_KoCHPause 2
+#define ROB_KoCHStop 3
+#define ROB_KoCHDock 4
+#define ROB_KoCHLocate 5
+#define ROB_KoCHFanSpeed 6
+#define ROB_KoCHFanSpeedStatus 7
+#define ROB_KoCHState 8
+#define ROB_KoCHStateText 9
+#define ROB_KoCHCleaning 10
+#define ROB_KoCHCharging 11
+#define ROB_KoCHBattery 12
+#define ROB_KoCHError 13
+#define ROB_KoCHErrorCode 14
+#define ROB_KoCHErrorText 15
+#define ROB_KoCHCleanArea 16
+#define ROB_KoCHCleanTime 17
+#define ROB_KoCHMainBrush 18
+#define ROB_KoCHSideBrush 19
+#define ROB_KoCHFilter 20
+#define ROB_KoCHSensors 21
+#define ROB_KoCHConsumableReset 22
+
+// Erreichbar
+#define KoROB_CHReachable                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHReachable)))
+// Reinigung starten
+#define KoROB_CHStart                             (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHStart)))
+// Pause
+#define KoROB_CHPause                             (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHPause)))
+// Stopp
+#define KoROB_CHStop                              (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHStop)))
+// Zur Station
+#define KoROB_CHDock                              (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHDock)))
+// Roboter finden
+#define KoROB_CHLocate                            (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHLocate)))
+// Saugstufe
+#define KoROB_CHFanSpeed                          (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHFanSpeed)))
+// Status Saugstufe
+#define KoROB_CHFanSpeedStatus                    (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHFanSpeedStatus)))
+// Zustand
+#define KoROB_CHState                             (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHState)))
+// Zustand Text
+#define KoROB_CHStateText                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHStateText)))
+// Reinigt
+#define KoROB_CHCleaning                          (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHCleaning)))
+// Lädt
+#define KoROB_CHCharging                          (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHCharging)))
+// Akku
+#define KoROB_CHBattery                           (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHBattery)))
+// Fehler
+#define KoROB_CHError                             (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHError)))
+// Fehlercode
+#define KoROB_CHErrorCode                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHErrorCode)))
+// Fehlertext
+#define KoROB_CHErrorText                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHErrorText)))
+// Gereinigte Fläche
+#define KoROB_CHCleanArea                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHCleanArea)))
+// Reinigungsdauer
+#define KoROB_CHCleanTime                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHCleanTime)))
+// Hauptbürste Restlaufzeit
+#define KoROB_CHMainBrush                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHMainBrush)))
+// Seitenbürste Restlaufzeit
+#define KoROB_CHSideBrush                         (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHSideBrush)))
+// Filter Restlaufzeit
+#define KoROB_CHFilter                            (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHFilter)))
+// Sensoren Restlaufzeit
+#define KoROB_CHSensors                           (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHSensors)))
+// Verschleiß zurücksetzen
+#define KoROB_CHConsumableReset                   (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHConsumableReset)))
+
+#define LOG_VisibleChannels                     6762      // uint8_t
+#define LOG_VacationKo                          6763      // 1 Bit, Bit 7
 #define     LOG_VacationKoMask 0x80
 #define     LOG_VacationKoShift 7
-#define LOG_HolidayKo                           5570      // 1 Bit, Bit 6
+#define LOG_HolidayKo                           6763      // 1 Bit, Bit 6
 #define     LOG_HolidayKoMask 0x40
 #define     LOG_HolidayKoShift 6
-#define LOG_VacationRead                        5570      // 1 Bit, Bit 5
+#define LOG_VacationRead                        6763      // 1 Bit, Bit 5
 #define     LOG_VacationReadMask 0x20
 #define     LOG_VacationReadShift 5
-#define LOG_HolidaySend                         5570      // 1 Bit, Bit 4
+#define LOG_HolidaySend                         6763      // 1 Bit, Bit 4
 #define     LOG_HolidaySendMask 0x10
 #define     LOG_HolidaySendShift 4
-#define LOG_Neujahr                             5571      // 1 Bit, Bit 7
+#define LOG_Neujahr                             6764      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         5571      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         6764      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     5571      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     6764      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         5571      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         6764      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  5571      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  6764      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      5571      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      6764      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           5571      // 1 Bit, Bit 1
+#define LOG_Frauentag                           6764      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     5571      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     6764      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          5572      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          6765      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        5572      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        6765      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         5572      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         6765      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        5572      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        6765      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         5572      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         6765      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      5572      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      6765      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       5572      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       6765      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        5572      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        6765      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        5573      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        6766      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    5573      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    6766      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     5573      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     6766      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Reformationstag                     5573      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     6766      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       5573      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       6766      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          5573      // 1 Bit, Bit 2
+#define LOG_BussBettag                          6766      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_Advent1                             5573      // 1 Bit, Bit 1
+#define LOG_Advent1                             6766      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             5573      // 1 Bit, Bit 0
+#define LOG_Advent2                             6766      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             5574      // 1 Bit, Bit 7
+#define LOG_Advent3                             6767      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             5574      // 1 Bit, Bit 6
+#define LOG_Advent4                             6767      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         5574      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         6767      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      5574      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      6767      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      5574      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      6767      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           5574      // 1 Bit, Bit 2
+#define LOG_Silvester                           6767      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_Nationalfeiertag                    5574      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    6767      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_MariaEmpfaengnis                    5574      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    6767      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_NationalfeiertagSchweiz             5575      // 1 Bit, Bit 7
+#define LOG_NationalfeiertagSchweiz             6768      // 1 Bit, Bit 7
 #define     LOG_NationalfeiertagSchweizMask 0x80
 #define     LOG_NationalfeiertagSchweizShift 7
-#define LOG_Totensonntag                        5575      // 1 Bit, Bit 6
+#define LOG_Totensonntag                        6768      // 1 Bit, Bit 6
 #define     LOG_TotensonntagMask 0x40
 #define     LOG_TotensonntagShift 6
-#define LOG_Weltkindertag                       5575      // 1 Bit, Bit 5
+#define LOG_Weltkindertag                       6768      // 1 Bit, Bit 5
 #define     LOG_WeltkindertagMask 0x20
 #define     LOG_WeltkindertagShift 5
-#define LOG_UserFormula1                        5576      // char*, 99 Byte
+#define LOG_UserFormula1                        6769      // char*, 99 Byte
 #define     LOG_UserFormula1Length 99
-#define LOG_UserFormula1Active                  5675      // 1 Bit, Bit 7
+#define LOG_UserFormula1Active                  6868      // 1 Bit, Bit 7
 #define     LOG_UserFormula1ActiveMask 0x80
 #define     LOG_UserFormula1ActiveShift 7
-#define LOG_UserFormula2                        5676      // char*, 99 Byte
+#define LOG_UserFormula2                        6869      // char*, 99 Byte
 #define     LOG_UserFormula2Length 99
-#define LOG_UserFormula2Active                  5775      // 1 Bit, Bit 7
+#define LOG_UserFormula2Active                  6968      // 1 Bit, Bit 7
 #define     LOG_UserFormula2ActiveMask 0x80
 #define     LOG_UserFormula2ActiveShift 7
-#define LOG_UserFormula3                        5776      // char*, 99 Byte
+#define LOG_UserFormula3                        6969      // char*, 99 Byte
 #define     LOG_UserFormula3Length 99
-#define LOG_UserFormula3Active                  5875      // 1 Bit, Bit 7
+#define LOG_UserFormula3Active                  7068      // 1 Bit, Bit 7
 #define     LOG_UserFormula3ActiveMask 0x80
 #define     LOG_UserFormula3ActiveShift 7
-#define LOG_UserFormula4                        5876      // char*, 99 Byte
+#define LOG_UserFormula4                        7069      // char*, 99 Byte
 #define     LOG_UserFormula4Length 99
-#define LOG_UserFormula4Active                  5975      // 1 Bit, Bit 7
+#define LOG_UserFormula4Active                  7168      // 1 Bit, Bit 7
 #define     LOG_UserFormula4ActiveMask 0x80
 #define     LOG_UserFormula4ActiveShift 7
-#define LOG_UserFormula5                        5976      // char*, 99 Byte
+#define LOG_UserFormula5                        7169      // char*, 99 Byte
 #define     LOG_UserFormula5Length 99
-#define LOG_UserFormula5Active                  6075      // 1 Bit, Bit 7
+#define LOG_UserFormula5Active                  7268      // 1 Bit, Bit 7
 #define     LOG_UserFormula5ActiveMask 0x80
 #define     LOG_UserFormula5ActiveShift 7
-#define LOG_UserFormula6                        6076      // char*, 99 Byte
+#define LOG_UserFormula6                        7269      // char*, 99 Byte
 #define     LOG_UserFormula6Length 99
-#define LOG_UserFormula6Active                  6175      // 1 Bit, Bit 7
+#define LOG_UserFormula6Active                  7368      // 1 Bit, Bit 7
 #define     LOG_UserFormula6ActiveMask 0x80
 #define     LOG_UserFormula6ActiveShift 7
-#define LOG_UserFormula7                        6176      // char*, 99 Byte
+#define LOG_UserFormula7                        7369      // char*, 99 Byte
 #define     LOG_UserFormula7Length 99
-#define LOG_UserFormula7Active                  6275      // 1 Bit, Bit 7
+#define LOG_UserFormula7Active                  7468      // 1 Bit, Bit 7
 #define     LOG_UserFormula7ActiveMask 0x80
 #define     LOG_UserFormula7ActiveShift 7
-#define LOG_UserFormula8                        6276      // char*, 99 Byte
+#define LOG_UserFormula8                        7469      // char*, 99 Byte
 #define     LOG_UserFormula8Length 99
-#define LOG_UserFormula8Active                  6375      // 1 Bit, Bit 7
+#define LOG_UserFormula8Active                  7568      // 1 Bit, Bit 7
 #define     LOG_UserFormula8ActiveMask 0x80
 #define     LOG_UserFormula8ActiveShift 7
-#define LOG_UserFormula9                        6376      // char*, 99 Byte
+#define LOG_UserFormula9                        7569      // char*, 99 Byte
 #define     LOG_UserFormula9Length 99
-#define LOG_UserFormula9Active                  6475      // 1 Bit, Bit 7
+#define LOG_UserFormula9Active                  7668      // 1 Bit, Bit 7
 #define     LOG_UserFormula9ActiveMask 0x80
 #define     LOG_UserFormula9ActiveShift 7
-#define LOG_UserFormula10                       6476      // char*, 99 Byte
+#define LOG_UserFormula10                       7669      // char*, 99 Byte
 #define     LOG_UserFormula10Length 99
-#define LOG_UserFormula10Active                 6575      // 1 Bit, Bit 7
+#define LOG_UserFormula10Active                 7768      // 1 Bit, Bit 7
 #define     LOG_UserFormula10ActiveMask 0x80
 #define     LOG_UserFormula10ActiveShift 7
-#define LOG_UserFormula11                       6576      // char*, 99 Byte
+#define LOG_UserFormula11                       7769      // char*, 99 Byte
 #define     LOG_UserFormula11Length 99
-#define LOG_UserFormula11Active                 6675      // 1 Bit, Bit 7
+#define LOG_UserFormula11Active                 7868      // 1 Bit, Bit 7
 #define     LOG_UserFormula11ActiveMask 0x80
 #define     LOG_UserFormula11ActiveShift 7
-#define LOG_UserFormula12                       6676      // char*, 99 Byte
+#define LOG_UserFormula12                       7869      // char*, 99 Byte
 #define     LOG_UserFormula12Length 99
-#define LOG_UserFormula12Active                 6775      // 1 Bit, Bit 7
+#define LOG_UserFormula12Active                 7968      // 1 Bit, Bit 7
 #define     LOG_UserFormula12ActiveMask 0x80
 #define     LOG_UserFormula12ActiveShift 7
-#define LOG_UserFormula13                       6776      // char*, 99 Byte
+#define LOG_UserFormula13                       7969      // char*, 99 Byte
 #define     LOG_UserFormula13Length 99
-#define LOG_UserFormula13Active                 6875      // 1 Bit, Bit 7
+#define LOG_UserFormula13Active                 8068      // 1 Bit, Bit 7
 #define     LOG_UserFormula13ActiveMask 0x80
 #define     LOG_UserFormula13ActiveShift 7
-#define LOG_UserFormula14                       6876      // char*, 99 Byte
+#define LOG_UserFormula14                       8069      // char*, 99 Byte
 #define     LOG_UserFormula14Length 99
-#define LOG_UserFormula14Active                 6975      // 1 Bit, Bit 7
+#define LOG_UserFormula14Active                 8168      // 1 Bit, Bit 7
 #define     LOG_UserFormula14ActiveMask 0x80
 #define     LOG_UserFormula14ActiveShift 7
-#define LOG_UserFormula15                       6976      // char*, 99 Byte
+#define LOG_UserFormula15                       8169      // char*, 99 Byte
 #define     LOG_UserFormula15Length 99
-#define LOG_UserFormula15Active                 7075      // 1 Bit, Bit 7
+#define LOG_UserFormula15Active                 8268      // 1 Bit, Bit 7
 #define     LOG_UserFormula15ActiveMask 0x80
 #define     LOG_UserFormula15ActiveShift 7
-#define LOG_UserFormula16                       7076      // char*, 99 Byte
+#define LOG_UserFormula16                       8269      // char*, 99 Byte
 #define     LOG_UserFormula16Length 99
-#define LOG_UserFormula16Active                 7175      // 1 Bit, Bit 7
+#define LOG_UserFormula16Active                 8368      // 1 Bit, Bit 7
 #define     LOG_UserFormula16ActiveMask 0x80
 #define     LOG_UserFormula16ActiveShift 7
-#define LOG_UserFormula17                       7176      // char*, 99 Byte
+#define LOG_UserFormula17                       8369      // char*, 99 Byte
 #define     LOG_UserFormula17Length 99
-#define LOG_UserFormula17Active                 7275      // 1 Bit, Bit 7
+#define LOG_UserFormula17Active                 8468      // 1 Bit, Bit 7
 #define     LOG_UserFormula17ActiveMask 0x80
 #define     LOG_UserFormula17ActiveShift 7
-#define LOG_UserFormula18                       7276      // char*, 99 Byte
+#define LOG_UserFormula18                       8469      // char*, 99 Byte
 #define     LOG_UserFormula18Length 99
-#define LOG_UserFormula18Active                 7375      // 1 Bit, Bit 7
+#define LOG_UserFormula18Active                 8568      // 1 Bit, Bit 7
 #define     LOG_UserFormula18ActiveMask 0x80
 #define     LOG_UserFormula18ActiveShift 7
-#define LOG_UserFormula19                       7376      // char*, 99 Byte
+#define LOG_UserFormula19                       8569      // char*, 99 Byte
 #define     LOG_UserFormula19Length 99
-#define LOG_UserFormula19Active                 7475      // 1 Bit, Bit 7
+#define LOG_UserFormula19Active                 8668      // 1 Bit, Bit 7
 #define     LOG_UserFormula19ActiveMask 0x80
 #define     LOG_UserFormula19ActiveShift 7
-#define LOG_UserFormula20                       7476      // char*, 99 Byte
+#define LOG_UserFormula20                       8669      // char*, 99 Byte
 #define     LOG_UserFormula20Length 99
-#define LOG_UserFormula20Active                 7575      // 1 Bit, Bit 7
+#define LOG_UserFormula20Active                 8768      // 1 Bit, Bit 7
 #define     LOG_UserFormula20ActiveMask 0x80
 #define     LOG_UserFormula20ActiveShift 7
-#define LOG_UserFormula21                       7576      // char*, 99 Byte
+#define LOG_UserFormula21                       8769      // char*, 99 Byte
 #define     LOG_UserFormula21Length 99
-#define LOG_UserFormula21Active                 7675      // 1 Bit, Bit 7
+#define LOG_UserFormula21Active                 8868      // 1 Bit, Bit 7
 #define     LOG_UserFormula21ActiveMask 0x80
 #define     LOG_UserFormula21ActiveShift 7
-#define LOG_UserFormula22                       7676      // char*, 99 Byte
+#define LOG_UserFormula22                       8869      // char*, 99 Byte
 #define     LOG_UserFormula22Length 99
-#define LOG_UserFormula22Active                 7775      // 1 Bit, Bit 7
+#define LOG_UserFormula22Active                 8968      // 1 Bit, Bit 7
 #define     LOG_UserFormula22ActiveMask 0x80
 #define     LOG_UserFormula22ActiveShift 7
-#define LOG_UserFormula23                       7776      // char*, 99 Byte
+#define LOG_UserFormula23                       8969      // char*, 99 Byte
 #define     LOG_UserFormula23Length 99
-#define LOG_UserFormula23Active                 7875      // 1 Bit, Bit 7
+#define LOG_UserFormula23Active                 9068      // 1 Bit, Bit 7
 #define     LOG_UserFormula23ActiveMask 0x80
 #define     LOG_UserFormula23ActiveShift 7
-#define LOG_UserFormula24                       7876      // char*, 99 Byte
+#define LOG_UserFormula24                       9069      // char*, 99 Byte
 #define     LOG_UserFormula24Length 99
-#define LOG_UserFormula24Active                 7975      // 1 Bit, Bit 7
+#define LOG_UserFormula24Active                 9168      // 1 Bit, Bit 7
 #define     LOG_UserFormula24ActiveMask 0x80
 #define     LOG_UserFormula24ActiveShift 7
-#define LOG_UserFormula25                       7976      // char*, 99 Byte
+#define LOG_UserFormula25                       9169      // char*, 99 Byte
 #define     LOG_UserFormula25Length 99
-#define LOG_UserFormula25Active                 8075      // 1 Bit, Bit 7
+#define LOG_UserFormula25Active                 9268      // 1 Bit, Bit 7
 #define     LOG_UserFormula25ActiveMask 0x80
 #define     LOG_UserFormula25ActiveShift 7
-#define LOG_UserFormula26                       8076      // char*, 99 Byte
+#define LOG_UserFormula26                       9269      // char*, 99 Byte
 #define     LOG_UserFormula26Length 99
-#define LOG_UserFormula26Active                 8175      // 1 Bit, Bit 7
+#define LOG_UserFormula26Active                 9368      // 1 Bit, Bit 7
 #define     LOG_UserFormula26ActiveMask 0x80
 #define     LOG_UserFormula26ActiveShift 7
-#define LOG_UserFormula27                       8176      // char*, 99 Byte
+#define LOG_UserFormula27                       9369      // char*, 99 Byte
 #define     LOG_UserFormula27Length 99
-#define LOG_UserFormula27Active                 8275      // 1 Bit, Bit 7
+#define LOG_UserFormula27Active                 9468      // 1 Bit, Bit 7
 #define     LOG_UserFormula27ActiveMask 0x80
 #define     LOG_UserFormula27ActiveShift 7
-#define LOG_UserFormula28                       8276      // char*, 99 Byte
+#define LOG_UserFormula28                       9469      // char*, 99 Byte
 #define     LOG_UserFormula28Length 99
-#define LOG_UserFormula28Active                 8375      // 1 Bit, Bit 7
+#define LOG_UserFormula28Active                 9568      // 1 Bit, Bit 7
 #define     LOG_UserFormula28ActiveMask 0x80
 #define     LOG_UserFormula28ActiveShift 7
-#define LOG_UserFormula29                       8376      // char*, 99 Byte
+#define LOG_UserFormula29                       9569      // char*, 99 Byte
 #define     LOG_UserFormula29Length 99
-#define LOG_UserFormula29Active                 8475      // 1 Bit, Bit 7
+#define LOG_UserFormula29Active                 9668      // 1 Bit, Bit 7
 #define     LOG_UserFormula29ActiveMask 0x80
 #define     LOG_UserFormula29ActiveShift 7
-#define LOG_UserFormula30                       8476      // char*, 99 Byte
+#define LOG_UserFormula30                       9669      // char*, 99 Byte
 #define     LOG_UserFormula30Length 99
-#define LOG_UserFormula30Active                 8575      // 1 Bit, Bit 7
+#define LOG_UserFormula30Active                 9768      // 1 Bit, Bit 7
 #define     LOG_UserFormula30ActiveMask 0x80
 #define     LOG_UserFormula30ActiveShift 7
 
@@ -1592,7 +4900,7 @@
 #define LOG_ChannelCount 50
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 8576
+#define LOG_ParamBlockOffset 9769
 #define LOG_ParamBlockSize 89
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -2520,17 +5828,17 @@
 #define LOG_fOOffKOSendNumber                   81      // uint16_t
 #define LOG_fOOffKOSendNumberRel                81      // int16_t
 
-// Zeit bis der Kanal nach einem Neustart aktiv wird
+// Startverzögerung
 #define ParamLOG_fChannelDelayBase                   ((knx.paramByte(LOG_ParamCalcIndex(LOG_fChannelDelayBase)) & LOG_fChannelDelayBaseMask) >> LOG_fChannelDelayBaseShift)
-// Zeit bis der Kanal nach einem Neustart aktiv wird
+// Startverzögerung
 #define ParamLOG_fChannelDelayTime                   (knx.paramWord(LOG_ParamCalcIndex(LOG_fChannelDelayTime)) & LOG_fChannelDelayTimeMask)
-// Zeit bis der Kanal nach einem Neustart aktiv wird (in Millisekunden)
+// Startverzögerung (in Millisekunden)
 #define ParamLOG_fChannelDelayTimeMS                 (paramDelay(knx.paramWord(LOG_ParamCalcIndex(LOG_fChannelDelayTime))))
 // Logik-Operation
 #define ParamLOG_fLogic                              (PT_Logic)(knx.paramByte(LOG_ParamCalcIndex(LOG_fLogic)))
 // Logik auswerten
 #define ParamLOG_fCalculate                          (PT_Calculate)(knx.paramByte(LOG_ParamCalcIndex(LOG_fCalculate)) & LOG_fCalculateMask)
-// Kanal deaktivieren (zu Testzwecken)
+// Suspendiert
 #define ParamLOG_fDisable                            ((bool)(knx.paramByte(LOG_ParamCalcIndex(LOG_fDisable)) & LOG_fDisableMask))
 // Tor geht sofort wieder zu
 #define ParamLOG_fTGate                              ((bool)(knx.paramByte(LOG_ParamCalcIndex(LOG_fTGate)) & LOG_fTGateMask))
@@ -3497,15 +6805,10 @@
 // Ausgang
 #define KoLOG_KOfO                                (knx.getGroupObject(LOG_KoCalcNumber(LOG_KoKOfO)))
 
-#define FCB_VisibleChannels                     13026      // uint8_t
-
-// Verfügbare Kanäle
-#define ParamFCB_VisibleChannels                     (knx.paramByte(FCB_VisibleChannels))
-
 #define FCB_ChannelCount 15
 
 // Parameter per channel
-#define FCB_ParamBlockOffset 13027
+#define FCB_ParamBlockOffset 14219
 #define FCB_ParamBlockSize 81
 #define FCB_ParamCalcIndex(index) (index + FCB_ParamBlockOffset + _channelIndex * FCB_ParamBlockSize)
 
@@ -4019,7 +7322,7 @@
 
 // Type
 #define ParamFCB_CHChannelType                       (knx.paramByte(FCB_ParamCalcIndex(FCB_CHChannelType)))
-// Kanal deaktivieren (zu Testzwecken)
+// Suspendiert
 #define ParamFCB_CHChannelDisabled                   ((bool)(knx.paramByte(FCB_ParamCalcIndex(FCB_CHChannelDisabled)) & FCB_CHChannelDisabledMask))
 // Eingang 1
 #define ParamFCB_CHLogicKo0D                         ((knx.paramByte(FCB_ParamCalcIndex(FCB_CHLogicKo0D)) & FCB_CHLogicKo0DMask) >> FCB_CHLogicKo0DShift)
