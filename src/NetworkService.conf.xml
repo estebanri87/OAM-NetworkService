@@ -12,8 +12,9 @@
   <op:config name="%SPV_VerifyVersion%" value="0.5" />
   <op:config name="%WIP_VerifyVersion%" value="0.2" />
   <op:config name="%ROB_VerifyVersion%" value="0.1" />
+  <op:config name="%GDW_VerifyVersion%" value="0.1" />
 
-  <op:config name="%ReleaseApplicationVersion%" value="1.0.0" />
+  <op:config name="%ReleaseApplicationVersion%" value="1.0.1" />
   <op:config name="%ReleaseReplacesVersions%" value="0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.10" />
 
   <op:config name="%NET_ServiceNTP%" value="1" />

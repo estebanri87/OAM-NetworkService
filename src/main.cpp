@@ -13,6 +13,7 @@
 #include "SolarmanPVModule.h"
 #include "WelcomeIPModule.h"
 #include "RoborockModule.h"
+#include "GoodWeModule.h"
 
 void setup()
 {
@@ -41,6 +42,7 @@ void setup()
 #ifdef OPENKNX_ROBOROCK
     openknx.addModule(13, openknxRoborockModule);
 #endif
+    openknx.addModule(14, openknxGoodWeModule);
     openknx.setup();
 }
 

@@ -17,16 +17,17 @@
 #define ETS_ModuleId_SPV 6
 #define ETS_ModuleId_WIP 7
 #define ETS_ModuleId_ROB 8
-#define ETS_ModuleId_LOG 9
-#define ETS_ModuleId_FCB 10
+#define ETS_ModuleId_GDW 9
+#define ETS_ModuleId_LOG 10
+#define ETS_ModuleId_FCB 11
 #define MAIN_FirmwareName "Netzwerk Dienste (Beta)"
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 47
 #define MAIN_ApplicationVersion 16
-#define MAIN_FirmwareRevision 0
+#define MAIN_FirmwareRevision 1
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 15434
-#define MAIN_MaxKoNumber 1255
+#define MAIN_ParameterSize 15627
+#define MAIN_MaxKoNumber 1991
 #define MAIN_OrderNumber "OpenKNX-SR-NET"
 #define BASE_ModuleVersion 25
 #define NET_ModuleVersion 8
@@ -36,6 +37,7 @@
 #define SPV_ModuleVersion 5
 #define WIP_ModuleVersion 2
 #define ROB_ModuleVersion 1
+#define GDW_ModuleVersion 1
 #define LOG_ModuleVersion 68
 #define FCB_ModuleVersion 11
 // Parameter with single occurrence
@@ -122,12 +124,15 @@
 #define BASE_ModuleEnabled_ROB                   110      // 1 Bit, Bit 0
 #define     BASE_ModuleEnabled_ROBMask 0x01
 #define     BASE_ModuleEnabled_ROBShift 0
-#define BASE_ModuleEnabled_LOG                   111      // 1 Bit, Bit 7
-#define     BASE_ModuleEnabled_LOGMask 0x80
-#define     BASE_ModuleEnabled_LOGShift 7
-#define BASE_ModuleEnabled_FCB                   111      // 1 Bit, Bit 6
-#define     BASE_ModuleEnabled_FCBMask 0x40
-#define     BASE_ModuleEnabled_FCBShift 6
+#define BASE_ModuleEnabled_GDW                   111      // 1 Bit, Bit 7
+#define     BASE_ModuleEnabled_GDWMask 0x80
+#define     BASE_ModuleEnabled_GDWShift 7
+#define BASE_ModuleEnabled_LOG                   111      // 1 Bit, Bit 6
+#define     BASE_ModuleEnabled_LOGMask 0x40
+#define     BASE_ModuleEnabled_LOGShift 6
+#define BASE_ModuleEnabled_FCB                   111      // 1 Bit, Bit 5
+#define     BASE_ModuleEnabled_FCBMask 0x20
+#define     BASE_ModuleEnabled_FCBShift 5
 
 // Zeitbasis
 #define ParamBASE_StartupDelayBase                    ((knx.paramByte(BASE_StartupDelayBase) & BASE_StartupDelayBaseMask) >> BASE_StartupDelayBaseShift)
@@ -198,6 +203,8 @@
 #define ParamBASE_ModuleEnabled_WIP                   ((bool)(knx.paramByte(BASE_ModuleEnabled_WIP) & BASE_ModuleEnabled_WIPMask))
 // ROB
 #define ParamBASE_ModuleEnabled_ROB                   ((bool)(knx.paramByte(BASE_ModuleEnabled_ROB) & BASE_ModuleEnabled_ROBMask))
+// GDW
+#define ParamBASE_ModuleEnabled_GDW                   ((bool)(knx.paramByte(BASE_ModuleEnabled_GDW) & BASE_ModuleEnabled_GDWMask))
 // LOG
 #define ParamBASE_ModuleEnabled_LOG                   ((bool)(knx.paramByte(BASE_ModuleEnabled_LOG) & BASE_ModuleEnabled_LOGMask))
 // FCB
@@ -4386,272 +4393,2760 @@
 // Verschleiß zurücksetzen
 #define KoROB_CHConsumableReset                   (knx.getGroupObject(ROB_KoCalcNumber(ROB_KoCHConsumableReset)))
 
-#define LOG_VisibleChannels                     6762      // uint8_t
-#define LOG_VacationKo                          6763      // 1 Bit, Bit 7
+#define GDW_GDWUseDiag                          6762      // 1 Bit, Bit 6
+#define     GDW_GDWUseDiagMask 0x40
+#define     GDW_GDWUseDiagShift 6
+
+// Diagnose-Meldungstext
+#define ParamGDW_GDWUseDiag                          ((bool)(knx.paramByte(GDW_GDWUseDiag) & GDW_GDWUseDiagMask))
+
+#define GDW_KoGDWDiag 1300
+
+// Diagnose
+#define KoGDW_GDWDiag                             (knx.getGroupObject(GDW_KoGDWDiag))
+
+#define GDW_ChannelCount 2
+
+// Parameter per channel
+#define GDW_ParamBlockOffset 6763
+#define GDW_ParamBlockSize 96
+#define GDW_ParamCalcIndex(index) (index + GDW_ParamBlockOffset + _channelIndex * GDW_ParamBlockSize)
+
+#define GDW_CHType                               0      // 8 Bits, Bit 7-0
+#define GDW_CHSuspended                          1      // 1 Bit, Bit 7
+#define     GDW_CHSuspendedMask 0x80
+#define     GDW_CHSuspendedShift 7
+#define GDW_CHIp                                 2      // char*, 16 Byte
+#define     GDW_CHIpLength 16
+#define GDW_CHPort                              18      // uint16_t
+#define GDW_CHProtocol                          20      // 8 Bits, Bit 7-0
+#define GDW_CHAddress                           21      // uint8_t
+#define GDW_CHPollInterval                      22      // uint16_t
+#define GDW_CHSendDelayBase                     24      // 2 Bits, Bit 7-6
+#define     GDW_CHSendDelayBaseMask 0xC0
+#define     GDW_CHSendDelayBaseShift 6
+#define GDW_CHSendDelayTime                     24      // 14 Bits, Bit 13-0
+#define     GDW_CHSendDelayTimeMask 0x3FFF
+#define     GDW_CHSendDelayTimeShift 0
+#define GDW_CHSendChangePercent                 26      // uint8_t
+#define GDW_CHUseReachable                      32      // 1 Bit, Bit 7
+#define     GDW_CHUseReachableMask 0x80
+#define     GDW_CHUseReachableShift 7
+#define GDW_CHUseWorkMode                       32      // 1 Bit, Bit 6
+#define     GDW_CHUseWorkModeMask 0x40
+#define     GDW_CHUseWorkModeShift 6
+#define GDW_CHUseErrorCodes                     32      // 1 Bit, Bit 5
+#define     GDW_CHUseErrorCodesMask 0x20
+#define     GDW_CHUseErrorCodesShift 5
+#define GDW_CHUseWarningCode                    32      // 1 Bit, Bit 4
+#define     GDW_CHUseWarningCodeMask 0x10
+#define     GDW_CHUseWarningCodeShift 4
+#define GDW_CHUseSafetyCountry                  32      // 1 Bit, Bit 3
+#define     GDW_CHUseSafetyCountryMask 0x08
+#define     GDW_CHUseSafetyCountryShift 3
+#define GDW_CHUseFunctionBit                    32      // 1 Bit, Bit 2
+#define     GDW_CHUseFunctionBitMask 0x04
+#define     GDW_CHUseFunctionBitShift 2
+#define GDW_CHUseHoursTotal                     32      // 1 Bit, Bit 1
+#define     GDW_CHUseHoursTotalMask 0x02
+#define     GDW_CHUseHoursTotalShift 1
+#define GDW_CHUseTimestamp                      32      // 1 Bit, Bit 0
+#define     GDW_CHUseTimestampMask 0x01
+#define     GDW_CHUseTimestampShift 0
+#define GDW_CHUseTemperature                    33      // 1 Bit, Bit 7
+#define     GDW_CHUseTemperatureMask 0x80
+#define     GDW_CHUseTemperatureShift 7
+#define GDW_CHUseBusVoltage                     33      // 1 Bit, Bit 6
+#define     GDW_CHUseBusVoltageMask 0x40
+#define     GDW_CHUseBusVoltageShift 6
+#define GDW_CHUseNBusVoltage                    33      // 1 Bit, Bit 5
+#define     GDW_CHUseNBusVoltageMask 0x20
+#define     GDW_CHUseNBusVoltageShift 5
+#define GDW_CHUseGridInOut                      33      // 1 Bit, Bit 4
+#define     GDW_CHUseGridInOutMask 0x10
+#define     GDW_CHUseGridInOutShift 4
+#define GDW_CHUseRssi                           33      // 1 Bit, Bit 3
+#define     GDW_CHUseRssiMask 0x08
+#define     GDW_CHUseRssiShift 3
+#define GDW_CHUseMeterCommStatus                33      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterCommStatusMask 0x04
+#define     GDW_CHUseMeterCommStatusShift 2
+#define GDW_CHUseGridMode                       33      // 1 Bit, Bit 1
+#define     GDW_CHUseGridModeMask 0x02
+#define     GDW_CHUseGridModeShift 1
+#define GDW_CHUseOperationCode                  33      // 1 Bit, Bit 0
+#define     GDW_CHUseOperationCodeMask 0x01
+#define     GDW_CHUseOperationCodeShift 0
+#define GDW_CHUseDiagStatus                     34      // 1 Bit, Bit 7
+#define     GDW_CHUseDiagStatusMask 0x80
+#define     GDW_CHUseDiagStatusShift 7
+#define GDW_CHUseTempAir                        34      // 1 Bit, Bit 6
+#define     GDW_CHUseTempAirMask 0x40
+#define     GDW_CHUseTempAirShift 6
+#define GDW_CHUseTempModule                     34      // 1 Bit, Bit 5
+#define     GDW_CHUseTempModuleMask 0x20
+#define     GDW_CHUseTempModuleShift 5
+#define GDW_CHUseTempHeatsink                   34      // 1 Bit, Bit 4
+#define     GDW_CHUseTempHeatsinkMask 0x10
+#define     GDW_CHUseTempHeatsinkShift 4
+#define GDW_CHUseDeratingMode                   34      // 1 Bit, Bit 3
+#define     GDW_CHUseDeratingModeMask 0x08
+#define     GDW_CHUseDeratingModeShift 3
+#define GDW_CHUseLeakageCurrent                 34      // 1 Bit, Bit 2
+#define     GDW_CHUseLeakageCurrentMask 0x04
+#define     GDW_CHUseLeakageCurrentShift 2
+#define GDW_CHUsePvPower                        34      // 1 Bit, Bit 1
+#define     GDW_CHUsePvPowerMask 0x02
+#define     GDW_CHUsePvPowerShift 1
+#define GDW_CHUsePv1Voltage                     34      // 1 Bit, Bit 0
+#define     GDW_CHUsePv1VoltageMask 0x01
+#define     GDW_CHUsePv1VoltageShift 0
+#define GDW_CHUsePv1Current                     35      // 1 Bit, Bit 7
+#define     GDW_CHUsePv1CurrentMask 0x80
+#define     GDW_CHUsePv1CurrentShift 7
+#define GDW_CHUsePv1Power                       35      // 1 Bit, Bit 6
+#define     GDW_CHUsePv1PowerMask 0x40
+#define     GDW_CHUsePv1PowerShift 6
+#define GDW_CHUsePv2Voltage                     35      // 1 Bit, Bit 5
+#define     GDW_CHUsePv2VoltageMask 0x20
+#define     GDW_CHUsePv2VoltageShift 5
+#define GDW_CHUsePv2Current                     35      // 1 Bit, Bit 4
+#define     GDW_CHUsePv2CurrentMask 0x10
+#define     GDW_CHUsePv2CurrentShift 4
+#define GDW_CHUsePv2Power                       35      // 1 Bit, Bit 3
+#define     GDW_CHUsePv2PowerMask 0x08
+#define     GDW_CHUsePv2PowerShift 3
+#define GDW_CHUsePv3Voltage                     35      // 1 Bit, Bit 2
+#define     GDW_CHUsePv3VoltageMask 0x04
+#define     GDW_CHUsePv3VoltageShift 2
+#define GDW_CHUsePv3Current                     35      // 1 Bit, Bit 1
+#define     GDW_CHUsePv3CurrentMask 0x02
+#define     GDW_CHUsePv3CurrentShift 1
+#define GDW_CHUsePv3Power                       35      // 1 Bit, Bit 0
+#define     GDW_CHUsePv3PowerMask 0x01
+#define     GDW_CHUsePv3PowerShift 0
+#define GDW_CHUsePv4Voltage                     36      // 1 Bit, Bit 7
+#define     GDW_CHUsePv4VoltageMask 0x80
+#define     GDW_CHUsePv4VoltageShift 7
+#define GDW_CHUsePv4Current                     36      // 1 Bit, Bit 6
+#define     GDW_CHUsePv4CurrentMask 0x40
+#define     GDW_CHUsePv4CurrentShift 6
+#define GDW_CHUsePv4Power                       36      // 1 Bit, Bit 5
+#define     GDW_CHUsePv4PowerMask 0x20
+#define     GDW_CHUsePv4PowerShift 5
+#define GDW_CHUsePv1Mode                        36      // 1 Bit, Bit 4
+#define     GDW_CHUsePv1ModeMask 0x10
+#define     GDW_CHUsePv1ModeShift 4
+#define GDW_CHUsePv2Mode                        36      // 1 Bit, Bit 3
+#define     GDW_CHUsePv2ModeMask 0x08
+#define     GDW_CHUsePv2ModeShift 3
+#define GDW_CHUsePv3Mode                        36      // 1 Bit, Bit 2
+#define     GDW_CHUsePv3ModeMask 0x04
+#define     GDW_CHUsePv3ModeShift 2
+#define GDW_CHUsePv4Mode                        36      // 1 Bit, Bit 1
+#define     GDW_CHUsePv4ModeMask 0x02
+#define     GDW_CHUsePv4ModeShift 1
+#define GDW_CHUseTotalInputPower                36      // 1 Bit, Bit 0
+#define     GDW_CHUseTotalInputPowerMask 0x01
+#define     GDW_CHUseTotalInputPowerShift 0
+#define GDW_CHUsePvPowerTotalExt                37      // 1 Bit, Bit 7
+#define     GDW_CHUsePvPowerTotalExtMask 0x80
+#define     GDW_CHUsePvPowerTotalExtShift 7
+#define GDW_CHUsePvChannel                      37      // 1 Bit, Bit 6
+#define     GDW_CHUsePvChannelMask 0x40
+#define     GDW_CHUsePvChannelShift 6
+#define GDW_CHUsePv5Voltage                     37      // 1 Bit, Bit 5
+#define     GDW_CHUsePv5VoltageMask 0x20
+#define     GDW_CHUsePv5VoltageShift 5
+#define GDW_CHUsePv5Current                     37      // 1 Bit, Bit 4
+#define     GDW_CHUsePv5CurrentMask 0x10
+#define     GDW_CHUsePv5CurrentShift 4
+#define GDW_CHUsePv6Voltage                     37      // 1 Bit, Bit 3
+#define     GDW_CHUsePv6VoltageMask 0x08
+#define     GDW_CHUsePv6VoltageShift 3
+#define GDW_CHUsePv6Current                     37      // 1 Bit, Bit 2
+#define     GDW_CHUsePv6CurrentMask 0x04
+#define     GDW_CHUsePv6CurrentShift 2
+#define GDW_CHUsePv7Voltage                     37      // 1 Bit, Bit 1
+#define     GDW_CHUsePv7VoltageMask 0x02
+#define     GDW_CHUsePv7VoltageShift 1
+#define GDW_CHUsePv7Current                     37      // 1 Bit, Bit 0
+#define     GDW_CHUsePv7CurrentMask 0x01
+#define     GDW_CHUsePv7CurrentShift 0
+#define GDW_CHUsePv8Voltage                     38      // 1 Bit, Bit 7
+#define     GDW_CHUsePv8VoltageMask 0x80
+#define     GDW_CHUsePv8VoltageShift 7
+#define GDW_CHUsePv8Current                     38      // 1 Bit, Bit 6
+#define     GDW_CHUsePv8CurrentMask 0x40
+#define     GDW_CHUsePv8CurrentShift 6
+#define GDW_CHUsePv9Voltage                     38      // 1 Bit, Bit 5
+#define     GDW_CHUsePv9VoltageMask 0x20
+#define     GDW_CHUsePv9VoltageShift 5
+#define GDW_CHUsePv9Current                     38      // 1 Bit, Bit 4
+#define     GDW_CHUsePv9CurrentMask 0x10
+#define     GDW_CHUsePv9CurrentShift 4
+#define GDW_CHUsePv10Voltage                    38      // 1 Bit, Bit 3
+#define     GDW_CHUsePv10VoltageMask 0x08
+#define     GDW_CHUsePv10VoltageShift 3
+#define GDW_CHUsePv10Current                    38      // 1 Bit, Bit 2
+#define     GDW_CHUsePv10CurrentMask 0x04
+#define     GDW_CHUsePv10CurrentShift 2
+#define GDW_CHUsePv11Voltage                    38      // 1 Bit, Bit 1
+#define     GDW_CHUsePv11VoltageMask 0x02
+#define     GDW_CHUsePv11VoltageShift 1
+#define GDW_CHUsePv11Current                    38      // 1 Bit, Bit 0
+#define     GDW_CHUsePv11CurrentMask 0x01
+#define     GDW_CHUsePv11CurrentShift 0
+#define GDW_CHUsePv12Voltage                    39      // 1 Bit, Bit 7
+#define     GDW_CHUsePv12VoltageMask 0x80
+#define     GDW_CHUsePv12VoltageShift 7
+#define GDW_CHUsePv12Current                    39      // 1 Bit, Bit 6
+#define     GDW_CHUsePv12CurrentMask 0x40
+#define     GDW_CHUsePv12CurrentShift 6
+#define GDW_CHUsePv13Voltage                    39      // 1 Bit, Bit 5
+#define     GDW_CHUsePv13VoltageMask 0x20
+#define     GDW_CHUsePv13VoltageShift 5
+#define GDW_CHUsePv13Current                    39      // 1 Bit, Bit 4
+#define     GDW_CHUsePv13CurrentMask 0x10
+#define     GDW_CHUsePv13CurrentShift 4
+#define GDW_CHUsePv14Voltage                    39      // 1 Bit, Bit 3
+#define     GDW_CHUsePv14VoltageMask 0x08
+#define     GDW_CHUsePv14VoltageShift 3
+#define GDW_CHUsePv14Current                    39      // 1 Bit, Bit 2
+#define     GDW_CHUsePv14CurrentMask 0x04
+#define     GDW_CHUsePv14CurrentShift 2
+#define GDW_CHUsePv15Voltage                    39      // 1 Bit, Bit 1
+#define     GDW_CHUsePv15VoltageMask 0x02
+#define     GDW_CHUsePv15VoltageShift 1
+#define GDW_CHUsePv15Current                    39      // 1 Bit, Bit 0
+#define     GDW_CHUsePv15CurrentMask 0x01
+#define     GDW_CHUsePv15CurrentShift 0
+#define GDW_CHUsePv16Voltage                    40      // 1 Bit, Bit 7
+#define     GDW_CHUsePv16VoltageMask 0x80
+#define     GDW_CHUsePv16VoltageShift 7
+#define GDW_CHUsePv16Current                    40      // 1 Bit, Bit 6
+#define     GDW_CHUsePv16CurrentMask 0x40
+#define     GDW_CHUsePv16CurrentShift 6
+#define GDW_CHUseMppt1Power                     40      // 1 Bit, Bit 5
+#define     GDW_CHUseMppt1PowerMask 0x20
+#define     GDW_CHUseMppt1PowerShift 5
+#define GDW_CHUseMppt2Power                     40      // 1 Bit, Bit 4
+#define     GDW_CHUseMppt2PowerMask 0x10
+#define     GDW_CHUseMppt2PowerShift 4
+#define GDW_CHUseMppt3Power                     40      // 1 Bit, Bit 3
+#define     GDW_CHUseMppt3PowerMask 0x08
+#define     GDW_CHUseMppt3PowerShift 3
+#define GDW_CHUseMppt4Power                     40      // 1 Bit, Bit 2
+#define     GDW_CHUseMppt4PowerMask 0x04
+#define     GDW_CHUseMppt4PowerShift 2
+#define GDW_CHUseMppt5Power                     40      // 1 Bit, Bit 1
+#define     GDW_CHUseMppt5PowerMask 0x02
+#define     GDW_CHUseMppt5PowerShift 1
+#define GDW_CHUseMppt6Power                     40      // 1 Bit, Bit 0
+#define     GDW_CHUseMppt6PowerMask 0x01
+#define     GDW_CHUseMppt6PowerShift 0
+#define GDW_CHUseMppt7Power                     41      // 1 Bit, Bit 7
+#define     GDW_CHUseMppt7PowerMask 0x80
+#define     GDW_CHUseMppt7PowerShift 7
+#define GDW_CHUseMppt8Power                     41      // 1 Bit, Bit 6
+#define     GDW_CHUseMppt8PowerMask 0x40
+#define     GDW_CHUseMppt8PowerShift 6
+#define GDW_CHUseMppt1Current                   41      // 1 Bit, Bit 5
+#define     GDW_CHUseMppt1CurrentMask 0x20
+#define     GDW_CHUseMppt1CurrentShift 5
+#define GDW_CHUseMppt2Current                   41      // 1 Bit, Bit 4
+#define     GDW_CHUseMppt2CurrentMask 0x10
+#define     GDW_CHUseMppt2CurrentShift 4
+#define GDW_CHUseMppt3Current                   41      // 1 Bit, Bit 3
+#define     GDW_CHUseMppt3CurrentMask 0x08
+#define     GDW_CHUseMppt3CurrentShift 3
+#define GDW_CHUseMppt4Current                   41      // 1 Bit, Bit 2
+#define     GDW_CHUseMppt4CurrentMask 0x04
+#define     GDW_CHUseMppt4CurrentShift 2
+#define GDW_CHUseMppt5Current                   41      // 1 Bit, Bit 1
+#define     GDW_CHUseMppt5CurrentMask 0x02
+#define     GDW_CHUseMppt5CurrentShift 1
+#define GDW_CHUseMppt6Current                   41      // 1 Bit, Bit 0
+#define     GDW_CHUseMppt6CurrentMask 0x01
+#define     GDW_CHUseMppt6CurrentShift 0
+#define GDW_CHUseMppt7Current                   42      // 1 Bit, Bit 7
+#define     GDW_CHUseMppt7CurrentMask 0x80
+#define     GDW_CHUseMppt7CurrentShift 7
+#define GDW_CHUseMppt8Current                   42      // 1 Bit, Bit 6
+#define     GDW_CHUseMppt8CurrentMask 0x40
+#define     GDW_CHUseMppt8CurrentShift 6
+#define GDW_CHUseGridVoltageL1                  42      // 1 Bit, Bit 5
+#define     GDW_CHUseGridVoltageL1Mask 0x20
+#define     GDW_CHUseGridVoltageL1Shift 5
+#define GDW_CHUseGridCurrentL1                  42      // 1 Bit, Bit 4
+#define     GDW_CHUseGridCurrentL1Mask 0x10
+#define     GDW_CHUseGridCurrentL1Shift 4
+#define GDW_CHUseGridFrequencyL1                42      // 1 Bit, Bit 3
+#define     GDW_CHUseGridFrequencyL1Mask 0x08
+#define     GDW_CHUseGridFrequencyL1Shift 3
+#define GDW_CHUseGridPowerL1                    42      // 1 Bit, Bit 2
+#define     GDW_CHUseGridPowerL1Mask 0x04
+#define     GDW_CHUseGridPowerL1Shift 2
+#define GDW_CHUseGridVoltageL2                  42      // 1 Bit, Bit 1
+#define     GDW_CHUseGridVoltageL2Mask 0x02
+#define     GDW_CHUseGridVoltageL2Shift 1
+#define GDW_CHUseGridCurrentL2                  42      // 1 Bit, Bit 0
+#define     GDW_CHUseGridCurrentL2Mask 0x01
+#define     GDW_CHUseGridCurrentL2Shift 0
+#define GDW_CHUseGridFrequencyL2                43      // 1 Bit, Bit 7
+#define     GDW_CHUseGridFrequencyL2Mask 0x80
+#define     GDW_CHUseGridFrequencyL2Shift 7
+#define GDW_CHUseGridPowerL2                    43      // 1 Bit, Bit 6
+#define     GDW_CHUseGridPowerL2Mask 0x40
+#define     GDW_CHUseGridPowerL2Shift 6
+#define GDW_CHUseGridVoltageL3                  43      // 1 Bit, Bit 5
+#define     GDW_CHUseGridVoltageL3Mask 0x20
+#define     GDW_CHUseGridVoltageL3Shift 5
+#define GDW_CHUseGridCurrentL3                  43      // 1 Bit, Bit 4
+#define     GDW_CHUseGridCurrentL3Mask 0x10
+#define     GDW_CHUseGridCurrentL3Shift 4
+#define GDW_CHUseGridFrequencyL3                43      // 1 Bit, Bit 3
+#define     GDW_CHUseGridFrequencyL3Mask 0x08
+#define     GDW_CHUseGridFrequencyL3Shift 3
+#define GDW_CHUseGridPowerL3                    43      // 1 Bit, Bit 2
+#define     GDW_CHUseGridPowerL3Mask 0x04
+#define     GDW_CHUseGridPowerL3Shift 2
+#define GDW_CHUseInverterPower                  43      // 1 Bit, Bit 1
+#define     GDW_CHUseInverterPowerMask 0x02
+#define     GDW_CHUseInverterPowerShift 1
+#define GDW_CHUseActivePower                    43      // 1 Bit, Bit 0
+#define     GDW_CHUseActivePowerMask 0x01
+#define     GDW_CHUseActivePowerShift 0
+#define GDW_CHUseImportPower                    44      // 1 Bit, Bit 7
+#define     GDW_CHUseImportPowerMask 0x80
+#define     GDW_CHUseImportPowerShift 7
+#define GDW_CHUseExportPower                    44      // 1 Bit, Bit 6
+#define     GDW_CHUseExportPowerMask 0x40
+#define     GDW_CHUseExportPowerShift 6
+#define GDW_CHUseReactivePower                  44      // 1 Bit, Bit 5
+#define     GDW_CHUseReactivePowerMask 0x20
+#define     GDW_CHUseReactivePowerShift 5
+#define GDW_CHUseApparentPower                  44      // 1 Bit, Bit 4
+#define     GDW_CHUseApparentPowerMask 0x10
+#define     GDW_CHUseApparentPowerShift 4
+#define GDW_CHUseHouseConsumption               44      // 1 Bit, Bit 3
+#define     GDW_CHUseHouseConsumptionMask 0x08
+#define     GDW_CHUseHouseConsumptionShift 3
+#define GDW_CHUseReactivePowerL1                44      // 1 Bit, Bit 2
+#define     GDW_CHUseReactivePowerL1Mask 0x04
+#define     GDW_CHUseReactivePowerL1Shift 2
+#define GDW_CHUseReactivePowerL2                44      // 1 Bit, Bit 1
+#define     GDW_CHUseReactivePowerL2Mask 0x02
+#define     GDW_CHUseReactivePowerL2Shift 1
+#define GDW_CHUseReactivePowerL3                44      // 1 Bit, Bit 0
+#define     GDW_CHUseReactivePowerL3Mask 0x01
+#define     GDW_CHUseReactivePowerL3Shift 0
+#define GDW_CHUseApparentPowerL1                45      // 1 Bit, Bit 7
+#define     GDW_CHUseApparentPowerL1Mask 0x80
+#define     GDW_CHUseApparentPowerL1Shift 7
+#define GDW_CHUseApparentPowerL2                45      // 1 Bit, Bit 6
+#define     GDW_CHUseApparentPowerL2Mask 0x40
+#define     GDW_CHUseApparentPowerL2Shift 6
+#define GDW_CHUseApparentPowerL3                45      // 1 Bit, Bit 5
+#define     GDW_CHUseApparentPowerL3Mask 0x20
+#define     GDW_CHUseApparentPowerL3Shift 5
+#define GDW_CHUseLineVoltageL1L2                45      // 1 Bit, Bit 4
+#define     GDW_CHUseLineVoltageL1L2Mask 0x10
+#define     GDW_CHUseLineVoltageL1L2Shift 4
+#define GDW_CHUseLineVoltageL2L3                45      // 1 Bit, Bit 3
+#define     GDW_CHUseLineVoltageL2L3Mask 0x08
+#define     GDW_CHUseLineVoltageL2L3Shift 3
+#define GDW_CHUseLineVoltageL3L1                45      // 1 Bit, Bit 2
+#define     GDW_CHUseLineVoltageL3L1Mask 0x04
+#define     GDW_CHUseLineVoltageL3L1Shift 2
+#define GDW_CHUsePowerFactor                    45      // 1 Bit, Bit 1
+#define     GDW_CHUsePowerFactorMask 0x02
+#define     GDW_CHUsePowerFactorShift 1
+#define GDW_CHUseBackupVoltageL1                45      // 1 Bit, Bit 0
+#define     GDW_CHUseBackupVoltageL1Mask 0x01
+#define     GDW_CHUseBackupVoltageL1Shift 0
+#define GDW_CHUseBackupCurrentL1                46      // 1 Bit, Bit 7
+#define     GDW_CHUseBackupCurrentL1Mask 0x80
+#define     GDW_CHUseBackupCurrentL1Shift 7
+#define GDW_CHUseBackupFrequencyL1              46      // 1 Bit, Bit 6
+#define     GDW_CHUseBackupFrequencyL1Mask 0x40
+#define     GDW_CHUseBackupFrequencyL1Shift 6
+#define GDW_CHUseLoadModeL1                     46      // 1 Bit, Bit 5
+#define     GDW_CHUseLoadModeL1Mask 0x20
+#define     GDW_CHUseLoadModeL1Shift 5
+#define GDW_CHUseBackupPowerL1                  46      // 1 Bit, Bit 4
+#define     GDW_CHUseBackupPowerL1Mask 0x10
+#define     GDW_CHUseBackupPowerL1Shift 4
+#define GDW_CHUseBackupVoltageL2                46      // 1 Bit, Bit 3
+#define     GDW_CHUseBackupVoltageL2Mask 0x08
+#define     GDW_CHUseBackupVoltageL2Shift 3
+#define GDW_CHUseBackupCurrentL2                46      // 1 Bit, Bit 2
+#define     GDW_CHUseBackupCurrentL2Mask 0x04
+#define     GDW_CHUseBackupCurrentL2Shift 2
+#define GDW_CHUseBackupFrequencyL2              46      // 1 Bit, Bit 1
+#define     GDW_CHUseBackupFrequencyL2Mask 0x02
+#define     GDW_CHUseBackupFrequencyL2Shift 1
+#define GDW_CHUseLoadModeL2                     46      // 1 Bit, Bit 0
+#define     GDW_CHUseLoadModeL2Mask 0x01
+#define     GDW_CHUseLoadModeL2Shift 0
+#define GDW_CHUseBackupPowerL2                  47      // 1 Bit, Bit 7
+#define     GDW_CHUseBackupPowerL2Mask 0x80
+#define     GDW_CHUseBackupPowerL2Shift 7
+#define GDW_CHUseBackupVoltageL3                47      // 1 Bit, Bit 6
+#define     GDW_CHUseBackupVoltageL3Mask 0x40
+#define     GDW_CHUseBackupVoltageL3Shift 6
+#define GDW_CHUseBackupCurrentL3                47      // 1 Bit, Bit 5
+#define     GDW_CHUseBackupCurrentL3Mask 0x20
+#define     GDW_CHUseBackupCurrentL3Shift 5
+#define GDW_CHUseBackupFrequencyL3              47      // 1 Bit, Bit 4
+#define     GDW_CHUseBackupFrequencyL3Mask 0x10
+#define     GDW_CHUseBackupFrequencyL3Shift 4
+#define GDW_CHUseLoadModeL3                     47      // 1 Bit, Bit 3
+#define     GDW_CHUseLoadModeL3Mask 0x08
+#define     GDW_CHUseLoadModeL3Shift 3
+#define GDW_CHUseBackupPowerL3                  47      // 1 Bit, Bit 2
+#define     GDW_CHUseBackupPowerL3Mask 0x04
+#define     GDW_CHUseBackupPowerL3Shift 2
+#define GDW_CHUseLoadPowerL1                    47      // 1 Bit, Bit 1
+#define     GDW_CHUseLoadPowerL1Mask 0x02
+#define     GDW_CHUseLoadPowerL1Shift 1
+#define GDW_CHUseLoadPowerL2                    47      // 1 Bit, Bit 0
+#define     GDW_CHUseLoadPowerL2Mask 0x01
+#define     GDW_CHUseLoadPowerL2Shift 0
+#define GDW_CHUseLoadPowerL3                    48      // 1 Bit, Bit 7
+#define     GDW_CHUseLoadPowerL3Mask 0x80
+#define     GDW_CHUseLoadPowerL3Shift 7
+#define GDW_CHUseBackupPowerTotal               48      // 1 Bit, Bit 6
+#define     GDW_CHUseBackupPowerTotalMask 0x40
+#define     GDW_CHUseBackupPowerTotalShift 6
+#define GDW_CHUseLoadPowerTotal                 48      // 1 Bit, Bit 5
+#define     GDW_CHUseLoadPowerTotalMask 0x20
+#define     GDW_CHUseLoadPowerTotalShift 5
+#define GDW_CHUseUpsLoad                        48      // 1 Bit, Bit 4
+#define     GDW_CHUseUpsLoadMask 0x10
+#define     GDW_CHUseUpsLoadShift 4
+#define GDW_CHUseBatteryVoltage                 48      // 1 Bit, Bit 3
+#define     GDW_CHUseBatteryVoltageMask 0x08
+#define     GDW_CHUseBatteryVoltageShift 3
+#define GDW_CHUseBatteryCurrent                 48      // 1 Bit, Bit 2
+#define     GDW_CHUseBatteryCurrentMask 0x04
+#define     GDW_CHUseBatteryCurrentShift 2
+#define GDW_CHUseBatteryPower                   48      // 1 Bit, Bit 1
+#define     GDW_CHUseBatteryPowerMask 0x02
+#define     GDW_CHUseBatteryPowerShift 1
+#define GDW_CHUseBatteryMode                    48      // 1 Bit, Bit 0
+#define     GDW_CHUseBatteryModeMask 0x01
+#define     GDW_CHUseBatteryModeShift 0
+#define GDW_CHUseBatterySoc                     49      // 1 Bit, Bit 7
+#define     GDW_CHUseBatterySocMask 0x80
+#define     GDW_CHUseBatterySocShift 7
+#define GDW_CHUseBatterySoh                     49      // 1 Bit, Bit 6
+#define     GDW_CHUseBatterySohMask 0x40
+#define     GDW_CHUseBatterySohShift 6
+#define GDW_CHUseBatteryTemperature             49      // 1 Bit, Bit 5
+#define     GDW_CHUseBatteryTemperatureMask 0x20
+#define     GDW_CHUseBatteryTemperatureShift 5
+#define GDW_CHUseBatteryChargeLimit             49      // 1 Bit, Bit 4
+#define     GDW_CHUseBatteryChargeLimitMask 0x10
+#define     GDW_CHUseBatteryChargeLimitShift 4
+#define GDW_CHUseBatteryDischargeLimit          49      // 1 Bit, Bit 3
+#define     GDW_CHUseBatteryDischargeLimitMask 0x08
+#define     GDW_CHUseBatteryDischargeLimitShift 3
+#define GDW_CHUseBatteryBms                     49      // 1 Bit, Bit 2
+#define     GDW_CHUseBatteryBmsMask 0x04
+#define     GDW_CHUseBatteryBmsShift 2
+#define GDW_CHUseBatteryIndex                   49      // 1 Bit, Bit 1
+#define     GDW_CHUseBatteryIndexMask 0x02
+#define     GDW_CHUseBatteryIndexShift 1
+#define GDW_CHUseBatteryStatus                  49      // 1 Bit, Bit 0
+#define     GDW_CHUseBatteryStatusMask 0x01
+#define     GDW_CHUseBatteryStatusShift 0
+#define GDW_CHUseBatteryModules                 50      // 1 Bit, Bit 7
+#define     GDW_CHUseBatteryModulesMask 0x80
+#define     GDW_CHUseBatteryModulesShift 7
+#define GDW_CHUseBatteryProtocol                50      // 1 Bit, Bit 6
+#define     GDW_CHUseBatteryProtocolMask 0x40
+#define     GDW_CHUseBatteryProtocolShift 6
+#define GDW_CHUseBatteryError                   50      // 1 Bit, Bit 5
+#define     GDW_CHUseBatteryErrorMask 0x20
+#define     GDW_CHUseBatteryErrorShift 5
+#define GDW_CHUseBatteryWarning                 50      // 1 Bit, Bit 4
+#define     GDW_CHUseBatteryWarningMask 0x10
+#define     GDW_CHUseBatteryWarningShift 4
+#define GDW_CHUseBatterySwVersion               50      // 1 Bit, Bit 3
+#define     GDW_CHUseBatterySwVersionMask 0x08
+#define     GDW_CHUseBatterySwVersionShift 3
+#define GDW_CHUseBatteryHwVersion               50      // 1 Bit, Bit 2
+#define     GDW_CHUseBatteryHwVersionMask 0x04
+#define     GDW_CHUseBatteryHwVersionShift 2
+#define GDW_CHUseBatteryMaxCellTempId           50      // 1 Bit, Bit 1
+#define     GDW_CHUseBatteryMaxCellTempIdMask 0x02
+#define     GDW_CHUseBatteryMaxCellTempIdShift 1
+#define GDW_CHUseBatteryMinCellTempId           50      // 1 Bit, Bit 0
+#define     GDW_CHUseBatteryMinCellTempIdMask 0x01
+#define     GDW_CHUseBatteryMinCellTempIdShift 0
+#define GDW_CHUseBatteryMaxCellVoltId           51      // 1 Bit, Bit 7
+#define     GDW_CHUseBatteryMaxCellVoltIdMask 0x80
+#define     GDW_CHUseBatteryMaxCellVoltIdShift 7
+#define GDW_CHUseBatteryMinCellVoltId           51      // 1 Bit, Bit 6
+#define     GDW_CHUseBatteryMinCellVoltIdMask 0x40
+#define     GDW_CHUseBatteryMinCellVoltIdShift 6
+#define GDW_CHUseBatteryMaxCellTemp             51      // 1 Bit, Bit 5
+#define     GDW_CHUseBatteryMaxCellTempMask 0x20
+#define     GDW_CHUseBatteryMaxCellTempShift 5
+#define GDW_CHUseBatteryMinCellTemp             51      // 1 Bit, Bit 4
+#define     GDW_CHUseBatteryMinCellTempMask 0x10
+#define     GDW_CHUseBatteryMinCellTempShift 4
+#define GDW_CHUseBatteryMaxCellVoltage          51      // 1 Bit, Bit 3
+#define     GDW_CHUseBatteryMaxCellVoltageMask 0x08
+#define     GDW_CHUseBatteryMaxCellVoltageShift 3
+#define GDW_CHUseBatteryMinCellVoltage          51      // 1 Bit, Bit 2
+#define     GDW_CHUseBatteryMinCellVoltageMask 0x04
+#define     GDW_CHUseBatteryMinCellVoltageShift 2
+#define GDW_CHUseBatteryCapacity                51      // 1 Bit, Bit 1
+#define     GDW_CHUseBatteryCapacityMask 0x02
+#define     GDW_CHUseBatteryCapacityShift 1
+#define GDW_CHUseBattery2Voltage                51      // 1 Bit, Bit 0
+#define     GDW_CHUseBattery2VoltageMask 0x01
+#define     GDW_CHUseBattery2VoltageShift 0
+#define GDW_CHUseBattery2Current                52      // 1 Bit, Bit 7
+#define     GDW_CHUseBattery2CurrentMask 0x80
+#define     GDW_CHUseBattery2CurrentShift 7
+#define GDW_CHUseBattery2Power                  52      // 1 Bit, Bit 6
+#define     GDW_CHUseBattery2PowerMask 0x40
+#define     GDW_CHUseBattery2PowerShift 6
+#define GDW_CHUseBattery2Mode                   52      // 1 Bit, Bit 5
+#define     GDW_CHUseBattery2ModeMask 0x20
+#define     GDW_CHUseBattery2ModeShift 5
+#define GDW_CHUseBattery2Status                 52      // 1 Bit, Bit 4
+#define     GDW_CHUseBattery2StatusMask 0x10
+#define     GDW_CHUseBattery2StatusShift 4
+#define GDW_CHUseBattery2Temperature            52      // 1 Bit, Bit 3
+#define     GDW_CHUseBattery2TemperatureMask 0x08
+#define     GDW_CHUseBattery2TemperatureShift 3
+#define GDW_CHUseBattery2ChargeLimit            52      // 1 Bit, Bit 2
+#define     GDW_CHUseBattery2ChargeLimitMask 0x04
+#define     GDW_CHUseBattery2ChargeLimitShift 2
+#define GDW_CHUseBattery2DischargeLimit         52      // 1 Bit, Bit 1
+#define     GDW_CHUseBattery2DischargeLimitMask 0x02
+#define     GDW_CHUseBattery2DischargeLimitShift 1
+#define GDW_CHUseBattery2Soc                    52      // 1 Bit, Bit 0
+#define     GDW_CHUseBattery2SocMask 0x01
+#define     GDW_CHUseBattery2SocShift 0
+#define GDW_CHUseBattery2Soh                    53      // 1 Bit, Bit 7
+#define     GDW_CHUseBattery2SohMask 0x80
+#define     GDW_CHUseBattery2SohShift 7
+#define GDW_CHUseBattery2Modules                53      // 1 Bit, Bit 6
+#define     GDW_CHUseBattery2ModulesMask 0x40
+#define     GDW_CHUseBattery2ModulesShift 6
+#define GDW_CHUseBattery2Protocol               53      // 1 Bit, Bit 5
+#define     GDW_CHUseBattery2ProtocolMask 0x20
+#define     GDW_CHUseBattery2ProtocolShift 5
+#define GDW_CHUseBattery2Error                  53      // 1 Bit, Bit 4
+#define     GDW_CHUseBattery2ErrorMask 0x10
+#define     GDW_CHUseBattery2ErrorShift 4
+#define GDW_CHUseBattery2Warning                53      // 1 Bit, Bit 3
+#define     GDW_CHUseBattery2WarningMask 0x08
+#define     GDW_CHUseBattery2WarningShift 3
+#define GDW_CHUseBattery2SwVersion              53      // 1 Bit, Bit 2
+#define     GDW_CHUseBattery2SwVersionMask 0x04
+#define     GDW_CHUseBattery2SwVersionShift 2
+#define GDW_CHUseBattery2HwVersion              53      // 1 Bit, Bit 1
+#define     GDW_CHUseBattery2HwVersionMask 0x02
+#define     GDW_CHUseBattery2HwVersionShift 1
+#define GDW_CHUseBattery2MaxCellTempId          53      // 1 Bit, Bit 0
+#define     GDW_CHUseBattery2MaxCellTempIdMask 0x01
+#define     GDW_CHUseBattery2MaxCellTempIdShift 0
+#define GDW_CHUseBattery2MinCellTempId          54      // 1 Bit, Bit 7
+#define     GDW_CHUseBattery2MinCellTempIdMask 0x80
+#define     GDW_CHUseBattery2MinCellTempIdShift 7
+#define GDW_CHUseBattery2MaxCellVoltId          54      // 1 Bit, Bit 6
+#define     GDW_CHUseBattery2MaxCellVoltIdMask 0x40
+#define     GDW_CHUseBattery2MaxCellVoltIdShift 6
+#define GDW_CHUseBattery2MinCellVoltId          54      // 1 Bit, Bit 5
+#define     GDW_CHUseBattery2MinCellVoltIdMask 0x20
+#define     GDW_CHUseBattery2MinCellVoltIdShift 5
+#define GDW_CHUseBattery2MaxCellTemp            54      // 1 Bit, Bit 4
+#define     GDW_CHUseBattery2MaxCellTempMask 0x10
+#define     GDW_CHUseBattery2MaxCellTempShift 4
+#define GDW_CHUseBattery2MinCellTemp            54      // 1 Bit, Bit 3
+#define     GDW_CHUseBattery2MinCellTempMask 0x08
+#define     GDW_CHUseBattery2MinCellTempShift 3
+#define GDW_CHUseBattery2MaxCellVoltage         54      // 1 Bit, Bit 2
+#define     GDW_CHUseBattery2MaxCellVoltageMask 0x04
+#define     GDW_CHUseBattery2MaxCellVoltageShift 2
+#define GDW_CHUseBattery2MinCellVoltage         54      // 1 Bit, Bit 1
+#define     GDW_CHUseBattery2MinCellVoltageMask 0x02
+#define     GDW_CHUseBattery2MinCellVoltageShift 1
+#define GDW_CHUseEnergyTotal                    54      // 1 Bit, Bit 0
+#define     GDW_CHUseEnergyTotalMask 0x01
+#define     GDW_CHUseEnergyTotalShift 0
+#define GDW_CHUseEnergyToday                    55      // 1 Bit, Bit 7
+#define     GDW_CHUseEnergyTodayMask 0x80
+#define     GDW_CHUseEnergyTodayShift 7
+#define GDW_CHUseMeterExportTotal               55      // 1 Bit, Bit 6
+#define     GDW_CHUseMeterExportTotalMask 0x40
+#define     GDW_CHUseMeterExportTotalShift 6
+#define GDW_CHUseMeterImportTotal               55      // 1 Bit, Bit 5
+#define     GDW_CHUseMeterImportTotalMask 0x20
+#define     GDW_CHUseMeterImportTotalShift 5
+#define GDW_CHUseExportTotal                    55      // 1 Bit, Bit 4
+#define     GDW_CHUseExportTotalMask 0x10
+#define     GDW_CHUseExportTotalShift 4
+#define GDW_CHUseExportToday                    55      // 1 Bit, Bit 3
+#define     GDW_CHUseExportTodayMask 0x08
+#define     GDW_CHUseExportTodayShift 3
+#define GDW_CHUseImportTotal                    55      // 1 Bit, Bit 2
+#define     GDW_CHUseImportTotalMask 0x04
+#define     GDW_CHUseImportTotalShift 2
+#define GDW_CHUseImportToday                    55      // 1 Bit, Bit 1
+#define     GDW_CHUseImportTodayMask 0x02
+#define     GDW_CHUseImportTodayShift 1
+#define GDW_CHUseLoadTotal                      55      // 1 Bit, Bit 0
+#define     GDW_CHUseLoadTotalMask 0x01
+#define     GDW_CHUseLoadTotalShift 0
+#define GDW_CHUseLoadToday                      56      // 1 Bit, Bit 7
+#define     GDW_CHUseLoadTodayMask 0x80
+#define     GDW_CHUseLoadTodayShift 7
+#define GDW_CHUseBatteryChargeTotal             56      // 1 Bit, Bit 6
+#define     GDW_CHUseBatteryChargeTotalMask 0x40
+#define     GDW_CHUseBatteryChargeTotalShift 6
+#define GDW_CHUseBatteryChargeToday             56      // 1 Bit, Bit 5
+#define     GDW_CHUseBatteryChargeTodayMask 0x20
+#define     GDW_CHUseBatteryChargeTodayShift 5
+#define GDW_CHUseBatteryDischargeTotal          56      // 1 Bit, Bit 4
+#define     GDW_CHUseBatteryDischargeTotalMask 0x10
+#define     GDW_CHUseBatteryDischargeTotalShift 4
+#define GDW_CHUseBatteryDischargeToday          56      // 1 Bit, Bit 3
+#define     GDW_CHUseBatteryDischargeTodayMask 0x08
+#define     GDW_CHUseBatteryDischargeTodayShift 3
+#define GDW_CHUseMeterCommode                   56      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterCommodeMask 0x04
+#define     GDW_CHUseMeterCommodeShift 2
+#define GDW_CHUseMeterManufacturer              56      // 1 Bit, Bit 1
+#define     GDW_CHUseMeterManufacturerMask 0x02
+#define     GDW_CHUseMeterManufacturerShift 1
+#define GDW_CHUseMeterTestStatus                56      // 1 Bit, Bit 0
+#define     GDW_CHUseMeterTestStatusMask 0x01
+#define     GDW_CHUseMeterTestStatusShift 0
+#define GDW_CHUseMeterTypeCode                  57      // 1 Bit, Bit 7
+#define     GDW_CHUseMeterTypeCodeMask 0x80
+#define     GDW_CHUseMeterTypeCodeShift 7
+#define GDW_CHUseMeterSwVersion                 57      // 1 Bit, Bit 6
+#define     GDW_CHUseMeterSwVersionMask 0x40
+#define     GDW_CHUseMeterSwVersionShift 6
+#define GDW_CHUseMeterPowerL1                   57      // 1 Bit, Bit 5
+#define     GDW_CHUseMeterPowerL1Mask 0x20
+#define     GDW_CHUseMeterPowerL1Shift 5
+#define GDW_CHUseMeterPowerL2                   57      // 1 Bit, Bit 4
+#define     GDW_CHUseMeterPowerL2Mask 0x10
+#define     GDW_CHUseMeterPowerL2Shift 4
+#define GDW_CHUseMeterPowerL3                   57      // 1 Bit, Bit 3
+#define     GDW_CHUseMeterPowerL3Mask 0x08
+#define     GDW_CHUseMeterPowerL3Shift 3
+#define GDW_CHUseMeterPowerTotal                57      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterPowerTotalMask 0x04
+#define     GDW_CHUseMeterPowerTotalShift 2
+#define GDW_CHUseMeterPower16L1                 57      // 1 Bit, Bit 1
+#define     GDW_CHUseMeterPower16L1Mask 0x02
+#define     GDW_CHUseMeterPower16L1Shift 1
+#define GDW_CHUseMeterPower16L2                 57      // 1 Bit, Bit 0
+#define     GDW_CHUseMeterPower16L2Mask 0x01
+#define     GDW_CHUseMeterPower16L2Shift 0
+#define GDW_CHUseMeterPower16L3                 58      // 1 Bit, Bit 7
+#define     GDW_CHUseMeterPower16L3Mask 0x80
+#define     GDW_CHUseMeterPower16L3Shift 7
+#define GDW_CHUseMeterPower16Total              58      // 1 Bit, Bit 6
+#define     GDW_CHUseMeterPower16TotalMask 0x40
+#define     GDW_CHUseMeterPower16TotalShift 6
+#define GDW_CHUseMeterReactiveL1                58      // 1 Bit, Bit 5
+#define     GDW_CHUseMeterReactiveL1Mask 0x20
+#define     GDW_CHUseMeterReactiveL1Shift 5
+#define GDW_CHUseMeterReactiveL2                58      // 1 Bit, Bit 4
+#define     GDW_CHUseMeterReactiveL2Mask 0x10
+#define     GDW_CHUseMeterReactiveL2Shift 4
+#define GDW_CHUseMeterReactiveL3                58      // 1 Bit, Bit 3
+#define     GDW_CHUseMeterReactiveL3Mask 0x08
+#define     GDW_CHUseMeterReactiveL3Shift 3
+#define GDW_CHUseMeterReactiveTotal             58      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterReactiveTotalMask 0x04
+#define     GDW_CHUseMeterReactiveTotalShift 2
+#define GDW_CHUseMeterReactive16Total           58      // 1 Bit, Bit 1
+#define     GDW_CHUseMeterReactive16TotalMask 0x02
+#define     GDW_CHUseMeterReactive16TotalShift 1
+#define GDW_CHUseMeterApparentL1                58      // 1 Bit, Bit 0
+#define     GDW_CHUseMeterApparentL1Mask 0x01
+#define     GDW_CHUseMeterApparentL1Shift 0
+#define GDW_CHUseMeterApparentL2                59      // 1 Bit, Bit 7
+#define     GDW_CHUseMeterApparentL2Mask 0x80
+#define     GDW_CHUseMeterApparentL2Shift 7
+#define GDW_CHUseMeterApparentL3                59      // 1 Bit, Bit 6
+#define     GDW_CHUseMeterApparentL3Mask 0x40
+#define     GDW_CHUseMeterApparentL3Shift 6
+#define GDW_CHUseMeterApparentTotal             59      // 1 Bit, Bit 5
+#define     GDW_CHUseMeterApparentTotalMask 0x20
+#define     GDW_CHUseMeterApparentTotalShift 5
+#define GDW_CHUseMeterPowerFactorL1             59      // 1 Bit, Bit 4
+#define     GDW_CHUseMeterPowerFactorL1Mask 0x10
+#define     GDW_CHUseMeterPowerFactorL1Shift 4
+#define GDW_CHUseMeterPowerFactorL2             59      // 1 Bit, Bit 3
+#define     GDW_CHUseMeterPowerFactorL2Mask 0x08
+#define     GDW_CHUseMeterPowerFactorL2Shift 3
+#define GDW_CHUseMeterPowerFactorL3             59      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterPowerFactorL3Mask 0x04
+#define     GDW_CHUseMeterPowerFactorL3Shift 2
+#define GDW_CHUseMeterPowerFactor               59      // 1 Bit, Bit 1
+#define     GDW_CHUseMeterPowerFactorMask 0x02
+#define     GDW_CHUseMeterPowerFactorShift 1
+#define GDW_CHUseMeterFrequency                 59      // 1 Bit, Bit 0
+#define     GDW_CHUseMeterFrequencyMask 0x01
+#define     GDW_CHUseMeterFrequencyShift 0
+#define GDW_CHUseMeterVoltageL1                 60      // 1 Bit, Bit 7
+#define     GDW_CHUseMeterVoltageL1Mask 0x80
+#define     GDW_CHUseMeterVoltageL1Shift 7
+#define GDW_CHUseMeterVoltageL2                 60      // 1 Bit, Bit 6
+#define     GDW_CHUseMeterVoltageL2Mask 0x40
+#define     GDW_CHUseMeterVoltageL2Shift 6
+#define GDW_CHUseMeterVoltageL3                 60      // 1 Bit, Bit 5
+#define     GDW_CHUseMeterVoltageL3Mask 0x20
+#define     GDW_CHUseMeterVoltageL3Shift 5
+#define GDW_CHUseMeterCurrentL1                 60      // 1 Bit, Bit 4
+#define     GDW_CHUseMeterCurrentL1Mask 0x10
+#define     GDW_CHUseMeterCurrentL1Shift 4
+#define GDW_CHUseMeterCurrentL2                 60      // 1 Bit, Bit 3
+#define     GDW_CHUseMeterCurrentL2Mask 0x08
+#define     GDW_CHUseMeterCurrentL2Shift 3
+#define GDW_CHUseMeterCurrentL3                 60      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterCurrentL3Mask 0x04
+#define     GDW_CHUseMeterCurrentL3Shift 2
+#define GDW_CHUseMeter2Power                    60      // 1 Bit, Bit 1
+#define     GDW_CHUseMeter2PowerMask 0x02
+#define     GDW_CHUseMeter2PowerShift 1
+#define GDW_CHUseMeter2ExportTotal              60      // 1 Bit, Bit 0
+#define     GDW_CHUseMeter2ExportTotalMask 0x01
+#define     GDW_CHUseMeter2ExportTotalShift 0
+#define GDW_CHUseMeter2ImportTotal              61      // 1 Bit, Bit 7
+#define     GDW_CHUseMeter2ImportTotalMask 0x80
+#define     GDW_CHUseMeter2ImportTotalShift 7
+#define GDW_CHUseMeter2CommStatus               61      // 1 Bit, Bit 6
+#define     GDW_CHUseMeter2CommStatusMask 0x40
+#define     GDW_CHUseMeter2CommStatusShift 6
+#define GDW_CHUseMeterExportL1                  61      // 1 Bit, Bit 5
+#define     GDW_CHUseMeterExportL1Mask 0x20
+#define     GDW_CHUseMeterExportL1Shift 5
+#define GDW_CHUseMeterExportL2                  61      // 1 Bit, Bit 4
+#define     GDW_CHUseMeterExportL2Mask 0x10
+#define     GDW_CHUseMeterExportL2Shift 4
+#define GDW_CHUseMeterExportL3                  61      // 1 Bit, Bit 3
+#define     GDW_CHUseMeterExportL3Mask 0x08
+#define     GDW_CHUseMeterExportL3Shift 3
+#define GDW_CHUseMeterExportTotal64             61      // 1 Bit, Bit 2
+#define     GDW_CHUseMeterExportTotal64Mask 0x04
+#define     GDW_CHUseMeterExportTotal64Shift 2
+#define GDW_CHUseMeterImportL1                  61      // 1 Bit, Bit 1
+#define     GDW_CHUseMeterImportL1Mask 0x02
+#define     GDW_CHUseMeterImportL1Shift 1
+#define GDW_CHUseMeterImportL2                  61      // 1 Bit, Bit 0
+#define     GDW_CHUseMeterImportL2Mask 0x01
+#define     GDW_CHUseMeterImportL2Shift 0
+#define GDW_CHUseMeterImportL3                  62      // 1 Bit, Bit 7
+#define     GDW_CHUseMeterImportL3Mask 0x80
+#define     GDW_CHUseMeterImportL3Shift 7
+#define GDW_CHUseMeterImportTotal64             62      // 1 Bit, Bit 6
+#define     GDW_CHUseMeterImportTotal64Mask 0x40
+#define     GDW_CHUseMeterImportTotal64Shift 6
+#define GDW_CHUseBms1Version                    62      // 1 Bit, Bit 5
+#define     GDW_CHUseBms1VersionMask 0x20
+#define     GDW_CHUseBms1VersionShift 5
+#define GDW_CHUseBms1Modules                    62      // 1 Bit, Bit 4
+#define     GDW_CHUseBms1ModulesMask 0x10
+#define     GDW_CHUseBms1ModulesShift 4
+#define GDW_CHUseBms1ChargeVoltageMax           62      // 1 Bit, Bit 3
+#define     GDW_CHUseBms1ChargeVoltageMaxMask 0x08
+#define     GDW_CHUseBms1ChargeVoltageMaxShift 3
+#define GDW_CHUseBms1ChargeCurrentMax           62      // 1 Bit, Bit 2
+#define     GDW_CHUseBms1ChargeCurrentMaxMask 0x04
+#define     GDW_CHUseBms1ChargeCurrentMaxShift 2
+#define GDW_CHUseBms1DischargeVoltageMin        62      // 1 Bit, Bit 1
+#define     GDW_CHUseBms1DischargeVoltageMinMask 0x02
+#define     GDW_CHUseBms1DischargeVoltageMinShift 1
+#define GDW_CHUseBms1DischargeCurrentMax        62      // 1 Bit, Bit 0
+#define     GDW_CHUseBms1DischargeCurrentMaxMask 0x01
+#define     GDW_CHUseBms1DischargeCurrentMaxShift 0
+#define GDW_CHUseBms1Voltage                    63      // 1 Bit, Bit 7
+#define     GDW_CHUseBms1VoltageMask 0x80
+#define     GDW_CHUseBms1VoltageShift 7
+#define GDW_CHUseBms1Current                    63      // 1 Bit, Bit 6
+#define     GDW_CHUseBms1CurrentMask 0x40
+#define     GDW_CHUseBms1CurrentShift 6
+#define GDW_CHUseBms1Soc                        63      // 1 Bit, Bit 5
+#define     GDW_CHUseBms1SocMask 0x20
+#define     GDW_CHUseBms1SocShift 5
+#define GDW_CHUseBms1Soh                        63      // 1 Bit, Bit 4
+#define     GDW_CHUseBms1SohMask 0x10
+#define     GDW_CHUseBms1SohShift 4
+#define GDW_CHUseBms1Temperature                63      // 1 Bit, Bit 3
+#define     GDW_CHUseBms1TemperatureMask 0x08
+#define     GDW_CHUseBms1TemperatureShift 3
+#define GDW_CHUseBms1WarningCode                63      // 1 Bit, Bit 2
+#define     GDW_CHUseBms1WarningCodeMask 0x04
+#define     GDW_CHUseBms1WarningCodeShift 2
+#define GDW_CHUseBms1AlarmCode                  63      // 1 Bit, Bit 1
+#define     GDW_CHUseBms1AlarmCodeMask 0x02
+#define     GDW_CHUseBms1AlarmCodeShift 1
+#define GDW_CHUseBms1Status                     63      // 1 Bit, Bit 0
+#define     GDW_CHUseBms1StatusMask 0x01
+#define     GDW_CHUseBms1StatusShift 0
+#define GDW_CHUseBms1CommLossDisable            64      // 1 Bit, Bit 7
+#define     GDW_CHUseBms1CommLossDisableMask 0x80
+#define     GDW_CHUseBms1CommLossDisableShift 7
+#define GDW_CHUseBms1StringRateVoltage          64      // 1 Bit, Bit 6
+#define     GDW_CHUseBms1StringRateVoltageMask 0x40
+#define     GDW_CHUseBms1StringRateVoltageShift 6
+#define GDW_CHUseBms2Version                    64      // 1 Bit, Bit 5
+#define     GDW_CHUseBms2VersionMask 0x20
+#define     GDW_CHUseBms2VersionShift 5
+#define GDW_CHUseBms2Modules                    64      // 1 Bit, Bit 4
+#define     GDW_CHUseBms2ModulesMask 0x10
+#define     GDW_CHUseBms2ModulesShift 4
+#define GDW_CHUseBms2ChargeVoltageMax           64      // 1 Bit, Bit 3
+#define     GDW_CHUseBms2ChargeVoltageMaxMask 0x08
+#define     GDW_CHUseBms2ChargeVoltageMaxShift 3
+#define GDW_CHUseBms2ChargeCurrentMax           64      // 1 Bit, Bit 2
+#define     GDW_CHUseBms2ChargeCurrentMaxMask 0x04
+#define     GDW_CHUseBms2ChargeCurrentMaxShift 2
+#define GDW_CHUseBms2DischargeVoltageMin        64      // 1 Bit, Bit 1
+#define     GDW_CHUseBms2DischargeVoltageMinMask 0x02
+#define     GDW_CHUseBms2DischargeVoltageMinShift 1
+#define GDW_CHUseBms2DischargeCurrentMax        64      // 1 Bit, Bit 0
+#define     GDW_CHUseBms2DischargeCurrentMaxMask 0x01
+#define     GDW_CHUseBms2DischargeCurrentMaxShift 0
+#define GDW_CHUseBms2Voltage                    65      // 1 Bit, Bit 7
+#define     GDW_CHUseBms2VoltageMask 0x80
+#define     GDW_CHUseBms2VoltageShift 7
+#define GDW_CHUseBms2Current                    65      // 1 Bit, Bit 6
+#define     GDW_CHUseBms2CurrentMask 0x40
+#define     GDW_CHUseBms2CurrentShift 6
+#define GDW_CHUseBms2Soc                        65      // 1 Bit, Bit 5
+#define     GDW_CHUseBms2SocMask 0x20
+#define     GDW_CHUseBms2SocShift 5
+#define GDW_CHUseBms2Soh                        65      // 1 Bit, Bit 4
+#define     GDW_CHUseBms2SohMask 0x10
+#define     GDW_CHUseBms2SohShift 4
+#define GDW_CHUseBms2Temperature                65      // 1 Bit, Bit 3
+#define     GDW_CHUseBms2TemperatureMask 0x08
+#define     GDW_CHUseBms2TemperatureShift 3
+#define GDW_CHUseBms2WarningCode                65      // 1 Bit, Bit 2
+#define     GDW_CHUseBms2WarningCodeMask 0x04
+#define     GDW_CHUseBms2WarningCodeShift 2
+#define GDW_CHUseBms2AlarmCode                  65      // 1 Bit, Bit 1
+#define     GDW_CHUseBms2AlarmCodeMask 0x02
+#define     GDW_CHUseBms2AlarmCodeShift 1
+#define GDW_CHUseBms2Status                     65      // 1 Bit, Bit 0
+#define     GDW_CHUseBms2StatusMask 0x01
+#define     GDW_CHUseBms2StatusShift 0
+#define GDW_CHUseBms2CommLossDisable            66      // 1 Bit, Bit 7
+#define     GDW_CHUseBms2CommLossDisableMask 0x80
+#define     GDW_CHUseBms2CommLossDisableShift 7
+#define GDW_CHUseBms2StringRateVoltage          66      // 1 Bit, Bit 6
+#define     GDW_CHUseBms2StringRateVoltageMask 0x40
+#define     GDW_CHUseBms2StringRateVoltageShift 6
+#define GDW_CHUseOperationMode                  69      // 1 Bit, Bit 3
+#define     GDW_CHUseOperationModeMask 0x08
+#define     GDW_CHUseOperationModeShift 3
+#define GDW_CHUseEmsMode                        69      // 1 Bit, Bit 2
+#define     GDW_CHUseEmsModeMask 0x04
+#define     GDW_CHUseEmsModeShift 2
+#define GDW_CHUseEmsPowerLimit                  69      // 1 Bit, Bit 1
+#define     GDW_CHUseEmsPowerLimitMask 0x02
+#define     GDW_CHUseEmsPowerLimitShift 1
+#define GDW_CHUseExportLimitEnable              69      // 1 Bit, Bit 0
+#define     GDW_CHUseExportLimitEnableMask 0x01
+#define     GDW_CHUseExportLimitEnableShift 0
+#define GDW_CHUseExportLimit                    70      // 1 Bit, Bit 7
+#define     GDW_CHUseExportLimitMask 0x80
+#define     GDW_CHUseExportLimitShift 7
+#define GDW_CHUseExportLimitPercent             70      // 1 Bit, Bit 6
+#define     GDW_CHUseExportLimitPercentMask 0x40
+#define     GDW_CHUseExportLimitPercentShift 6
+#define GDW_CHUseDodOnGrid                      70      // 1 Bit, Bit 5
+#define     GDW_CHUseDodOnGridMask 0x20
+#define     GDW_CHUseDodOnGridShift 5
+#define GDW_CHUseDodOffGrid                     70      // 1 Bit, Bit 4
+#define     GDW_CHUseDodOffGridMask 0x10
+#define     GDW_CHUseDodOffGridShift 4
+#define GDW_CHUseSocProtection                  70      // 1 Bit, Bit 3
+#define     GDW_CHUseSocProtectionMask 0x08
+#define     GDW_CHUseSocProtectionShift 3
+#define GDW_CHUseSocUpperLimit                  70      // 1 Bit, Bit 2
+#define     GDW_CHUseSocUpperLimitMask 0x04
+#define     GDW_CHUseSocUpperLimitShift 2
+#define GDW_CHUseEcoModePower                   70      // 1 Bit, Bit 1
+#define     GDW_CHUseEcoModePowerMask 0x02
+#define     GDW_CHUseEcoModePowerShift 1
+#define GDW_CHUseEcoModeSoc                     70      // 1 Bit, Bit 0
+#define     GDW_CHUseEcoModeSocMask 0x01
+#define     GDW_CHUseEcoModeSocShift 0
+#define GDW_CHUseFastCharging                   71      // 1 Bit, Bit 7
+#define     GDW_CHUseFastChargingMask 0x80
+#define     GDW_CHUseFastChargingShift 7
+#define GDW_CHUseFastChargingSoc                71      // 1 Bit, Bit 6
+#define     GDW_CHUseFastChargingSocMask 0x40
+#define     GDW_CHUseFastChargingSocShift 6
+#define GDW_CHUseFastChargingPower              71      // 1 Bit, Bit 5
+#define     GDW_CHUseFastChargingPowerMask 0x20
+#define     GDW_CHUseFastChargingPowerShift 5
+#define GDW_CHUseBackupSupply                   71      // 1 Bit, Bit 4
+#define     GDW_CHUseBackupSupplyMask 0x10
+#define     GDW_CHUseBackupSupplyShift 4
+#define GDW_CHUseDodHolding                     71      // 1 Bit, Bit 3
+#define     GDW_CHUseDodHoldingMask 0x08
+#define     GDW_CHUseDodHoldingShift 3
+#define GDW_CHUseLoadControl                    71      // 1 Bit, Bit 2
+#define     GDW_CHUseLoadControlMask 0x04
+#define     GDW_CHUseLoadControlShift 2
+#define GDW_CHUseSyncClock                      71      // 1 Bit, Bit 1
+#define     GDW_CHUseSyncClockMask 0x02
+#define     GDW_CHUseSyncClockShift 1
+#define GDW_CHUseStartInverter                  71      // 1 Bit, Bit 0
+#define     GDW_CHUseStartInverterMask 0x01
+#define     GDW_CHUseStartInverterShift 0
+#define GDW_CHUseStopInverter                   72      // 1 Bit, Bit 7
+#define     GDW_CHUseStopInverterMask 0x80
+#define     GDW_CHUseStopInverterShift 7
+
+// Wechselrichtertyp
+#define ParamGDW_CHType                              (knx.paramByte(GDW_ParamCalcIndex(GDW_CHType)))
+// Suspendiert
+#define ParamGDW_CHSuspended                         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHSuspended)) & GDW_CHSuspendedMask))
+// IP-Adresse
+#define ParamGDW_CHIp                                (knx.paramData(GDW_ParamCalcIndex(GDW_CHIp)))
+#define ParamGDW_CHIpStr                             (knx.paramString(GDW_ParamCalcIndex(GDW_CHIp), GDW_CHIpLength))
+// Port
+#define ParamGDW_CHPort                              (knx.paramWord(GDW_ParamCalcIndex(GDW_CHPort)))
+// Protokoll
+#define ParamGDW_CHProtocol                          (knx.paramByte(GDW_ParamCalcIndex(GDW_CHProtocol)))
+// Modbus-Adresse
+#define ParamGDW_CHAddress                           (knx.paramByte(GDW_ParamCalcIndex(GDW_CHAddress)))
+// Abfrageintervall
+#define ParamGDW_CHPollInterval                      (knx.paramWord(GDW_ParamCalcIndex(GDW_CHPollInterval)))
+// Zeitbasis
+#define ParamGDW_CHSendDelayBase                     ((knx.paramByte(GDW_ParamCalcIndex(GDW_CHSendDelayBase)) & GDW_CHSendDelayBaseMask) >> GDW_CHSendDelayBaseShift)
+// zyklisch senden alle (0 = nicht)
+#define ParamGDW_CHSendDelayTime                     (knx.paramWord(GDW_ParamCalcIndex(GDW_CHSendDelayTime)) & GDW_CHSendDelayTimeMask)
+// zyklisch senden alle (0 = nicht) (in Millisekunden)
+#define ParamGDW_CHSendDelayTimeMS                   (paramDelay(knx.paramWord(GDW_ParamCalcIndex(GDW_CHSendDelayTime))))
+// bei Änderung um (0 = jede Änderung)
+#define ParamGDW_CHSendChangePercent                 (knx.paramByte(GDW_ParamCalcIndex(GDW_CHSendChangePercent)))
+// Erreichbar
+#define ParamGDW_CHUseReachable                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReachable)) & GDW_CHUseReachableMask))
+// Arbeitsmodus
+#define ParamGDW_CHUseWorkMode                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseWorkMode)) & GDW_CHUseWorkModeMask))
+// Fehlercode
+#define ParamGDW_CHUseErrorCodes                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseErrorCodes)) & GDW_CHUseErrorCodesMask))
+// Warnungscode
+#define ParamGDW_CHUseWarningCode                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseWarningCode)) & GDW_CHUseWarningCodeMask))
+// Ländereinstellung
+#define ParamGDW_CHUseSafetyCountry                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseSafetyCountry)) & GDW_CHUseSafetyCountryMask))
+// Funktionsbits
+#define ParamGDW_CHUseFunctionBit                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseFunctionBit)) & GDW_CHUseFunctionBitMask))
+// Betriebsstunden
+#define ParamGDW_CHUseHoursTotal                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseHoursTotal)) & GDW_CHUseHoursTotalMask))
+// Gerätezeit
+#define ParamGDW_CHUseTimestamp                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTimestamp)) & GDW_CHUseTimestampMask))
+// Temperatur Wechselrichter
+#define ParamGDW_CHUseTemperature                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTemperature)) & GDW_CHUseTemperatureMask))
+// Busspannung
+#define ParamGDW_CHUseBusVoltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBusVoltage)) & GDW_CHUseBusVoltageMask))
+// N-Busspannung
+#define ParamGDW_CHUseNBusVoltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseNBusVoltage)) & GDW_CHUseNBusVoltageMask))
+// Netzrichtung
+#define ParamGDW_CHUseGridInOut                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridInOut)) & GDW_CHUseGridInOutMask))
+// Signalstärke
+#define ParamGDW_CHUseRssi                           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseRssi)) & GDW_CHUseRssiMask))
+// Zähler Kommunikationsstatus
+#define ParamGDW_CHUseMeterCommStatus                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCommStatus)) & GDW_CHUseMeterCommStatusMask))
+// Netzstatus
+#define ParamGDW_CHUseGridMode                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridMode)) & GDW_CHUseGridModeMask))
+// Betriebsart
+#define ParamGDW_CHUseOperationCode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseOperationCode)) & GDW_CHUseOperationCodeMask))
+// Diagnosestatus
+#define ParamGDW_CHUseDiagStatus                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDiagStatus)) & GDW_CHUseDiagStatusMask))
+// Temperatur Luft
+#define ParamGDW_CHUseTempAir                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTempAir)) & GDW_CHUseTempAirMask))
+// Temperatur Modul
+#define ParamGDW_CHUseTempModule                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTempModule)) & GDW_CHUseTempModuleMask))
+// Temperatur Kühlkörper
+#define ParamGDW_CHUseTempHeatsink                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTempHeatsink)) & GDW_CHUseTempHeatsinkMask))
+// Leistungsreduzierung
+#define ParamGDW_CHUseDeratingMode                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDeratingMode)) & GDW_CHUseDeratingModeMask))
+// Ableitstrom
+#define ParamGDW_CHUseLeakageCurrent                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLeakageCurrent)) & GDW_CHUseLeakageCurrentMask))
+// PV-Leistung gesamt
+#define ParamGDW_CHUsePvPower                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePvPower)) & GDW_CHUsePvPowerMask))
+// PV1 Spannung
+#define ParamGDW_CHUsePv1Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Voltage)) & GDW_CHUsePv1VoltageMask))
+// PV1 Strom
+#define ParamGDW_CHUsePv1Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Current)) & GDW_CHUsePv1CurrentMask))
+// PV1 Leistung
+#define ParamGDW_CHUsePv1Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Power)) & GDW_CHUsePv1PowerMask))
+// PV2 Spannung
+#define ParamGDW_CHUsePv2Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Voltage)) & GDW_CHUsePv2VoltageMask))
+// PV2 Strom
+#define ParamGDW_CHUsePv2Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Current)) & GDW_CHUsePv2CurrentMask))
+// PV2 Leistung
+#define ParamGDW_CHUsePv2Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Power)) & GDW_CHUsePv2PowerMask))
+// PV3 Spannung
+#define ParamGDW_CHUsePv3Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Voltage)) & GDW_CHUsePv3VoltageMask))
+// PV3 Strom
+#define ParamGDW_CHUsePv3Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Current)) & GDW_CHUsePv3CurrentMask))
+// PV3 Leistung
+#define ParamGDW_CHUsePv3Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Power)) & GDW_CHUsePv3PowerMask))
+// PV4 Spannung
+#define ParamGDW_CHUsePv4Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Voltage)) & GDW_CHUsePv4VoltageMask))
+// PV4 Strom
+#define ParamGDW_CHUsePv4Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Current)) & GDW_CHUsePv4CurrentMask))
+// PV4 Leistung
+#define ParamGDW_CHUsePv4Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Power)) & GDW_CHUsePv4PowerMask))
+// PV1 Modus
+#define ParamGDW_CHUsePv1Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Mode)) & GDW_CHUsePv1ModeMask))
+// PV2 Modus
+#define ParamGDW_CHUsePv2Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Mode)) & GDW_CHUsePv2ModeMask))
+// PV3 Modus
+#define ParamGDW_CHUsePv3Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Mode)) & GDW_CHUsePv3ModeMask))
+// PV4 Modus
+#define ParamGDW_CHUsePv4Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Mode)) & GDW_CHUsePv4ModeMask))
+// Eingangsleistung gesamt
+#define ParamGDW_CHUseTotalInputPower                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTotalInputPower)) & GDW_CHUseTotalInputPowerMask))
+// PV-Leistung gesamt (MPPT-Block)
+#define ParamGDW_CHUsePvPowerTotalExt                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePvPowerTotalExt)) & GDW_CHUsePvPowerTotalExtMask))
+// Anzahl PV-Kanäle
+#define ParamGDW_CHUsePvChannel                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePvChannel)) & GDW_CHUsePvChannelMask))
+// PV5 Spannung
+#define ParamGDW_CHUsePv5Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv5Voltage)) & GDW_CHUsePv5VoltageMask))
+// PV5 Strom
+#define ParamGDW_CHUsePv5Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv5Current)) & GDW_CHUsePv5CurrentMask))
+// PV6 Spannung
+#define ParamGDW_CHUsePv6Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv6Voltage)) & GDW_CHUsePv6VoltageMask))
+// PV6 Strom
+#define ParamGDW_CHUsePv6Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv6Current)) & GDW_CHUsePv6CurrentMask))
+// PV7 Spannung
+#define ParamGDW_CHUsePv7Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv7Voltage)) & GDW_CHUsePv7VoltageMask))
+// PV7 Strom
+#define ParamGDW_CHUsePv7Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv7Current)) & GDW_CHUsePv7CurrentMask))
+// PV8 Spannung
+#define ParamGDW_CHUsePv8Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv8Voltage)) & GDW_CHUsePv8VoltageMask))
+// PV8 Strom
+#define ParamGDW_CHUsePv8Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv8Current)) & GDW_CHUsePv8CurrentMask))
+// PV9 Spannung
+#define ParamGDW_CHUsePv9Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv9Voltage)) & GDW_CHUsePv9VoltageMask))
+// PV9 Strom
+#define ParamGDW_CHUsePv9Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv9Current)) & GDW_CHUsePv9CurrentMask))
+// PV10 Spannung
+#define ParamGDW_CHUsePv10Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv10Voltage)) & GDW_CHUsePv10VoltageMask))
+// PV10 Strom
+#define ParamGDW_CHUsePv10Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv10Current)) & GDW_CHUsePv10CurrentMask))
+// PV11 Spannung
+#define ParamGDW_CHUsePv11Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv11Voltage)) & GDW_CHUsePv11VoltageMask))
+// PV11 Strom
+#define ParamGDW_CHUsePv11Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv11Current)) & GDW_CHUsePv11CurrentMask))
+// PV12 Spannung
+#define ParamGDW_CHUsePv12Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv12Voltage)) & GDW_CHUsePv12VoltageMask))
+// PV12 Strom
+#define ParamGDW_CHUsePv12Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv12Current)) & GDW_CHUsePv12CurrentMask))
+// PV13 Spannung
+#define ParamGDW_CHUsePv13Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv13Voltage)) & GDW_CHUsePv13VoltageMask))
+// PV13 Strom
+#define ParamGDW_CHUsePv13Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv13Current)) & GDW_CHUsePv13CurrentMask))
+// PV14 Spannung
+#define ParamGDW_CHUsePv14Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv14Voltage)) & GDW_CHUsePv14VoltageMask))
+// PV14 Strom
+#define ParamGDW_CHUsePv14Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv14Current)) & GDW_CHUsePv14CurrentMask))
+// PV15 Spannung
+#define ParamGDW_CHUsePv15Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv15Voltage)) & GDW_CHUsePv15VoltageMask))
+// PV15 Strom
+#define ParamGDW_CHUsePv15Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv15Current)) & GDW_CHUsePv15CurrentMask))
+// PV16 Spannung
+#define ParamGDW_CHUsePv16Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv16Voltage)) & GDW_CHUsePv16VoltageMask))
+// PV16 Strom
+#define ParamGDW_CHUsePv16Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv16Current)) & GDW_CHUsePv16CurrentMask))
+// MPPT1 Leistung
+#define ParamGDW_CHUseMppt1Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt1Power)) & GDW_CHUseMppt1PowerMask))
+// MPPT2 Leistung
+#define ParamGDW_CHUseMppt2Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt2Power)) & GDW_CHUseMppt2PowerMask))
+// MPPT3 Leistung
+#define ParamGDW_CHUseMppt3Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt3Power)) & GDW_CHUseMppt3PowerMask))
+// MPPT4 Leistung
+#define ParamGDW_CHUseMppt4Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt4Power)) & GDW_CHUseMppt4PowerMask))
+// MPPT5 Leistung
+#define ParamGDW_CHUseMppt5Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt5Power)) & GDW_CHUseMppt5PowerMask))
+// MPPT6 Leistung
+#define ParamGDW_CHUseMppt6Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt6Power)) & GDW_CHUseMppt6PowerMask))
+// MPPT7 Leistung
+#define ParamGDW_CHUseMppt7Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt7Power)) & GDW_CHUseMppt7PowerMask))
+// MPPT8 Leistung
+#define ParamGDW_CHUseMppt8Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt8Power)) & GDW_CHUseMppt8PowerMask))
+// MPPT1 Strom
+#define ParamGDW_CHUseMppt1Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt1Current)) & GDW_CHUseMppt1CurrentMask))
+// MPPT2 Strom
+#define ParamGDW_CHUseMppt2Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt2Current)) & GDW_CHUseMppt2CurrentMask))
+// MPPT3 Strom
+#define ParamGDW_CHUseMppt3Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt3Current)) & GDW_CHUseMppt3CurrentMask))
+// MPPT4 Strom
+#define ParamGDW_CHUseMppt4Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt4Current)) & GDW_CHUseMppt4CurrentMask))
+// MPPT5 Strom
+#define ParamGDW_CHUseMppt5Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt5Current)) & GDW_CHUseMppt5CurrentMask))
+// MPPT6 Strom
+#define ParamGDW_CHUseMppt6Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt6Current)) & GDW_CHUseMppt6CurrentMask))
+// MPPT7 Strom
+#define ParamGDW_CHUseMppt7Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt7Current)) & GDW_CHUseMppt7CurrentMask))
+// MPPT8 Strom
+#define ParamGDW_CHUseMppt8Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt8Current)) & GDW_CHUseMppt8CurrentMask))
+// Netzspannung L1
+#define ParamGDW_CHUseGridVoltageL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridVoltageL1)) & GDW_CHUseGridVoltageL1Mask))
+// Netzstrom L1
+#define ParamGDW_CHUseGridCurrentL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridCurrentL1)) & GDW_CHUseGridCurrentL1Mask))
+// Netzfrequenz L1
+#define ParamGDW_CHUseGridFrequencyL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridFrequencyL1)) & GDW_CHUseGridFrequencyL1Mask))
+// Leistung L1
+#define ParamGDW_CHUseGridPowerL1                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridPowerL1)) & GDW_CHUseGridPowerL1Mask))
+// Netzspannung L2
+#define ParamGDW_CHUseGridVoltageL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridVoltageL2)) & GDW_CHUseGridVoltageL2Mask))
+// Netzstrom L2
+#define ParamGDW_CHUseGridCurrentL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridCurrentL2)) & GDW_CHUseGridCurrentL2Mask))
+// Netzfrequenz L2
+#define ParamGDW_CHUseGridFrequencyL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridFrequencyL2)) & GDW_CHUseGridFrequencyL2Mask))
+// Leistung L2
+#define ParamGDW_CHUseGridPowerL2                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridPowerL2)) & GDW_CHUseGridPowerL2Mask))
+// Netzspannung L3
+#define ParamGDW_CHUseGridVoltageL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridVoltageL3)) & GDW_CHUseGridVoltageL3Mask))
+// Netzstrom L3
+#define ParamGDW_CHUseGridCurrentL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridCurrentL3)) & GDW_CHUseGridCurrentL3Mask))
+// Netzfrequenz L3
+#define ParamGDW_CHUseGridFrequencyL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridFrequencyL3)) & GDW_CHUseGridFrequencyL3Mask))
+// Leistung L3
+#define ParamGDW_CHUseGridPowerL3                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridPowerL3)) & GDW_CHUseGridPowerL3Mask))
+// Wechselrichterleistung
+#define ParamGDW_CHUseInverterPower                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseInverterPower)) & GDW_CHUseInverterPowerMask))
+// Netzleistung (+ Einspeisung)
+#define ParamGDW_CHUseActivePower                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseActivePower)) & GDW_CHUseActivePowerMask))
+// Netzbezug Leistung
+#define ParamGDW_CHUseImportPower                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseImportPower)) & GDW_CHUseImportPowerMask))
+// Einspeisung Leistung
+#define ParamGDW_CHUseExportPower                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportPower)) & GDW_CHUseExportPowerMask))
+// Blindleistung (var)
+#define ParamGDW_CHUseReactivePower                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReactivePower)) & GDW_CHUseReactivePowerMask))
+// Scheinleistung (VA)
+#define ParamGDW_CHUseApparentPower                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPower)) & GDW_CHUseApparentPowerMask))
+// Hausverbrauch
+#define ParamGDW_CHUseHouseConsumption               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseHouseConsumption)) & GDW_CHUseHouseConsumptionMask))
+// Blindleistung L1 (var)
+#define ParamGDW_CHUseReactivePowerL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReactivePowerL1)) & GDW_CHUseReactivePowerL1Mask))
+// Blindleistung L2 (var)
+#define ParamGDW_CHUseReactivePowerL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReactivePowerL2)) & GDW_CHUseReactivePowerL2Mask))
+// Blindleistung L3 (var)
+#define ParamGDW_CHUseReactivePowerL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReactivePowerL3)) & GDW_CHUseReactivePowerL3Mask))
+// Scheinleistung L1 (VA)
+#define ParamGDW_CHUseApparentPowerL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPowerL1)) & GDW_CHUseApparentPowerL1Mask))
+// Scheinleistung L2 (VA)
+#define ParamGDW_CHUseApparentPowerL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPowerL2)) & GDW_CHUseApparentPowerL2Mask))
+// Scheinleistung L3 (VA)
+#define ParamGDW_CHUseApparentPowerL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPowerL3)) & GDW_CHUseApparentPowerL3Mask))
+// Außenleiterspannung L1-L2
+#define ParamGDW_CHUseLineVoltageL1L2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLineVoltageL1L2)) & GDW_CHUseLineVoltageL1L2Mask))
+// Außenleiterspannung L2-L3
+#define ParamGDW_CHUseLineVoltageL2L3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLineVoltageL2L3)) & GDW_CHUseLineVoltageL2L3Mask))
+// Außenleiterspannung L3-L1
+#define ParamGDW_CHUseLineVoltageL3L1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLineVoltageL3L1)) & GDW_CHUseLineVoltageL3L1Mask))
+// Leistungsfaktor
+#define ParamGDW_CHUsePowerFactor                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePowerFactor)) & GDW_CHUsePowerFactorMask))
+// Backup L1 Spannung
+#define ParamGDW_CHUseBackupVoltageL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupVoltageL1)) & GDW_CHUseBackupVoltageL1Mask))
+// Backup L1 Strom
+#define ParamGDW_CHUseBackupCurrentL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupCurrentL1)) & GDW_CHUseBackupCurrentL1Mask))
+// Backup L1 Frequenz
+#define ParamGDW_CHUseBackupFrequencyL1              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupFrequencyL1)) & GDW_CHUseBackupFrequencyL1Mask))
+// Lastmodus L1
+#define ParamGDW_CHUseLoadModeL1                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadModeL1)) & GDW_CHUseLoadModeL1Mask))
+// Backup L1 Leistung
+#define ParamGDW_CHUseBackupPowerL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerL1)) & GDW_CHUseBackupPowerL1Mask))
+// Backup L2 Spannung
+#define ParamGDW_CHUseBackupVoltageL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupVoltageL2)) & GDW_CHUseBackupVoltageL2Mask))
+// Backup L2 Strom
+#define ParamGDW_CHUseBackupCurrentL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupCurrentL2)) & GDW_CHUseBackupCurrentL2Mask))
+// Backup L2 Frequenz
+#define ParamGDW_CHUseBackupFrequencyL2              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupFrequencyL2)) & GDW_CHUseBackupFrequencyL2Mask))
+// Lastmodus L2
+#define ParamGDW_CHUseLoadModeL2                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadModeL2)) & GDW_CHUseLoadModeL2Mask))
+// Backup L2 Leistung
+#define ParamGDW_CHUseBackupPowerL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerL2)) & GDW_CHUseBackupPowerL2Mask))
+// Backup L3 Spannung
+#define ParamGDW_CHUseBackupVoltageL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupVoltageL3)) & GDW_CHUseBackupVoltageL3Mask))
+// Backup L3 Strom
+#define ParamGDW_CHUseBackupCurrentL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupCurrentL3)) & GDW_CHUseBackupCurrentL3Mask))
+// Backup L3 Frequenz
+#define ParamGDW_CHUseBackupFrequencyL3              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupFrequencyL3)) & GDW_CHUseBackupFrequencyL3Mask))
+// Lastmodus L3
+#define ParamGDW_CHUseLoadModeL3                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadModeL3)) & GDW_CHUseLoadModeL3Mask))
+// Backup L3 Leistung
+#define ParamGDW_CHUseBackupPowerL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerL3)) & GDW_CHUseBackupPowerL3Mask))
+// Last L1
+#define ParamGDW_CHUseLoadPowerL1                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerL1)) & GDW_CHUseLoadPowerL1Mask))
+// Last L2
+#define ParamGDW_CHUseLoadPowerL2                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerL2)) & GDW_CHUseLoadPowerL2Mask))
+// Last L3
+#define ParamGDW_CHUseLoadPowerL3                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerL3)) & GDW_CHUseLoadPowerL3Mask))
+// Backup-Last gesamt
+#define ParamGDW_CHUseBackupPowerTotal               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerTotal)) & GDW_CHUseBackupPowerTotalMask))
+// Last gesamt
+#define ParamGDW_CHUseLoadPowerTotal                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerTotal)) & GDW_CHUseLoadPowerTotalMask))
+// USV-Auslastung
+#define ParamGDW_CHUseUpsLoad                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseUpsLoad)) & GDW_CHUseUpsLoadMask))
+// Batterie Spannung
+#define ParamGDW_CHUseBatteryVoltage                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryVoltage)) & GDW_CHUseBatteryVoltageMask))
+// Batterie Strom
+#define ParamGDW_CHUseBatteryCurrent                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryCurrent)) & GDW_CHUseBatteryCurrentMask))
+// Batterie Leistung (+ Entladen)
+#define ParamGDW_CHUseBatteryPower                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryPower)) & GDW_CHUseBatteryPowerMask))
+// Batterie Modus
+#define ParamGDW_CHUseBatteryMode                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMode)) & GDW_CHUseBatteryModeMask))
+// Batterie Ladezustand
+#define ParamGDW_CHUseBatterySoc                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatterySoc)) & GDW_CHUseBatterySocMask))
+// Batterie Gesundheitszustand
+#define ParamGDW_CHUseBatterySoh                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatterySoh)) & GDW_CHUseBatterySohMask))
+// Batterie Temperatur
+#define ParamGDW_CHUseBatteryTemperature             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryTemperature)) & GDW_CHUseBatteryTemperatureMask))
+// Batterie Ladestromgrenze
+#define ParamGDW_CHUseBatteryChargeLimit             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryChargeLimit)) & GDW_CHUseBatteryChargeLimitMask))
+// Batterie Entladestromgrenze
+#define ParamGDW_CHUseBatteryDischargeLimit          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryDischargeLimit)) & GDW_CHUseBatteryDischargeLimitMask))
+// Batterie BMS
+#define ParamGDW_CHUseBatteryBms                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryBms)) & GDW_CHUseBatteryBmsMask))
+// Batterie Index
+#define ParamGDW_CHUseBatteryIndex                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryIndex)) & GDW_CHUseBatteryIndexMask))
+// Batterie Status
+#define ParamGDW_CHUseBatteryStatus                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryStatus)) & GDW_CHUseBatteryStatusMask))
+// Batterie Modulanzahl
+#define ParamGDW_CHUseBatteryModules                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryModules)) & GDW_CHUseBatteryModulesMask))
+// Batterie Protokoll
+#define ParamGDW_CHUseBatteryProtocol                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryProtocol)) & GDW_CHUseBatteryProtocolMask))
+// Batterie Fehler
+#define ParamGDW_CHUseBatteryError                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryError)) & GDW_CHUseBatteryErrorMask))
+// Batterie Warnung
+#define ParamGDW_CHUseBatteryWarning                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryWarning)) & GDW_CHUseBatteryWarningMask))
+// Batterie Softwareversion
+#define ParamGDW_CHUseBatterySwVersion               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatterySwVersion)) & GDW_CHUseBatterySwVersionMask))
+// Batterie Hardwareversion
+#define ParamGDW_CHUseBatteryHwVersion               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryHwVersion)) & GDW_CHUseBatteryHwVersionMask))
+// Batterie Zelle max. Temperatur (Nr.)
+#define ParamGDW_CHUseBatteryMaxCellTempId           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellTempId)) & GDW_CHUseBatteryMaxCellTempIdMask))
+// Batterie Zelle min. Temperatur (Nr.)
+#define ParamGDW_CHUseBatteryMinCellTempId           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellTempId)) & GDW_CHUseBatteryMinCellTempIdMask))
+// Batterie Zelle max. Spannung (Nr.)
+#define ParamGDW_CHUseBatteryMaxCellVoltId           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellVoltId)) & GDW_CHUseBatteryMaxCellVoltIdMask))
+// Batterie Zelle min. Spannung (Nr.)
+#define ParamGDW_CHUseBatteryMinCellVoltId           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellVoltId)) & GDW_CHUseBatteryMinCellVoltIdMask))
+// Batterie Zelltemperatur max.
+#define ParamGDW_CHUseBatteryMaxCellTemp             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellTemp)) & GDW_CHUseBatteryMaxCellTempMask))
+// Batterie Zelltemperatur min.
+#define ParamGDW_CHUseBatteryMinCellTemp             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellTemp)) & GDW_CHUseBatteryMinCellTempMask))
+// Batterie Zellspannung max.
+#define ParamGDW_CHUseBatteryMaxCellVoltage          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellVoltage)) & GDW_CHUseBatteryMaxCellVoltageMask))
+// Batterie Zellspannung min.
+#define ParamGDW_CHUseBatteryMinCellVoltage          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellVoltage)) & GDW_CHUseBatteryMinCellVoltageMask))
+// Batterie Kapazität (Ah)
+#define ParamGDW_CHUseBatteryCapacity                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryCapacity)) & GDW_CHUseBatteryCapacityMask))
+// Batterie 2 Spannung
+#define ParamGDW_CHUseBattery2Voltage                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Voltage)) & GDW_CHUseBattery2VoltageMask))
+// Batterie 2 Strom
+#define ParamGDW_CHUseBattery2Current                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Current)) & GDW_CHUseBattery2CurrentMask))
+// Batterie 2 Leistung (+ Entladen)
+#define ParamGDW_CHUseBattery2Power                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Power)) & GDW_CHUseBattery2PowerMask))
+// Batterie 2 Modus
+#define ParamGDW_CHUseBattery2Mode                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Mode)) & GDW_CHUseBattery2ModeMask))
+// Batterie 2 Status
+#define ParamGDW_CHUseBattery2Status                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Status)) & GDW_CHUseBattery2StatusMask))
+// Batterie 2 Temperatur
+#define ParamGDW_CHUseBattery2Temperature            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Temperature)) & GDW_CHUseBattery2TemperatureMask))
+// Batterie 2 Ladestromgrenze
+#define ParamGDW_CHUseBattery2ChargeLimit            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2ChargeLimit)) & GDW_CHUseBattery2ChargeLimitMask))
+// Batterie 2 Entladestromgrenze
+#define ParamGDW_CHUseBattery2DischargeLimit         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2DischargeLimit)) & GDW_CHUseBattery2DischargeLimitMask))
+// Batterie 2 Ladezustand
+#define ParamGDW_CHUseBattery2Soc                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Soc)) & GDW_CHUseBattery2SocMask))
+// Batterie 2 Gesundheitszustand
+#define ParamGDW_CHUseBattery2Soh                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Soh)) & GDW_CHUseBattery2SohMask))
+// Batterie 2 Modulanzahl
+#define ParamGDW_CHUseBattery2Modules                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Modules)) & GDW_CHUseBattery2ModulesMask))
+// Batterie 2 Protokoll
+#define ParamGDW_CHUseBattery2Protocol               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Protocol)) & GDW_CHUseBattery2ProtocolMask))
+// Batterie 2 Fehler
+#define ParamGDW_CHUseBattery2Error                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Error)) & GDW_CHUseBattery2ErrorMask))
+// Batterie 2 Warnung
+#define ParamGDW_CHUseBattery2Warning                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Warning)) & GDW_CHUseBattery2WarningMask))
+// Batterie 2 Softwareversion
+#define ParamGDW_CHUseBattery2SwVersion              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2SwVersion)) & GDW_CHUseBattery2SwVersionMask))
+// Batterie 2 Hardwareversion
+#define ParamGDW_CHUseBattery2HwVersion              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2HwVersion)) & GDW_CHUseBattery2HwVersionMask))
+// Batterie 2 Zelle max. Temperatur (Nr.)
+#define ParamGDW_CHUseBattery2MaxCellTempId          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellTempId)) & GDW_CHUseBattery2MaxCellTempIdMask))
+// Batterie 2 Zelle min. Temperatur (Nr.)
+#define ParamGDW_CHUseBattery2MinCellTempId          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellTempId)) & GDW_CHUseBattery2MinCellTempIdMask))
+// Batterie 2 Zelle max. Spannung (Nr.)
+#define ParamGDW_CHUseBattery2MaxCellVoltId          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellVoltId)) & GDW_CHUseBattery2MaxCellVoltIdMask))
+// Batterie 2 Zelle min. Spannung (Nr.)
+#define ParamGDW_CHUseBattery2MinCellVoltId          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellVoltId)) & GDW_CHUseBattery2MinCellVoltIdMask))
+// Batterie 2 Zelltemperatur max.
+#define ParamGDW_CHUseBattery2MaxCellTemp            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellTemp)) & GDW_CHUseBattery2MaxCellTempMask))
+// Batterie 2 Zelltemperatur min.
+#define ParamGDW_CHUseBattery2MinCellTemp            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellTemp)) & GDW_CHUseBattery2MinCellTempMask))
+// Batterie 2 Zellspannung max.
+#define ParamGDW_CHUseBattery2MaxCellVoltage         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellVoltage)) & GDW_CHUseBattery2MaxCellVoltageMask))
+// Batterie 2 Zellspannung min.
+#define ParamGDW_CHUseBattery2MinCellVoltage         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellVoltage)) & GDW_CHUseBattery2MinCellVoltageMask))
+// PV-Ertrag gesamt
+#define ParamGDW_CHUseEnergyTotal                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEnergyTotal)) & GDW_CHUseEnergyTotalMask))
+// PV-Ertrag heute
+#define ParamGDW_CHUseEnergyToday                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEnergyToday)) & GDW_CHUseEnergyTodayMask))
+// Zähler Einspeisung gesamt
+#define ParamGDW_CHUseMeterExportTotal               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportTotal)) & GDW_CHUseMeterExportTotalMask))
+// Zähler Netzbezug gesamt
+#define ParamGDW_CHUseMeterImportTotal               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportTotal)) & GDW_CHUseMeterImportTotalMask))
+// Einspeisung gesamt
+#define ParamGDW_CHUseExportTotal                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportTotal)) & GDW_CHUseExportTotalMask))
+// Einspeisung heute
+#define ParamGDW_CHUseExportToday                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportToday)) & GDW_CHUseExportTodayMask))
+// Netzbezug gesamt
+#define ParamGDW_CHUseImportTotal                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseImportTotal)) & GDW_CHUseImportTotalMask))
+// Netzbezug heute
+#define ParamGDW_CHUseImportToday                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseImportToday)) & GDW_CHUseImportTodayMask))
+// Verbrauch gesamt
+#define ParamGDW_CHUseLoadTotal                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadTotal)) & GDW_CHUseLoadTotalMask))
+// Verbrauch heute
+#define ParamGDW_CHUseLoadToday                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadToday)) & GDW_CHUseLoadTodayMask))
+// Batterie geladen gesamt
+#define ParamGDW_CHUseBatteryChargeTotal             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryChargeTotal)) & GDW_CHUseBatteryChargeTotalMask))
+// Batterie geladen heute
+#define ParamGDW_CHUseBatteryChargeToday             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryChargeToday)) & GDW_CHUseBatteryChargeTodayMask))
+// Batterie entladen gesamt
+#define ParamGDW_CHUseBatteryDischargeTotal          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryDischargeTotal)) & GDW_CHUseBatteryDischargeTotalMask))
+// Batterie entladen heute
+#define ParamGDW_CHUseBatteryDischargeToday          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryDischargeToday)) & GDW_CHUseBatteryDischargeTodayMask))
+// Zähler Kommunikationsart
+#define ParamGDW_CHUseMeterCommode                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCommode)) & GDW_CHUseMeterCommodeMask))
+// Zähler Herstellercode
+#define ParamGDW_CHUseMeterManufacturer              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterManufacturer)) & GDW_CHUseMeterManufacturerMask))
+// Zähler Prüfstatus
+#define ParamGDW_CHUseMeterTestStatus                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterTestStatus)) & GDW_CHUseMeterTestStatusMask))
+// Zähler Typ
+#define ParamGDW_CHUseMeterTypeCode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterTypeCode)) & GDW_CHUseMeterTypeCodeMask))
+// Zähler Softwareversion
+#define ParamGDW_CHUseMeterSwVersion                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterSwVersion)) & GDW_CHUseMeterSwVersionMask))
+// Zähler Wirkleistung L1
+#define ParamGDW_CHUseMeterPowerL1                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerL1)) & GDW_CHUseMeterPowerL1Mask))
+// Zähler Wirkleistung L2
+#define ParamGDW_CHUseMeterPowerL2                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerL2)) & GDW_CHUseMeterPowerL2Mask))
+// Zähler Wirkleistung L3
+#define ParamGDW_CHUseMeterPowerL3                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerL3)) & GDW_CHUseMeterPowerL3Mask))
+// Zähler Wirkleistung gesamt
+#define ParamGDW_CHUseMeterPowerTotal                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerTotal)) & GDW_CHUseMeterPowerTotalMask))
+// Zähler Wirkleistung L1 (16 Bit)
+#define ParamGDW_CHUseMeterPower16L1                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPower16L1)) & GDW_CHUseMeterPower16L1Mask))
+// Zähler Wirkleistung L2 (16 Bit)
+#define ParamGDW_CHUseMeterPower16L2                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPower16L2)) & GDW_CHUseMeterPower16L2Mask))
+// Zähler Wirkleistung L3 (16 Bit)
+#define ParamGDW_CHUseMeterPower16L3                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPower16L3)) & GDW_CHUseMeterPower16L3Mask))
+// Zähler Wirkleistung gesamt (16 Bit)
+#define ParamGDW_CHUseMeterPower16Total              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPower16Total)) & GDW_CHUseMeterPower16TotalMask))
+// Zähler Blindleistung L1 (var)
+#define ParamGDW_CHUseMeterReactiveL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterReactiveL1)) & GDW_CHUseMeterReactiveL1Mask))
+// Zähler Blindleistung L2 (var)
+#define ParamGDW_CHUseMeterReactiveL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterReactiveL2)) & GDW_CHUseMeterReactiveL2Mask))
+// Zähler Blindleistung L3 (var)
+#define ParamGDW_CHUseMeterReactiveL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterReactiveL3)) & GDW_CHUseMeterReactiveL3Mask))
+// Zähler Blindleistung gesamt (var)
+#define ParamGDW_CHUseMeterReactiveTotal             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterReactiveTotal)) & GDW_CHUseMeterReactiveTotalMask))
+// Zähler Blindleistung gesamt (16 Bit, var)
+#define ParamGDW_CHUseMeterReactive16Total           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterReactive16Total)) & GDW_CHUseMeterReactive16TotalMask))
+// Zähler Scheinleistung L1 (VA)
+#define ParamGDW_CHUseMeterApparentL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterApparentL1)) & GDW_CHUseMeterApparentL1Mask))
+// Zähler Scheinleistung L2 (VA)
+#define ParamGDW_CHUseMeterApparentL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterApparentL2)) & GDW_CHUseMeterApparentL2Mask))
+// Zähler Scheinleistung L3 (VA)
+#define ParamGDW_CHUseMeterApparentL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterApparentL3)) & GDW_CHUseMeterApparentL3Mask))
+// Zähler Scheinleistung gesamt (VA)
+#define ParamGDW_CHUseMeterApparentTotal             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterApparentTotal)) & GDW_CHUseMeterApparentTotalMask))
+// Zähler Leistungsfaktor L1
+#define ParamGDW_CHUseMeterPowerFactorL1             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerFactorL1)) & GDW_CHUseMeterPowerFactorL1Mask))
+// Zähler Leistungsfaktor L2
+#define ParamGDW_CHUseMeterPowerFactorL2             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerFactorL2)) & GDW_CHUseMeterPowerFactorL2Mask))
+// Zähler Leistungsfaktor L3
+#define ParamGDW_CHUseMeterPowerFactorL3             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerFactorL3)) & GDW_CHUseMeterPowerFactorL3Mask))
+// Zähler Leistungsfaktor
+#define ParamGDW_CHUseMeterPowerFactor               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerFactor)) & GDW_CHUseMeterPowerFactorMask))
+// Zähler Frequenz
+#define ParamGDW_CHUseMeterFrequency                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterFrequency)) & GDW_CHUseMeterFrequencyMask))
+// Zähler Spannung L1
+#define ParamGDW_CHUseMeterVoltageL1                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterVoltageL1)) & GDW_CHUseMeterVoltageL1Mask))
+// Zähler Spannung L2
+#define ParamGDW_CHUseMeterVoltageL2                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterVoltageL2)) & GDW_CHUseMeterVoltageL2Mask))
+// Zähler Spannung L3
+#define ParamGDW_CHUseMeterVoltageL3                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterVoltageL3)) & GDW_CHUseMeterVoltageL3Mask))
+// Zähler Strom L1
+#define ParamGDW_CHUseMeterCurrentL1                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCurrentL1)) & GDW_CHUseMeterCurrentL1Mask))
+// Zähler Strom L2
+#define ParamGDW_CHUseMeterCurrentL2                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCurrentL2)) & GDW_CHUseMeterCurrentL2Mask))
+// Zähler Strom L3
+#define ParamGDW_CHUseMeterCurrentL3                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCurrentL3)) & GDW_CHUseMeterCurrentL3Mask))
+// Zähler 2 Wirkleistung
+#define ParamGDW_CHUseMeter2Power                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2Power)) & GDW_CHUseMeter2PowerMask))
+// Zähler 2 Einspeisung gesamt
+#define ParamGDW_CHUseMeter2ExportTotal              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2ExportTotal)) & GDW_CHUseMeter2ExportTotalMask))
+// Zähler 2 Netzbezug gesamt
+#define ParamGDW_CHUseMeter2ImportTotal              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2ImportTotal)) & GDW_CHUseMeter2ImportTotalMask))
+// Zähler 2 Kommunikationsstatus
+#define ParamGDW_CHUseMeter2CommStatus               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2CommStatus)) & GDW_CHUseMeter2CommStatusMask))
+// Zähler Einspeisung L1
+#define ParamGDW_CHUseMeterExportL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportL1)) & GDW_CHUseMeterExportL1Mask))
+// Zähler Einspeisung L2
+#define ParamGDW_CHUseMeterExportL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportL2)) & GDW_CHUseMeterExportL2Mask))
+// Zähler Einspeisung L3
+#define ParamGDW_CHUseMeterExportL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportL3)) & GDW_CHUseMeterExportL3Mask))
+// Zähler Einspeisung gesamt (64 Bit)
+#define ParamGDW_CHUseMeterExportTotal64             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportTotal64)) & GDW_CHUseMeterExportTotal64Mask))
+// Zähler Netzbezug L1
+#define ParamGDW_CHUseMeterImportL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportL1)) & GDW_CHUseMeterImportL1Mask))
+// Zähler Netzbezug L2
+#define ParamGDW_CHUseMeterImportL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportL2)) & GDW_CHUseMeterImportL2Mask))
+// Zähler Netzbezug L3
+#define ParamGDW_CHUseMeterImportL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportL3)) & GDW_CHUseMeterImportL3Mask))
+// Zähler Netzbezug gesamt (64 Bit)
+#define ParamGDW_CHUseMeterImportTotal64             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportTotal64)) & GDW_CHUseMeterImportTotal64Mask))
+// BMS 1 Version
+#define ParamGDW_CHUseBms1Version                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Version)) & GDW_CHUseBms1VersionMask))
+// BMS 1 Modulanzahl
+#define ParamGDW_CHUseBms1Modules                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Modules)) & GDW_CHUseBms1ModulesMask))
+// BMS 1 Ladespannung max.
+#define ParamGDW_CHUseBms1ChargeVoltageMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1ChargeVoltageMax)) & GDW_CHUseBms1ChargeVoltageMaxMask))
+// BMS 1 Ladestrom max.
+#define ParamGDW_CHUseBms1ChargeCurrentMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1ChargeCurrentMax)) & GDW_CHUseBms1ChargeCurrentMaxMask))
+// BMS 1 Entladespannung min.
+#define ParamGDW_CHUseBms1DischargeVoltageMin        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1DischargeVoltageMin)) & GDW_CHUseBms1DischargeVoltageMinMask))
+// BMS 1 Entladestrom max.
+#define ParamGDW_CHUseBms1DischargeCurrentMax        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1DischargeCurrentMax)) & GDW_CHUseBms1DischargeCurrentMaxMask))
+// BMS 1 Spannung
+#define ParamGDW_CHUseBms1Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Voltage)) & GDW_CHUseBms1VoltageMask))
+// BMS 1 Strom
+#define ParamGDW_CHUseBms1Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Current)) & GDW_CHUseBms1CurrentMask))
+// BMS 1 Ladezustand
+#define ParamGDW_CHUseBms1Soc                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Soc)) & GDW_CHUseBms1SocMask))
+// BMS 1 Gesundheitszustand
+#define ParamGDW_CHUseBms1Soh                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Soh)) & GDW_CHUseBms1SohMask))
+// BMS 1 Temperatur
+#define ParamGDW_CHUseBms1Temperature                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Temperature)) & GDW_CHUseBms1TemperatureMask))
+// BMS 1 Warnungscode
+#define ParamGDW_CHUseBms1WarningCode                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1WarningCode)) & GDW_CHUseBms1WarningCodeMask))
+// BMS 1 Alarmcode
+#define ParamGDW_CHUseBms1AlarmCode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1AlarmCode)) & GDW_CHUseBms1AlarmCodeMask))
+// BMS 1 Status
+#define ParamGDW_CHUseBms1Status                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Status)) & GDW_CHUseBms1StatusMask))
+// BMS 1 Kommunikationsverlust ignorieren
+#define ParamGDW_CHUseBms1CommLossDisable            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1CommLossDisable)) & GDW_CHUseBms1CommLossDisableMask))
+// BMS 1 Strang-Nennspannung
+#define ParamGDW_CHUseBms1StringRateVoltage          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1StringRateVoltage)) & GDW_CHUseBms1StringRateVoltageMask))
+// BMS 2 Version
+#define ParamGDW_CHUseBms2Version                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Version)) & GDW_CHUseBms2VersionMask))
+// BMS 2 Modulanzahl
+#define ParamGDW_CHUseBms2Modules                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Modules)) & GDW_CHUseBms2ModulesMask))
+// BMS 2 Ladespannung max.
+#define ParamGDW_CHUseBms2ChargeVoltageMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2ChargeVoltageMax)) & GDW_CHUseBms2ChargeVoltageMaxMask))
+// BMS 2 Ladestrom max.
+#define ParamGDW_CHUseBms2ChargeCurrentMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2ChargeCurrentMax)) & GDW_CHUseBms2ChargeCurrentMaxMask))
+// BMS 2 Entladespannung min.
+#define ParamGDW_CHUseBms2DischargeVoltageMin        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2DischargeVoltageMin)) & GDW_CHUseBms2DischargeVoltageMinMask))
+// BMS 2 Entladestrom max.
+#define ParamGDW_CHUseBms2DischargeCurrentMax        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2DischargeCurrentMax)) & GDW_CHUseBms2DischargeCurrentMaxMask))
+// BMS 2 Spannung
+#define ParamGDW_CHUseBms2Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Voltage)) & GDW_CHUseBms2VoltageMask))
+// BMS 2 Strom
+#define ParamGDW_CHUseBms2Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Current)) & GDW_CHUseBms2CurrentMask))
+// BMS 2 Ladezustand
+#define ParamGDW_CHUseBms2Soc                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Soc)) & GDW_CHUseBms2SocMask))
+// BMS 2 Gesundheitszustand
+#define ParamGDW_CHUseBms2Soh                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Soh)) & GDW_CHUseBms2SohMask))
+// BMS 2 Temperatur
+#define ParamGDW_CHUseBms2Temperature                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Temperature)) & GDW_CHUseBms2TemperatureMask))
+// BMS 2 Warnungscode
+#define ParamGDW_CHUseBms2WarningCode                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2WarningCode)) & GDW_CHUseBms2WarningCodeMask))
+// BMS 2 Alarmcode
+#define ParamGDW_CHUseBms2AlarmCode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2AlarmCode)) & GDW_CHUseBms2AlarmCodeMask))
+// BMS 2 Status
+#define ParamGDW_CHUseBms2Status                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Status)) & GDW_CHUseBms2StatusMask))
+// BMS 2 Kommunikationsverlust ignorieren
+#define ParamGDW_CHUseBms2CommLossDisable            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2CommLossDisable)) & GDW_CHUseBms2CommLossDisableMask))
+// BMS 2 Strang-Nennspannung
+#define ParamGDW_CHUseBms2StringRateVoltage          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2StringRateVoltage)) & GDW_CHUseBms2StringRateVoltageMask))
+// Betriebsmodus
+#define ParamGDW_CHUseOperationMode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseOperationMode)) & GDW_CHUseOperationModeMask))
+// EMS-Modus
+#define ParamGDW_CHUseEmsMode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEmsMode)) & GDW_CHUseEmsModeMask))
+// EMS-Leistung
+#define ParamGDW_CHUseEmsPowerLimit                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEmsPowerLimit)) & GDW_CHUseEmsPowerLimitMask))
+// Einspeisebegrenzung aktiv
+#define ParamGDW_CHUseExportLimitEnable              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportLimitEnable)) & GDW_CHUseExportLimitEnableMask))
+// Einspeisebegrenzung
+#define ParamGDW_CHUseExportLimit                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportLimit)) & GDW_CHUseExportLimitMask))
+// Einspeisebegrenzung (%)
+#define ParamGDW_CHUseExportLimitPercent             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportLimitPercent)) & GDW_CHUseExportLimitPercentMask))
+// Entladetiefe Netzbetrieb
+#define ParamGDW_CHUseDodOnGrid                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDodOnGrid)) & GDW_CHUseDodOnGridMask))
+// Entladetiefe Inselbetrieb
+#define ParamGDW_CHUseDodOffGrid                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDodOffGrid)) & GDW_CHUseDodOffGridMask))
+// SoC-Schutz
+#define ParamGDW_CHUseSocProtection                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseSocProtection)) & GDW_CHUseSocProtectionMask))
+// SoC-Obergrenze
+#define ParamGDW_CHUseSocUpperLimit                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseSocUpperLimit)) & GDW_CHUseSocUpperLimitMask))
+// Eco-Leistung
+#define ParamGDW_CHUseEcoModePower                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEcoModePower)) & GDW_CHUseEcoModePowerMask))
+// Eco-Ziel-SoC
+#define ParamGDW_CHUseEcoModeSoc                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEcoModeSoc)) & GDW_CHUseEcoModeSocMask))
+// Schnellladen
+#define ParamGDW_CHUseFastCharging                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseFastCharging)) & GDW_CHUseFastChargingMask))
+// Schnellladen Ziel-SoC
+#define ParamGDW_CHUseFastChargingSoc                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseFastChargingSoc)) & GDW_CHUseFastChargingSocMask))
+// Schnellladen Leistung
+#define ParamGDW_CHUseFastChargingPower              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseFastChargingPower)) & GDW_CHUseFastChargingPowerMask))
+// Backup-Versorgung
+#define ParamGDW_CHUseBackupSupply                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupSupply)) & GDW_CHUseBackupSupplyMask))
+// Entladetiefe halten
+#define ParamGDW_CHUseDodHolding                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDodHolding)) & GDW_CHUseDodHoldingMask))
+// Lastregelung
+#define ParamGDW_CHUseLoadControl                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadControl)) & GDW_CHUseLoadControlMask))
+// Uhr synchronisieren
+#define ParamGDW_CHUseSyncClock                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseSyncClock)) & GDW_CHUseSyncClockMask))
+// Wechselrichter starten
+#define ParamGDW_CHUseStartInverter                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseStartInverter)) & GDW_CHUseStartInverterMask))
+// Wechselrichter stoppen
+#define ParamGDW_CHUseStopInverter                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseStopInverter)) & GDW_CHUseStopInverterMask))
+
+// deprecated
+#define GDW_KoOffset 1310
+
+// Communication objects per channel (multiple occurrence)
+#define GDW_KoBlockOffset 1310
+#define GDW_KoBlockSize 341
+
+#define GDW_KoCalcNumber(index) (index + GDW_KoBlockOffset + _channelIndex * GDW_KoBlockSize)
+#define GDW_KoCalcIndex(number) ((number >= GDW_KoCalcNumber(0) && number < GDW_KoCalcNumber(GDW_KoBlockSize)) ? (number - GDW_KoBlockOffset) % GDW_KoBlockSize : -1)
+#define GDW_KoCalcChannel(number) ((number >= GDW_KoBlockOffset && number < GDW_KoBlockOffset + GDW_ChannelCount * GDW_KoBlockSize) ? (number - GDW_KoBlockOffset) / GDW_KoBlockSize : -1)
+
+#define GDW_KoCHReachable 0
+#define GDW_KoCHWorkMode 1
+#define GDW_KoCHErrorCodes 2
+#define GDW_KoCHWarningCode 3
+#define GDW_KoCHSafetyCountry 4
+#define GDW_KoCHFunctionBit 5
+#define GDW_KoCHHoursTotal 6
+#define GDW_KoCHTimestamp 7
+#define GDW_KoCHTemperature 8
+#define GDW_KoCHBusVoltage 9
+#define GDW_KoCHNBusVoltage 10
+#define GDW_KoCHGridInOut 11
+#define GDW_KoCHRssi 12
+#define GDW_KoCHMeterCommStatus 13
+#define GDW_KoCHGridMode 14
+#define GDW_KoCHOperationCode 15
+#define GDW_KoCHDiagStatus 16
+#define GDW_KoCHTempAir 17
+#define GDW_KoCHTempModule 18
+#define GDW_KoCHTempHeatsink 19
+#define GDW_KoCHDeratingMode 20
+#define GDW_KoCHLeakageCurrent 21
+#define GDW_KoCHPvPower 22
+#define GDW_KoCHPv1Voltage 23
+#define GDW_KoCHPv1Current 24
+#define GDW_KoCHPv1Power 25
+#define GDW_KoCHPv2Voltage 26
+#define GDW_KoCHPv2Current 27
+#define GDW_KoCHPv2Power 28
+#define GDW_KoCHPv3Voltage 29
+#define GDW_KoCHPv3Current 30
+#define GDW_KoCHPv3Power 31
+#define GDW_KoCHPv4Voltage 32
+#define GDW_KoCHPv4Current 33
+#define GDW_KoCHPv4Power 34
+#define GDW_KoCHPv1Mode 35
+#define GDW_KoCHPv2Mode 36
+#define GDW_KoCHPv3Mode 37
+#define GDW_KoCHPv4Mode 38
+#define GDW_KoCHTotalInputPower 39
+#define GDW_KoCHPvPowerTotalExt 40
+#define GDW_KoCHPvChannel 41
+#define GDW_KoCHPv5Voltage 42
+#define GDW_KoCHPv5Current 43
+#define GDW_KoCHPv6Voltage 44
+#define GDW_KoCHPv6Current 45
+#define GDW_KoCHPv7Voltage 46
+#define GDW_KoCHPv7Current 47
+#define GDW_KoCHPv8Voltage 48
+#define GDW_KoCHPv8Current 49
+#define GDW_KoCHPv9Voltage 50
+#define GDW_KoCHPv9Current 51
+#define GDW_KoCHPv10Voltage 52
+#define GDW_KoCHPv10Current 53
+#define GDW_KoCHPv11Voltage 54
+#define GDW_KoCHPv11Current 55
+#define GDW_KoCHPv12Voltage 56
+#define GDW_KoCHPv12Current 57
+#define GDW_KoCHPv13Voltage 58
+#define GDW_KoCHPv13Current 59
+#define GDW_KoCHPv14Voltage 60
+#define GDW_KoCHPv14Current 61
+#define GDW_KoCHPv15Voltage 62
+#define GDW_KoCHPv15Current 63
+#define GDW_KoCHPv16Voltage 64
+#define GDW_KoCHPv16Current 65
+#define GDW_KoCHMppt1Power 66
+#define GDW_KoCHMppt2Power 67
+#define GDW_KoCHMppt3Power 68
+#define GDW_KoCHMppt4Power 69
+#define GDW_KoCHMppt5Power 70
+#define GDW_KoCHMppt6Power 71
+#define GDW_KoCHMppt7Power 72
+#define GDW_KoCHMppt8Power 73
+#define GDW_KoCHMppt1Current 74
+#define GDW_KoCHMppt2Current 75
+#define GDW_KoCHMppt3Current 76
+#define GDW_KoCHMppt4Current 77
+#define GDW_KoCHMppt5Current 78
+#define GDW_KoCHMppt6Current 79
+#define GDW_KoCHMppt7Current 80
+#define GDW_KoCHMppt8Current 81
+#define GDW_KoCHGridVoltageL1 82
+#define GDW_KoCHGridCurrentL1 83
+#define GDW_KoCHGridFrequencyL1 84
+#define GDW_KoCHGridPowerL1 85
+#define GDW_KoCHGridVoltageL2 86
+#define GDW_KoCHGridCurrentL2 87
+#define GDW_KoCHGridFrequencyL2 88
+#define GDW_KoCHGridPowerL2 89
+#define GDW_KoCHGridVoltageL3 90
+#define GDW_KoCHGridCurrentL3 91
+#define GDW_KoCHGridFrequencyL3 92
+#define GDW_KoCHGridPowerL3 93
+#define GDW_KoCHInverterPower 94
+#define GDW_KoCHActivePower 95
+#define GDW_KoCHImportPower 96
+#define GDW_KoCHExportPower 97
+#define GDW_KoCHReactivePower 98
+#define GDW_KoCHApparentPower 99
+#define GDW_KoCHHouseConsumption 100
+#define GDW_KoCHReactivePowerL1 101
+#define GDW_KoCHReactivePowerL2 102
+#define GDW_KoCHReactivePowerL3 103
+#define GDW_KoCHApparentPowerL1 104
+#define GDW_KoCHApparentPowerL2 105
+#define GDW_KoCHApparentPowerL3 106
+#define GDW_KoCHLineVoltageL1L2 107
+#define GDW_KoCHLineVoltageL2L3 108
+#define GDW_KoCHLineVoltageL3L1 109
+#define GDW_KoCHPowerFactor 110
+#define GDW_KoCHBackupVoltageL1 111
+#define GDW_KoCHBackupCurrentL1 112
+#define GDW_KoCHBackupFrequencyL1 113
+#define GDW_KoCHLoadModeL1 114
+#define GDW_KoCHBackupPowerL1 115
+#define GDW_KoCHBackupVoltageL2 116
+#define GDW_KoCHBackupCurrentL2 117
+#define GDW_KoCHBackupFrequencyL2 118
+#define GDW_KoCHLoadModeL2 119
+#define GDW_KoCHBackupPowerL2 120
+#define GDW_KoCHBackupVoltageL3 121
+#define GDW_KoCHBackupCurrentL3 122
+#define GDW_KoCHBackupFrequencyL3 123
+#define GDW_KoCHLoadModeL3 124
+#define GDW_KoCHBackupPowerL3 125
+#define GDW_KoCHLoadPowerL1 126
+#define GDW_KoCHLoadPowerL2 127
+#define GDW_KoCHLoadPowerL3 128
+#define GDW_KoCHBackupPowerTotal 129
+#define GDW_KoCHLoadPowerTotal 130
+#define GDW_KoCHUpsLoad 131
+#define GDW_KoCHBatteryVoltage 132
+#define GDW_KoCHBatteryCurrent 133
+#define GDW_KoCHBatteryPower 134
+#define GDW_KoCHBatteryMode 135
+#define GDW_KoCHBatterySoc 136
+#define GDW_KoCHBatterySoh 137
+#define GDW_KoCHBatteryTemperature 138
+#define GDW_KoCHBatteryChargeLimit 139
+#define GDW_KoCHBatteryDischargeLimit 140
+#define GDW_KoCHBatteryBms 141
+#define GDW_KoCHBatteryIndex 142
+#define GDW_KoCHBatteryStatus 143
+#define GDW_KoCHBatteryModules 144
+#define GDW_KoCHBatteryProtocol 145
+#define GDW_KoCHBatteryError 146
+#define GDW_KoCHBatteryWarning 147
+#define GDW_KoCHBatterySwVersion 148
+#define GDW_KoCHBatteryHwVersion 149
+#define GDW_KoCHBatteryMaxCellTempId 150
+#define GDW_KoCHBatteryMinCellTempId 151
+#define GDW_KoCHBatteryMaxCellVoltId 152
+#define GDW_KoCHBatteryMinCellVoltId 153
+#define GDW_KoCHBatteryMaxCellTemp 154
+#define GDW_KoCHBatteryMinCellTemp 155
+#define GDW_KoCHBatteryMaxCellVoltage 156
+#define GDW_KoCHBatteryMinCellVoltage 157
+#define GDW_KoCHBatteryCapacity 158
+#define GDW_KoCHBattery2Voltage 159
+#define GDW_KoCHBattery2Current 160
+#define GDW_KoCHBattery2Power 161
+#define GDW_KoCHBattery2Mode 162
+#define GDW_KoCHBattery2Status 163
+#define GDW_KoCHBattery2Temperature 164
+#define GDW_KoCHBattery2ChargeLimit 165
+#define GDW_KoCHBattery2DischargeLimit 166
+#define GDW_KoCHBattery2Soc 167
+#define GDW_KoCHBattery2Soh 168
+#define GDW_KoCHBattery2Modules 169
+#define GDW_KoCHBattery2Protocol 170
+#define GDW_KoCHBattery2Error 171
+#define GDW_KoCHBattery2Warning 172
+#define GDW_KoCHBattery2SwVersion 173
+#define GDW_KoCHBattery2HwVersion 174
+#define GDW_KoCHBattery2MaxCellTempId 175
+#define GDW_KoCHBattery2MinCellTempId 176
+#define GDW_KoCHBattery2MaxCellVoltId 177
+#define GDW_KoCHBattery2MinCellVoltId 178
+#define GDW_KoCHBattery2MaxCellTemp 179
+#define GDW_KoCHBattery2MinCellTemp 180
+#define GDW_KoCHBattery2MaxCellVoltage 181
+#define GDW_KoCHBattery2MinCellVoltage 182
+#define GDW_KoCHEnergyTotal 183
+#define GDW_KoCHEnergyToday 184
+#define GDW_KoCHMeterExportTotal 185
+#define GDW_KoCHMeterImportTotal 186
+#define GDW_KoCHExportTotal 187
+#define GDW_KoCHExportToday 188
+#define GDW_KoCHImportTotal 189
+#define GDW_KoCHImportToday 190
+#define GDW_KoCHLoadTotal 191
+#define GDW_KoCHLoadToday 192
+#define GDW_KoCHBatteryChargeTotal 193
+#define GDW_KoCHBatteryChargeToday 194
+#define GDW_KoCHBatteryDischargeTotal 195
+#define GDW_KoCHBatteryDischargeToday 196
+#define GDW_KoCHMeterCommode 197
+#define GDW_KoCHMeterManufacturer 198
+#define GDW_KoCHMeterTestStatus 199
+#define GDW_KoCHMeterTypeCode 200
+#define GDW_KoCHMeterSwVersion 201
+#define GDW_KoCHMeterPowerL1 202
+#define GDW_KoCHMeterPowerL2 203
+#define GDW_KoCHMeterPowerL3 204
+#define GDW_KoCHMeterPowerTotal 205
+#define GDW_KoCHMeterPower16L1 206
+#define GDW_KoCHMeterPower16L2 207
+#define GDW_KoCHMeterPower16L3 208
+#define GDW_KoCHMeterPower16Total 209
+#define GDW_KoCHMeterReactiveL1 210
+#define GDW_KoCHMeterReactiveL2 211
+#define GDW_KoCHMeterReactiveL3 212
+#define GDW_KoCHMeterReactiveTotal 213
+#define GDW_KoCHMeterReactive16Total 214
+#define GDW_KoCHMeterApparentL1 215
+#define GDW_KoCHMeterApparentL2 216
+#define GDW_KoCHMeterApparentL3 217
+#define GDW_KoCHMeterApparentTotal 218
+#define GDW_KoCHMeterPowerFactorL1 219
+#define GDW_KoCHMeterPowerFactorL2 220
+#define GDW_KoCHMeterPowerFactorL3 221
+#define GDW_KoCHMeterPowerFactor 222
+#define GDW_KoCHMeterFrequency 223
+#define GDW_KoCHMeterVoltageL1 224
+#define GDW_KoCHMeterVoltageL2 225
+#define GDW_KoCHMeterVoltageL3 226
+#define GDW_KoCHMeterCurrentL1 227
+#define GDW_KoCHMeterCurrentL2 228
+#define GDW_KoCHMeterCurrentL3 229
+#define GDW_KoCHMeter2Power 230
+#define GDW_KoCHMeter2ExportTotal 231
+#define GDW_KoCHMeter2ImportTotal 232
+#define GDW_KoCHMeter2CommStatus 233
+#define GDW_KoCHMeterExportL1 234
+#define GDW_KoCHMeterExportL2 235
+#define GDW_KoCHMeterExportL3 236
+#define GDW_KoCHMeterExportTotal64 237
+#define GDW_KoCHMeterImportL1 238
+#define GDW_KoCHMeterImportL2 239
+#define GDW_KoCHMeterImportL3 240
+#define GDW_KoCHMeterImportTotal64 241
+#define GDW_KoCHBms1Version 242
+#define GDW_KoCHBms1Modules 243
+#define GDW_KoCHBms1ChargeVoltageMax 244
+#define GDW_KoCHBms1ChargeCurrentMax 245
+#define GDW_KoCHBms1DischargeVoltageMin 246
+#define GDW_KoCHBms1DischargeCurrentMax 247
+#define GDW_KoCHBms1Voltage 248
+#define GDW_KoCHBms1Current 249
+#define GDW_KoCHBms1Soc 250
+#define GDW_KoCHBms1Soh 251
+#define GDW_KoCHBms1Temperature 252
+#define GDW_KoCHBms1WarningCode 253
+#define GDW_KoCHBms1AlarmCode 254
+#define GDW_KoCHBms1Status 255
+#define GDW_KoCHBms1CommLossDisable 256
+#define GDW_KoCHBms1StringRateVoltage 257
+#define GDW_KoCHBms2Version 258
+#define GDW_KoCHBms2Modules 259
+#define GDW_KoCHBms2ChargeVoltageMax 260
+#define GDW_KoCHBms2ChargeCurrentMax 261
+#define GDW_KoCHBms2DischargeVoltageMin 262
+#define GDW_KoCHBms2DischargeCurrentMax 263
+#define GDW_KoCHBms2Voltage 264
+#define GDW_KoCHBms2Current 265
+#define GDW_KoCHBms2Soc 266
+#define GDW_KoCHBms2Soh 267
+#define GDW_KoCHBms2Temperature 268
+#define GDW_KoCHBms2WarningCode 269
+#define GDW_KoCHBms2AlarmCode 270
+#define GDW_KoCHBms2Status 271
+#define GDW_KoCHBms2CommLossDisable 272
+#define GDW_KoCHBms2StringRateVoltage 273
+#define GDW_KoCHOperationMode 300
+#define GDW_KoCHOperationModeStatus 301
+#define GDW_KoCHEmsMode 302
+#define GDW_KoCHEmsModeStatus 303
+#define GDW_KoCHEmsPowerLimit 304
+#define GDW_KoCHEmsPowerLimitStatus 305
+#define GDW_KoCHExportLimitEnable 306
+#define GDW_KoCHExportLimitEnableStatus 307
+#define GDW_KoCHExportLimit 308
+#define GDW_KoCHExportLimitStatus 309
+#define GDW_KoCHExportLimitPercent 310
+#define GDW_KoCHExportLimitPercentStatus 311
+#define GDW_KoCHDodOnGrid 312
+#define GDW_KoCHDodOnGridStatus 313
+#define GDW_KoCHDodOffGrid 314
+#define GDW_KoCHDodOffGridStatus 315
+#define GDW_KoCHSocProtection 316
+#define GDW_KoCHSocProtectionStatus 317
+#define GDW_KoCHSocUpperLimit 318
+#define GDW_KoCHSocUpperLimitStatus 319
+#define GDW_KoCHEcoModePower 320
+#define GDW_KoCHEcoModePowerStatus 321
+#define GDW_KoCHEcoModeSoc 322
+#define GDW_KoCHEcoModeSocStatus 323
+#define GDW_KoCHFastCharging 324
+#define GDW_KoCHFastChargingStatus 325
+#define GDW_KoCHFastChargingSoc 326
+#define GDW_KoCHFastChargingSocStatus 327
+#define GDW_KoCHFastChargingPower 328
+#define GDW_KoCHFastChargingPowerStatus 329
+#define GDW_KoCHBackupSupply 330
+#define GDW_KoCHBackupSupplyStatus 331
+#define GDW_KoCHDodHolding 332
+#define GDW_KoCHDodHoldingStatus 333
+#define GDW_KoCHLoadControl 334
+#define GDW_KoCHLoadControlStatus 335
+#define GDW_KoCHSyncClock 336
+#define GDW_KoCHStartInverter 338
+#define GDW_KoCHStopInverter 340
+
+// Erreichbar
+#define KoGDW_CHReachable                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHReachable)))
+// Arbeitsmodus
+#define KoGDW_CHWorkMode                          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHWorkMode)))
+// Fehlercode
+#define KoGDW_CHErrorCodes                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHErrorCodes)))
+// Warnungscode
+#define KoGDW_CHWarningCode                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHWarningCode)))
+// Ländereinstellung
+#define KoGDW_CHSafetyCountry                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHSafetyCountry)))
+// Funktionsbits
+#define KoGDW_CHFunctionBit                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFunctionBit)))
+// Betriebsstunden
+#define KoGDW_CHHoursTotal                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHHoursTotal)))
+// Gerätezeit
+#define KoGDW_CHTimestamp                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHTimestamp)))
+// Temperatur Wechselrichter
+#define KoGDW_CHTemperature                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHTemperature)))
+// Busspannung
+#define KoGDW_CHBusVoltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBusVoltage)))
+// N-Busspannung
+#define KoGDW_CHNBusVoltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHNBusVoltage)))
+// Netzrichtung
+#define KoGDW_CHGridInOut                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridInOut)))
+// Signalstärke
+#define KoGDW_CHRssi                              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHRssi)))
+// Zähler Kommunikationsstatus
+#define KoGDW_CHMeterCommStatus                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterCommStatus)))
+// Netzstatus
+#define KoGDW_CHGridMode                          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridMode)))
+// Betriebsart
+#define KoGDW_CHOperationCode                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHOperationCode)))
+// Diagnosestatus
+#define KoGDW_CHDiagStatus                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDiagStatus)))
+// Temperatur Luft
+#define KoGDW_CHTempAir                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHTempAir)))
+// Temperatur Modul
+#define KoGDW_CHTempModule                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHTempModule)))
+// Temperatur Kühlkörper
+#define KoGDW_CHTempHeatsink                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHTempHeatsink)))
+// Leistungsreduzierung
+#define KoGDW_CHDeratingMode                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDeratingMode)))
+// Ableitstrom
+#define KoGDW_CHLeakageCurrent                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLeakageCurrent)))
+// PV-Leistung gesamt
+#define KoGDW_CHPvPower                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPvPower)))
+// PV1 Spannung
+#define KoGDW_CHPv1Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv1Voltage)))
+// PV1 Strom
+#define KoGDW_CHPv1Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv1Current)))
+// PV1 Leistung
+#define KoGDW_CHPv1Power                          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv1Power)))
+// PV2 Spannung
+#define KoGDW_CHPv2Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv2Voltage)))
+// PV2 Strom
+#define KoGDW_CHPv2Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv2Current)))
+// PV2 Leistung
+#define KoGDW_CHPv2Power                          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv2Power)))
+// PV3 Spannung
+#define KoGDW_CHPv3Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv3Voltage)))
+// PV3 Strom
+#define KoGDW_CHPv3Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv3Current)))
+// PV3 Leistung
+#define KoGDW_CHPv3Power                          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv3Power)))
+// PV4 Spannung
+#define KoGDW_CHPv4Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv4Voltage)))
+// PV4 Strom
+#define KoGDW_CHPv4Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv4Current)))
+// PV4 Leistung
+#define KoGDW_CHPv4Power                          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv4Power)))
+// PV1 Modus
+#define KoGDW_CHPv1Mode                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv1Mode)))
+// PV2 Modus
+#define KoGDW_CHPv2Mode                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv2Mode)))
+// PV3 Modus
+#define KoGDW_CHPv3Mode                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv3Mode)))
+// PV4 Modus
+#define KoGDW_CHPv4Mode                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv4Mode)))
+// Eingangsleistung gesamt
+#define KoGDW_CHTotalInputPower                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHTotalInputPower)))
+// PV-Leistung gesamt (MPPT-Block)
+#define KoGDW_CHPvPowerTotalExt                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPvPowerTotalExt)))
+// Anzahl PV-Kanäle
+#define KoGDW_CHPvChannel                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPvChannel)))
+// PV5 Spannung
+#define KoGDW_CHPv5Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv5Voltage)))
+// PV5 Strom
+#define KoGDW_CHPv5Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv5Current)))
+// PV6 Spannung
+#define KoGDW_CHPv6Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv6Voltage)))
+// PV6 Strom
+#define KoGDW_CHPv6Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv6Current)))
+// PV7 Spannung
+#define KoGDW_CHPv7Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv7Voltage)))
+// PV7 Strom
+#define KoGDW_CHPv7Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv7Current)))
+// PV8 Spannung
+#define KoGDW_CHPv8Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv8Voltage)))
+// PV8 Strom
+#define KoGDW_CHPv8Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv8Current)))
+// PV9 Spannung
+#define KoGDW_CHPv9Voltage                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv9Voltage)))
+// PV9 Strom
+#define KoGDW_CHPv9Current                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv9Current)))
+// PV10 Spannung
+#define KoGDW_CHPv10Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv10Voltage)))
+// PV10 Strom
+#define KoGDW_CHPv10Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv10Current)))
+// PV11 Spannung
+#define KoGDW_CHPv11Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv11Voltage)))
+// PV11 Strom
+#define KoGDW_CHPv11Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv11Current)))
+// PV12 Spannung
+#define KoGDW_CHPv12Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv12Voltage)))
+// PV12 Strom
+#define KoGDW_CHPv12Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv12Current)))
+// PV13 Spannung
+#define KoGDW_CHPv13Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv13Voltage)))
+// PV13 Strom
+#define KoGDW_CHPv13Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv13Current)))
+// PV14 Spannung
+#define KoGDW_CHPv14Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv14Voltage)))
+// PV14 Strom
+#define KoGDW_CHPv14Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv14Current)))
+// PV15 Spannung
+#define KoGDW_CHPv15Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv15Voltage)))
+// PV15 Strom
+#define KoGDW_CHPv15Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv15Current)))
+// PV16 Spannung
+#define KoGDW_CHPv16Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv16Voltage)))
+// PV16 Strom
+#define KoGDW_CHPv16Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPv16Current)))
+// MPPT1 Leistung
+#define KoGDW_CHMppt1Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt1Power)))
+// MPPT2 Leistung
+#define KoGDW_CHMppt2Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt2Power)))
+// MPPT3 Leistung
+#define KoGDW_CHMppt3Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt3Power)))
+// MPPT4 Leistung
+#define KoGDW_CHMppt4Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt4Power)))
+// MPPT5 Leistung
+#define KoGDW_CHMppt5Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt5Power)))
+// MPPT6 Leistung
+#define KoGDW_CHMppt6Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt6Power)))
+// MPPT7 Leistung
+#define KoGDW_CHMppt7Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt7Power)))
+// MPPT8 Leistung
+#define KoGDW_CHMppt8Power                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt8Power)))
+// MPPT1 Strom
+#define KoGDW_CHMppt1Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt1Current)))
+// MPPT2 Strom
+#define KoGDW_CHMppt2Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt2Current)))
+// MPPT3 Strom
+#define KoGDW_CHMppt3Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt3Current)))
+// MPPT4 Strom
+#define KoGDW_CHMppt4Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt4Current)))
+// MPPT5 Strom
+#define KoGDW_CHMppt5Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt5Current)))
+// MPPT6 Strom
+#define KoGDW_CHMppt6Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt6Current)))
+// MPPT7 Strom
+#define KoGDW_CHMppt7Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt7Current)))
+// MPPT8 Strom
+#define KoGDW_CHMppt8Current                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMppt8Current)))
+// Netzspannung L1
+#define KoGDW_CHGridVoltageL1                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridVoltageL1)))
+// Netzstrom L1
+#define KoGDW_CHGridCurrentL1                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridCurrentL1)))
+// Netzfrequenz L1
+#define KoGDW_CHGridFrequencyL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridFrequencyL1)))
+// Leistung L1
+#define KoGDW_CHGridPowerL1                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridPowerL1)))
+// Netzspannung L2
+#define KoGDW_CHGridVoltageL2                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridVoltageL2)))
+// Netzstrom L2
+#define KoGDW_CHGridCurrentL2                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridCurrentL2)))
+// Netzfrequenz L2
+#define KoGDW_CHGridFrequencyL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridFrequencyL2)))
+// Leistung L2
+#define KoGDW_CHGridPowerL2                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridPowerL2)))
+// Netzspannung L3
+#define KoGDW_CHGridVoltageL3                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridVoltageL3)))
+// Netzstrom L3
+#define KoGDW_CHGridCurrentL3                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridCurrentL3)))
+// Netzfrequenz L3
+#define KoGDW_CHGridFrequencyL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridFrequencyL3)))
+// Leistung L3
+#define KoGDW_CHGridPowerL3                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHGridPowerL3)))
+// Wechselrichterleistung
+#define KoGDW_CHInverterPower                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHInverterPower)))
+// Netzleistung (+ Einspeisung)
+#define KoGDW_CHActivePower                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHActivePower)))
+// Netzbezug Leistung
+#define KoGDW_CHImportPower                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHImportPower)))
+// Einspeisung Leistung
+#define KoGDW_CHExportPower                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportPower)))
+// Blindleistung (var)
+#define KoGDW_CHReactivePower                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHReactivePower)))
+// Scheinleistung (VA)
+#define KoGDW_CHApparentPower                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHApparentPower)))
+// Hausverbrauch
+#define KoGDW_CHHouseConsumption                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHHouseConsumption)))
+// Blindleistung L1 (var)
+#define KoGDW_CHReactivePowerL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHReactivePowerL1)))
+// Blindleistung L2 (var)
+#define KoGDW_CHReactivePowerL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHReactivePowerL2)))
+// Blindleistung L3 (var)
+#define KoGDW_CHReactivePowerL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHReactivePowerL3)))
+// Scheinleistung L1 (VA)
+#define KoGDW_CHApparentPowerL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHApparentPowerL1)))
+// Scheinleistung L2 (VA)
+#define KoGDW_CHApparentPowerL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHApparentPowerL2)))
+// Scheinleistung L3 (VA)
+#define KoGDW_CHApparentPowerL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHApparentPowerL3)))
+// Außenleiterspannung L1-L2
+#define KoGDW_CHLineVoltageL1L2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLineVoltageL1L2)))
+// Außenleiterspannung L2-L3
+#define KoGDW_CHLineVoltageL2L3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLineVoltageL2L3)))
+// Außenleiterspannung L3-L1
+#define KoGDW_CHLineVoltageL3L1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLineVoltageL3L1)))
+// Leistungsfaktor
+#define KoGDW_CHPowerFactor                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHPowerFactor)))
+// Backup L1 Spannung
+#define KoGDW_CHBackupVoltageL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupVoltageL1)))
+// Backup L1 Strom
+#define KoGDW_CHBackupCurrentL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupCurrentL1)))
+// Backup L1 Frequenz
+#define KoGDW_CHBackupFrequencyL1                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupFrequencyL1)))
+// Lastmodus L1
+#define KoGDW_CHLoadModeL1                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadModeL1)))
+// Backup L1 Leistung
+#define KoGDW_CHBackupPowerL1                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupPowerL1)))
+// Backup L2 Spannung
+#define KoGDW_CHBackupVoltageL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupVoltageL2)))
+// Backup L2 Strom
+#define KoGDW_CHBackupCurrentL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupCurrentL2)))
+// Backup L2 Frequenz
+#define KoGDW_CHBackupFrequencyL2                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupFrequencyL2)))
+// Lastmodus L2
+#define KoGDW_CHLoadModeL2                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadModeL2)))
+// Backup L2 Leistung
+#define KoGDW_CHBackupPowerL2                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupPowerL2)))
+// Backup L3 Spannung
+#define KoGDW_CHBackupVoltageL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupVoltageL3)))
+// Backup L3 Strom
+#define KoGDW_CHBackupCurrentL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupCurrentL3)))
+// Backup L3 Frequenz
+#define KoGDW_CHBackupFrequencyL3                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupFrequencyL3)))
+// Lastmodus L3
+#define KoGDW_CHLoadModeL3                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadModeL3)))
+// Backup L3 Leistung
+#define KoGDW_CHBackupPowerL3                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupPowerL3)))
+// Last L1
+#define KoGDW_CHLoadPowerL1                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadPowerL1)))
+// Last L2
+#define KoGDW_CHLoadPowerL2                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadPowerL2)))
+// Last L3
+#define KoGDW_CHLoadPowerL3                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadPowerL3)))
+// Backup-Last gesamt
+#define KoGDW_CHBackupPowerTotal                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupPowerTotal)))
+// Last gesamt
+#define KoGDW_CHLoadPowerTotal                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadPowerTotal)))
+// USV-Auslastung
+#define KoGDW_CHUpsLoad                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHUpsLoad)))
+// Batterie Spannung
+#define KoGDW_CHBatteryVoltage                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryVoltage)))
+// Batterie Strom
+#define KoGDW_CHBatteryCurrent                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryCurrent)))
+// Batterie Leistung (+ Entladen)
+#define KoGDW_CHBatteryPower                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryPower)))
+// Batterie Modus
+#define KoGDW_CHBatteryMode                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMode)))
+// Batterie Ladezustand
+#define KoGDW_CHBatterySoc                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatterySoc)))
+// Batterie Gesundheitszustand
+#define KoGDW_CHBatterySoh                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatterySoh)))
+// Batterie Temperatur
+#define KoGDW_CHBatteryTemperature                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryTemperature)))
+// Batterie Ladestromgrenze
+#define KoGDW_CHBatteryChargeLimit                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryChargeLimit)))
+// Batterie Entladestromgrenze
+#define KoGDW_CHBatteryDischargeLimit             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryDischargeLimit)))
+// Batterie BMS
+#define KoGDW_CHBatteryBms                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryBms)))
+// Batterie Index
+#define KoGDW_CHBatteryIndex                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryIndex)))
+// Batterie Status
+#define KoGDW_CHBatteryStatus                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryStatus)))
+// Batterie Modulanzahl
+#define KoGDW_CHBatteryModules                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryModules)))
+// Batterie Protokoll
+#define KoGDW_CHBatteryProtocol                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryProtocol)))
+// Batterie Fehler
+#define KoGDW_CHBatteryError                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryError)))
+// Batterie Warnung
+#define KoGDW_CHBatteryWarning                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryWarning)))
+// Batterie Softwareversion
+#define KoGDW_CHBatterySwVersion                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatterySwVersion)))
+// Batterie Hardwareversion
+#define KoGDW_CHBatteryHwVersion                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryHwVersion)))
+// Batterie Zelle max. Temperatur (Nr.)
+#define KoGDW_CHBatteryMaxCellTempId              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMaxCellTempId)))
+// Batterie Zelle min. Temperatur (Nr.)
+#define KoGDW_CHBatteryMinCellTempId              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMinCellTempId)))
+// Batterie Zelle max. Spannung (Nr.)
+#define KoGDW_CHBatteryMaxCellVoltId              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMaxCellVoltId)))
+// Batterie Zelle min. Spannung (Nr.)
+#define KoGDW_CHBatteryMinCellVoltId              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMinCellVoltId)))
+// Batterie Zelltemperatur max.
+#define KoGDW_CHBatteryMaxCellTemp                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMaxCellTemp)))
+// Batterie Zelltemperatur min.
+#define KoGDW_CHBatteryMinCellTemp                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMinCellTemp)))
+// Batterie Zellspannung max.
+#define KoGDW_CHBatteryMaxCellVoltage             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMaxCellVoltage)))
+// Batterie Zellspannung min.
+#define KoGDW_CHBatteryMinCellVoltage             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryMinCellVoltage)))
+// Batterie Kapazität (Ah)
+#define KoGDW_CHBatteryCapacity                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryCapacity)))
+// Batterie 2 Spannung
+#define KoGDW_CHBattery2Voltage                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Voltage)))
+// Batterie 2 Strom
+#define KoGDW_CHBattery2Current                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Current)))
+// Batterie 2 Leistung (+ Entladen)
+#define KoGDW_CHBattery2Power                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Power)))
+// Batterie 2 Modus
+#define KoGDW_CHBattery2Mode                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Mode)))
+// Batterie 2 Status
+#define KoGDW_CHBattery2Status                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Status)))
+// Batterie 2 Temperatur
+#define KoGDW_CHBattery2Temperature               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Temperature)))
+// Batterie 2 Ladestromgrenze
+#define KoGDW_CHBattery2ChargeLimit               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2ChargeLimit)))
+// Batterie 2 Entladestromgrenze
+#define KoGDW_CHBattery2DischargeLimit            (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2DischargeLimit)))
+// Batterie 2 Ladezustand
+#define KoGDW_CHBattery2Soc                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Soc)))
+// Batterie 2 Gesundheitszustand
+#define KoGDW_CHBattery2Soh                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Soh)))
+// Batterie 2 Modulanzahl
+#define KoGDW_CHBattery2Modules                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Modules)))
+// Batterie 2 Protokoll
+#define KoGDW_CHBattery2Protocol                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Protocol)))
+// Batterie 2 Fehler
+#define KoGDW_CHBattery2Error                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Error)))
+// Batterie 2 Warnung
+#define KoGDW_CHBattery2Warning                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2Warning)))
+// Batterie 2 Softwareversion
+#define KoGDW_CHBattery2SwVersion                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2SwVersion)))
+// Batterie 2 Hardwareversion
+#define KoGDW_CHBattery2HwVersion                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2HwVersion)))
+// Batterie 2 Zelle max. Temperatur (Nr.)
+#define KoGDW_CHBattery2MaxCellTempId             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MaxCellTempId)))
+// Batterie 2 Zelle min. Temperatur (Nr.)
+#define KoGDW_CHBattery2MinCellTempId             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MinCellTempId)))
+// Batterie 2 Zelle max. Spannung (Nr.)
+#define KoGDW_CHBattery2MaxCellVoltId             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MaxCellVoltId)))
+// Batterie 2 Zelle min. Spannung (Nr.)
+#define KoGDW_CHBattery2MinCellVoltId             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MinCellVoltId)))
+// Batterie 2 Zelltemperatur max.
+#define KoGDW_CHBattery2MaxCellTemp               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MaxCellTemp)))
+// Batterie 2 Zelltemperatur min.
+#define KoGDW_CHBattery2MinCellTemp               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MinCellTemp)))
+// Batterie 2 Zellspannung max.
+#define KoGDW_CHBattery2MaxCellVoltage            (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MaxCellVoltage)))
+// Batterie 2 Zellspannung min.
+#define KoGDW_CHBattery2MinCellVoltage            (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBattery2MinCellVoltage)))
+// PV-Ertrag gesamt
+#define KoGDW_CHEnergyTotal                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEnergyTotal)))
+// PV-Ertrag heute
+#define KoGDW_CHEnergyToday                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEnergyToday)))
+// Zähler Einspeisung gesamt
+#define KoGDW_CHMeterExportTotal                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterExportTotal)))
+// Zähler Netzbezug gesamt
+#define KoGDW_CHMeterImportTotal                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterImportTotal)))
+// Einspeisung gesamt
+#define KoGDW_CHExportTotal                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportTotal)))
+// Einspeisung heute
+#define KoGDW_CHExportToday                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportToday)))
+// Netzbezug gesamt
+#define KoGDW_CHImportTotal                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHImportTotal)))
+// Netzbezug heute
+#define KoGDW_CHImportToday                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHImportToday)))
+// Verbrauch gesamt
+#define KoGDW_CHLoadTotal                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadTotal)))
+// Verbrauch heute
+#define KoGDW_CHLoadToday                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadToday)))
+// Batterie geladen gesamt
+#define KoGDW_CHBatteryChargeTotal                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryChargeTotal)))
+// Batterie geladen heute
+#define KoGDW_CHBatteryChargeToday                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryChargeToday)))
+// Batterie entladen gesamt
+#define KoGDW_CHBatteryDischargeTotal             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryDischargeTotal)))
+// Batterie entladen heute
+#define KoGDW_CHBatteryDischargeToday             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBatteryDischargeToday)))
+// Zähler Kommunikationsart
+#define KoGDW_CHMeterCommode                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterCommode)))
+// Zähler Herstellercode
+#define KoGDW_CHMeterManufacturer                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterManufacturer)))
+// Zähler Prüfstatus
+#define KoGDW_CHMeterTestStatus                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterTestStatus)))
+// Zähler Typ
+#define KoGDW_CHMeterTypeCode                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterTypeCode)))
+// Zähler Softwareversion
+#define KoGDW_CHMeterSwVersion                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterSwVersion)))
+// Zähler Wirkleistung L1
+#define KoGDW_CHMeterPowerL1                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerL1)))
+// Zähler Wirkleistung L2
+#define KoGDW_CHMeterPowerL2                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerL2)))
+// Zähler Wirkleistung L3
+#define KoGDW_CHMeterPowerL3                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerL3)))
+// Zähler Wirkleistung gesamt
+#define KoGDW_CHMeterPowerTotal                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerTotal)))
+// Zähler Wirkleistung L1 (16 Bit)
+#define KoGDW_CHMeterPower16L1                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPower16L1)))
+// Zähler Wirkleistung L2 (16 Bit)
+#define KoGDW_CHMeterPower16L2                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPower16L2)))
+// Zähler Wirkleistung L3 (16 Bit)
+#define KoGDW_CHMeterPower16L3                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPower16L3)))
+// Zähler Wirkleistung gesamt (16 Bit)
+#define KoGDW_CHMeterPower16Total                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPower16Total)))
+// Zähler Blindleistung L1 (var)
+#define KoGDW_CHMeterReactiveL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterReactiveL1)))
+// Zähler Blindleistung L2 (var)
+#define KoGDW_CHMeterReactiveL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterReactiveL2)))
+// Zähler Blindleistung L3 (var)
+#define KoGDW_CHMeterReactiveL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterReactiveL3)))
+// Zähler Blindleistung gesamt (var)
+#define KoGDW_CHMeterReactiveTotal                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterReactiveTotal)))
+// Zähler Blindleistung gesamt (16 Bit, var)
+#define KoGDW_CHMeterReactive16Total              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterReactive16Total)))
+// Zähler Scheinleistung L1 (VA)
+#define KoGDW_CHMeterApparentL1                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterApparentL1)))
+// Zähler Scheinleistung L2 (VA)
+#define KoGDW_CHMeterApparentL2                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterApparentL2)))
+// Zähler Scheinleistung L3 (VA)
+#define KoGDW_CHMeterApparentL3                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterApparentL3)))
+// Zähler Scheinleistung gesamt (VA)
+#define KoGDW_CHMeterApparentTotal                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterApparentTotal)))
+// Zähler Leistungsfaktor L1
+#define KoGDW_CHMeterPowerFactorL1                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerFactorL1)))
+// Zähler Leistungsfaktor L2
+#define KoGDW_CHMeterPowerFactorL2                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerFactorL2)))
+// Zähler Leistungsfaktor L3
+#define KoGDW_CHMeterPowerFactorL3                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerFactorL3)))
+// Zähler Leistungsfaktor
+#define KoGDW_CHMeterPowerFactor                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterPowerFactor)))
+// Zähler Frequenz
+#define KoGDW_CHMeterFrequency                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterFrequency)))
+// Zähler Spannung L1
+#define KoGDW_CHMeterVoltageL1                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterVoltageL1)))
+// Zähler Spannung L2
+#define KoGDW_CHMeterVoltageL2                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterVoltageL2)))
+// Zähler Spannung L3
+#define KoGDW_CHMeterVoltageL3                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterVoltageL3)))
+// Zähler Strom L1
+#define KoGDW_CHMeterCurrentL1                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterCurrentL1)))
+// Zähler Strom L2
+#define KoGDW_CHMeterCurrentL2                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterCurrentL2)))
+// Zähler Strom L3
+#define KoGDW_CHMeterCurrentL3                    (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterCurrentL3)))
+// Zähler 2 Wirkleistung
+#define KoGDW_CHMeter2Power                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeter2Power)))
+// Zähler 2 Einspeisung gesamt
+#define KoGDW_CHMeter2ExportTotal                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeter2ExportTotal)))
+// Zähler 2 Netzbezug gesamt
+#define KoGDW_CHMeter2ImportTotal                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeter2ImportTotal)))
+// Zähler 2 Kommunikationsstatus
+#define KoGDW_CHMeter2CommStatus                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeter2CommStatus)))
+// Zähler Einspeisung L1
+#define KoGDW_CHMeterExportL1                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterExportL1)))
+// Zähler Einspeisung L2
+#define KoGDW_CHMeterExportL2                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterExportL2)))
+// Zähler Einspeisung L3
+#define KoGDW_CHMeterExportL3                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterExportL3)))
+// Zähler Einspeisung gesamt (64 Bit)
+#define KoGDW_CHMeterExportTotal64                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterExportTotal64)))
+// Zähler Netzbezug L1
+#define KoGDW_CHMeterImportL1                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterImportL1)))
+// Zähler Netzbezug L2
+#define KoGDW_CHMeterImportL2                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterImportL2)))
+// Zähler Netzbezug L3
+#define KoGDW_CHMeterImportL3                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterImportL3)))
+// Zähler Netzbezug gesamt (64 Bit)
+#define KoGDW_CHMeterImportTotal64                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHMeterImportTotal64)))
+// BMS 1 Version
+#define KoGDW_CHBms1Version                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Version)))
+// BMS 1 Modulanzahl
+#define KoGDW_CHBms1Modules                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Modules)))
+// BMS 1 Ladespannung max.
+#define KoGDW_CHBms1ChargeVoltageMax              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1ChargeVoltageMax)))
+// BMS 1 Ladestrom max.
+#define KoGDW_CHBms1ChargeCurrentMax              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1ChargeCurrentMax)))
+// BMS 1 Entladespannung min.
+#define KoGDW_CHBms1DischargeVoltageMin           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1DischargeVoltageMin)))
+// BMS 1 Entladestrom max.
+#define KoGDW_CHBms1DischargeCurrentMax           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1DischargeCurrentMax)))
+// BMS 1 Spannung
+#define KoGDW_CHBms1Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Voltage)))
+// BMS 1 Strom
+#define KoGDW_CHBms1Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Current)))
+// BMS 1 Ladezustand
+#define KoGDW_CHBms1Soc                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Soc)))
+// BMS 1 Gesundheitszustand
+#define KoGDW_CHBms1Soh                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Soh)))
+// BMS 1 Temperatur
+#define KoGDW_CHBms1Temperature                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Temperature)))
+// BMS 1 Warnungscode
+#define KoGDW_CHBms1WarningCode                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1WarningCode)))
+// BMS 1 Alarmcode
+#define KoGDW_CHBms1AlarmCode                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1AlarmCode)))
+// BMS 1 Status
+#define KoGDW_CHBms1Status                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1Status)))
+// BMS 1 Kommunikationsverlust ignorieren
+#define KoGDW_CHBms1CommLossDisable               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1CommLossDisable)))
+// BMS 1 Strang-Nennspannung
+#define KoGDW_CHBms1StringRateVoltage             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms1StringRateVoltage)))
+// BMS 2 Version
+#define KoGDW_CHBms2Version                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Version)))
+// BMS 2 Modulanzahl
+#define KoGDW_CHBms2Modules                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Modules)))
+// BMS 2 Ladespannung max.
+#define KoGDW_CHBms2ChargeVoltageMax              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2ChargeVoltageMax)))
+// BMS 2 Ladestrom max.
+#define KoGDW_CHBms2ChargeCurrentMax              (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2ChargeCurrentMax)))
+// BMS 2 Entladespannung min.
+#define KoGDW_CHBms2DischargeVoltageMin           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2DischargeVoltageMin)))
+// BMS 2 Entladestrom max.
+#define KoGDW_CHBms2DischargeCurrentMax           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2DischargeCurrentMax)))
+// BMS 2 Spannung
+#define KoGDW_CHBms2Voltage                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Voltage)))
+// BMS 2 Strom
+#define KoGDW_CHBms2Current                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Current)))
+// BMS 2 Ladezustand
+#define KoGDW_CHBms2Soc                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Soc)))
+// BMS 2 Gesundheitszustand
+#define KoGDW_CHBms2Soh                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Soh)))
+// BMS 2 Temperatur
+#define KoGDW_CHBms2Temperature                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Temperature)))
+// BMS 2 Warnungscode
+#define KoGDW_CHBms2WarningCode                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2WarningCode)))
+// BMS 2 Alarmcode
+#define KoGDW_CHBms2AlarmCode                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2AlarmCode)))
+// BMS 2 Status
+#define KoGDW_CHBms2Status                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2Status)))
+// BMS 2 Kommunikationsverlust ignorieren
+#define KoGDW_CHBms2CommLossDisable               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2CommLossDisable)))
+// BMS 2 Strang-Nennspannung
+#define KoGDW_CHBms2StringRateVoltage             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBms2StringRateVoltage)))
+// Betriebsmodus
+#define KoGDW_CHOperationMode                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHOperationMode)))
+// Status Betriebsmodus
+#define KoGDW_CHOperationModeStatus               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHOperationModeStatus)))
+// EMS-Modus
+#define KoGDW_CHEmsMode                           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEmsMode)))
+// Status EMS-Modus
+#define KoGDW_CHEmsModeStatus                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEmsModeStatus)))
+// EMS-Leistung
+#define KoGDW_CHEmsPowerLimit                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEmsPowerLimit)))
+// Status EMS-Leistung
+#define KoGDW_CHEmsPowerLimitStatus               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEmsPowerLimitStatus)))
+// Einspeisebegrenzung aktiv
+#define KoGDW_CHExportLimitEnable                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportLimitEnable)))
+// Status Einspeisebegrenzung aktiv
+#define KoGDW_CHExportLimitEnableStatus           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportLimitEnableStatus)))
+// Einspeisebegrenzung
+#define KoGDW_CHExportLimit                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportLimit)))
+// Status Einspeisebegrenzung
+#define KoGDW_CHExportLimitStatus                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportLimitStatus)))
+// Einspeisebegrenzung (%)
+#define KoGDW_CHExportLimitPercent                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportLimitPercent)))
+// Status Einspeisebegrenzung (%)
+#define KoGDW_CHExportLimitPercentStatus          (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHExportLimitPercentStatus)))
+// Entladetiefe Netzbetrieb
+#define KoGDW_CHDodOnGrid                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDodOnGrid)))
+// Status Entladetiefe Netzbetrieb
+#define KoGDW_CHDodOnGridStatus                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDodOnGridStatus)))
+// Entladetiefe Inselbetrieb
+#define KoGDW_CHDodOffGrid                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDodOffGrid)))
+// Status Entladetiefe Inselbetrieb
+#define KoGDW_CHDodOffGridStatus                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDodOffGridStatus)))
+// SoC-Schutz
+#define KoGDW_CHSocProtection                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHSocProtection)))
+// Status SoC-Schutz
+#define KoGDW_CHSocProtectionStatus               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHSocProtectionStatus)))
+// SoC-Obergrenze
+#define KoGDW_CHSocUpperLimit                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHSocUpperLimit)))
+// Status SoC-Obergrenze
+#define KoGDW_CHSocUpperLimitStatus               (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHSocUpperLimitStatus)))
+// Eco-Leistung
+#define KoGDW_CHEcoModePower                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEcoModePower)))
+// Status Eco-Leistung
+#define KoGDW_CHEcoModePowerStatus                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEcoModePowerStatus)))
+// Eco-Ziel-SoC
+#define KoGDW_CHEcoModeSoc                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEcoModeSoc)))
+// Status Eco-Ziel-SoC
+#define KoGDW_CHEcoModeSocStatus                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHEcoModeSocStatus)))
+// Schnellladen
+#define KoGDW_CHFastCharging                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFastCharging)))
+// Status Schnellladen
+#define KoGDW_CHFastChargingStatus                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFastChargingStatus)))
+// Schnellladen Ziel-SoC
+#define KoGDW_CHFastChargingSoc                   (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFastChargingSoc)))
+// Status Schnellladen Ziel-SoC
+#define KoGDW_CHFastChargingSocStatus             (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFastChargingSocStatus)))
+// Schnellladen Leistung
+#define KoGDW_CHFastChargingPower                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFastChargingPower)))
+// Status Schnellladen Leistung
+#define KoGDW_CHFastChargingPowerStatus           (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHFastChargingPowerStatus)))
+// Backup-Versorgung
+#define KoGDW_CHBackupSupply                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupSupply)))
+// Status Backup-Versorgung
+#define KoGDW_CHBackupSupplyStatus                (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHBackupSupplyStatus)))
+// Entladetiefe halten
+#define KoGDW_CHDodHolding                        (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDodHolding)))
+// Status Entladetiefe halten
+#define KoGDW_CHDodHoldingStatus                  (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHDodHoldingStatus)))
+// Lastregelung
+#define KoGDW_CHLoadControl                       (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadControl)))
+// Status Lastregelung
+#define KoGDW_CHLoadControlStatus                 (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHLoadControlStatus)))
+// Uhr synchronisieren
+#define KoGDW_CHSyncClock                         (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHSyncClock)))
+// Wechselrichter starten
+#define KoGDW_CHStartInverter                     (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHStartInverter)))
+// Wechselrichter stoppen
+#define KoGDW_CHStopInverter                      (knx.getGroupObject(GDW_KoCalcNumber(GDW_KoCHStopInverter)))
+
+#define LOG_VisibleChannels                     6955      // uint8_t
+#define LOG_VacationKo                          6956      // 1 Bit, Bit 7
 #define     LOG_VacationKoMask 0x80
 #define     LOG_VacationKoShift 7
-#define LOG_HolidayKo                           6763      // 1 Bit, Bit 6
+#define LOG_HolidayKo                           6956      // 1 Bit, Bit 6
 #define     LOG_HolidayKoMask 0x40
 #define     LOG_HolidayKoShift 6
-#define LOG_VacationRead                        6763      // 1 Bit, Bit 5
+#define LOG_VacationRead                        6956      // 1 Bit, Bit 5
 #define     LOG_VacationReadMask 0x20
 #define     LOG_VacationReadShift 5
-#define LOG_HolidaySend                         6763      // 1 Bit, Bit 4
+#define LOG_HolidaySend                         6956      // 1 Bit, Bit 4
 #define     LOG_HolidaySendMask 0x10
 #define     LOG_HolidaySendShift 4
-#define LOG_Neujahr                             6764      // 1 Bit, Bit 7
+#define LOG_Neujahr                             6957      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         6764      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         6957      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     6764      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     6957      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         6764      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         6957      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  6764      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  6957      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      6764      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      6957      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           6764      // 1 Bit, Bit 1
+#define LOG_Frauentag                           6957      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     6764      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     6957      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          6765      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          6958      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        6765      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        6958      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         6765      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         6958      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        6765      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        6958      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         6765      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         6958      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      6765      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      6958      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       6765      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       6958      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        6765      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        6958      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        6766      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        6959      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    6766      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    6959      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     6766      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     6959      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Reformationstag                     6766      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     6959      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       6766      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       6959      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          6766      // 1 Bit, Bit 2
+#define LOG_BussBettag                          6959      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_Advent1                             6766      // 1 Bit, Bit 1
+#define LOG_Advent1                             6959      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             6766      // 1 Bit, Bit 0
+#define LOG_Advent2                             6959      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             6767      // 1 Bit, Bit 7
+#define LOG_Advent3                             6960      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             6767      // 1 Bit, Bit 6
+#define LOG_Advent4                             6960      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         6767      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         6960      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      6767      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      6960      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      6767      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      6960      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           6767      // 1 Bit, Bit 2
+#define LOG_Silvester                           6960      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_Nationalfeiertag                    6767      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    6960      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_MariaEmpfaengnis                    6767      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    6960      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_NationalfeiertagSchweiz             6768      // 1 Bit, Bit 7
+#define LOG_NationalfeiertagSchweiz             6961      // 1 Bit, Bit 7
 #define     LOG_NationalfeiertagSchweizMask 0x80
 #define     LOG_NationalfeiertagSchweizShift 7
-#define LOG_Totensonntag                        6768      // 1 Bit, Bit 6
+#define LOG_Totensonntag                        6961      // 1 Bit, Bit 6
 #define     LOG_TotensonntagMask 0x40
 #define     LOG_TotensonntagShift 6
-#define LOG_Weltkindertag                       6768      // 1 Bit, Bit 5
+#define LOG_Weltkindertag                       6961      // 1 Bit, Bit 5
 #define     LOG_WeltkindertagMask 0x20
 #define     LOG_WeltkindertagShift 5
-#define LOG_UserFormula1                        6769      // char*, 99 Byte
+#define LOG_UserFormula1                        6962      // char*, 99 Byte
 #define     LOG_UserFormula1Length 99
-#define LOG_UserFormula1Active                  6868      // 1 Bit, Bit 7
+#define LOG_UserFormula1Active                  7061      // 1 Bit, Bit 7
 #define     LOG_UserFormula1ActiveMask 0x80
 #define     LOG_UserFormula1ActiveShift 7
-#define LOG_UserFormula2                        6869      // char*, 99 Byte
+#define LOG_UserFormula2                        7062      // char*, 99 Byte
 #define     LOG_UserFormula2Length 99
-#define LOG_UserFormula2Active                  6968      // 1 Bit, Bit 7
+#define LOG_UserFormula2Active                  7161      // 1 Bit, Bit 7
 #define     LOG_UserFormula2ActiveMask 0x80
 #define     LOG_UserFormula2ActiveShift 7
-#define LOG_UserFormula3                        6969      // char*, 99 Byte
+#define LOG_UserFormula3                        7162      // char*, 99 Byte
 #define     LOG_UserFormula3Length 99
-#define LOG_UserFormula3Active                  7068      // 1 Bit, Bit 7
+#define LOG_UserFormula3Active                  7261      // 1 Bit, Bit 7
 #define     LOG_UserFormula3ActiveMask 0x80
 #define     LOG_UserFormula3ActiveShift 7
-#define LOG_UserFormula4                        7069      // char*, 99 Byte
+#define LOG_UserFormula4                        7262      // char*, 99 Byte
 #define     LOG_UserFormula4Length 99
-#define LOG_UserFormula4Active                  7168      // 1 Bit, Bit 7
+#define LOG_UserFormula4Active                  7361      // 1 Bit, Bit 7
 #define     LOG_UserFormula4ActiveMask 0x80
 #define     LOG_UserFormula4ActiveShift 7
-#define LOG_UserFormula5                        7169      // char*, 99 Byte
+#define LOG_UserFormula5                        7362      // char*, 99 Byte
 #define     LOG_UserFormula5Length 99
-#define LOG_UserFormula5Active                  7268      // 1 Bit, Bit 7
+#define LOG_UserFormula5Active                  7461      // 1 Bit, Bit 7
 #define     LOG_UserFormula5ActiveMask 0x80
 #define     LOG_UserFormula5ActiveShift 7
-#define LOG_UserFormula6                        7269      // char*, 99 Byte
+#define LOG_UserFormula6                        7462      // char*, 99 Byte
 #define     LOG_UserFormula6Length 99
-#define LOG_UserFormula6Active                  7368      // 1 Bit, Bit 7
+#define LOG_UserFormula6Active                  7561      // 1 Bit, Bit 7
 #define     LOG_UserFormula6ActiveMask 0x80
 #define     LOG_UserFormula6ActiveShift 7
-#define LOG_UserFormula7                        7369      // char*, 99 Byte
+#define LOG_UserFormula7                        7562      // char*, 99 Byte
 #define     LOG_UserFormula7Length 99
-#define LOG_UserFormula7Active                  7468      // 1 Bit, Bit 7
+#define LOG_UserFormula7Active                  7661      // 1 Bit, Bit 7
 #define     LOG_UserFormula7ActiveMask 0x80
 #define     LOG_UserFormula7ActiveShift 7
-#define LOG_UserFormula8                        7469      // char*, 99 Byte
+#define LOG_UserFormula8                        7662      // char*, 99 Byte
 #define     LOG_UserFormula8Length 99
-#define LOG_UserFormula8Active                  7568      // 1 Bit, Bit 7
+#define LOG_UserFormula8Active                  7761      // 1 Bit, Bit 7
 #define     LOG_UserFormula8ActiveMask 0x80
 #define     LOG_UserFormula8ActiveShift 7
-#define LOG_UserFormula9                        7569      // char*, 99 Byte
+#define LOG_UserFormula9                        7762      // char*, 99 Byte
 #define     LOG_UserFormula9Length 99
-#define LOG_UserFormula9Active                  7668      // 1 Bit, Bit 7
+#define LOG_UserFormula9Active                  7861      // 1 Bit, Bit 7
 #define     LOG_UserFormula9ActiveMask 0x80
 #define     LOG_UserFormula9ActiveShift 7
-#define LOG_UserFormula10                       7669      // char*, 99 Byte
+#define LOG_UserFormula10                       7862      // char*, 99 Byte
 #define     LOG_UserFormula10Length 99
-#define LOG_UserFormula10Active                 7768      // 1 Bit, Bit 7
+#define LOG_UserFormula10Active                 7961      // 1 Bit, Bit 7
 #define     LOG_UserFormula10ActiveMask 0x80
 #define     LOG_UserFormula10ActiveShift 7
-#define LOG_UserFormula11                       7769      // char*, 99 Byte
+#define LOG_UserFormula11                       7962      // char*, 99 Byte
 #define     LOG_UserFormula11Length 99
-#define LOG_UserFormula11Active                 7868      // 1 Bit, Bit 7
+#define LOG_UserFormula11Active                 8061      // 1 Bit, Bit 7
 #define     LOG_UserFormula11ActiveMask 0x80
 #define     LOG_UserFormula11ActiveShift 7
-#define LOG_UserFormula12                       7869      // char*, 99 Byte
+#define LOG_UserFormula12                       8062      // char*, 99 Byte
 #define     LOG_UserFormula12Length 99
-#define LOG_UserFormula12Active                 7968      // 1 Bit, Bit 7
+#define LOG_UserFormula12Active                 8161      // 1 Bit, Bit 7
 #define     LOG_UserFormula12ActiveMask 0x80
 #define     LOG_UserFormula12ActiveShift 7
-#define LOG_UserFormula13                       7969      // char*, 99 Byte
+#define LOG_UserFormula13                       8162      // char*, 99 Byte
 #define     LOG_UserFormula13Length 99
-#define LOG_UserFormula13Active                 8068      // 1 Bit, Bit 7
+#define LOG_UserFormula13Active                 8261      // 1 Bit, Bit 7
 #define     LOG_UserFormula13ActiveMask 0x80
 #define     LOG_UserFormula13ActiveShift 7
-#define LOG_UserFormula14                       8069      // char*, 99 Byte
+#define LOG_UserFormula14                       8262      // char*, 99 Byte
 #define     LOG_UserFormula14Length 99
-#define LOG_UserFormula14Active                 8168      // 1 Bit, Bit 7
+#define LOG_UserFormula14Active                 8361      // 1 Bit, Bit 7
 #define     LOG_UserFormula14ActiveMask 0x80
 #define     LOG_UserFormula14ActiveShift 7
-#define LOG_UserFormula15                       8169      // char*, 99 Byte
+#define LOG_UserFormula15                       8362      // char*, 99 Byte
 #define     LOG_UserFormula15Length 99
-#define LOG_UserFormula15Active                 8268      // 1 Bit, Bit 7
+#define LOG_UserFormula15Active                 8461      // 1 Bit, Bit 7
 #define     LOG_UserFormula15ActiveMask 0x80
 #define     LOG_UserFormula15ActiveShift 7
-#define LOG_UserFormula16                       8269      // char*, 99 Byte
+#define LOG_UserFormula16                       8462      // char*, 99 Byte
 #define     LOG_UserFormula16Length 99
-#define LOG_UserFormula16Active                 8368      // 1 Bit, Bit 7
+#define LOG_UserFormula16Active                 8561      // 1 Bit, Bit 7
 #define     LOG_UserFormula16ActiveMask 0x80
 #define     LOG_UserFormula16ActiveShift 7
-#define LOG_UserFormula17                       8369      // char*, 99 Byte
+#define LOG_UserFormula17                       8562      // char*, 99 Byte
 #define     LOG_UserFormula17Length 99
-#define LOG_UserFormula17Active                 8468      // 1 Bit, Bit 7
+#define LOG_UserFormula17Active                 8661      // 1 Bit, Bit 7
 #define     LOG_UserFormula17ActiveMask 0x80
 #define     LOG_UserFormula17ActiveShift 7
-#define LOG_UserFormula18                       8469      // char*, 99 Byte
+#define LOG_UserFormula18                       8662      // char*, 99 Byte
 #define     LOG_UserFormula18Length 99
-#define LOG_UserFormula18Active                 8568      // 1 Bit, Bit 7
+#define LOG_UserFormula18Active                 8761      // 1 Bit, Bit 7
 #define     LOG_UserFormula18ActiveMask 0x80
 #define     LOG_UserFormula18ActiveShift 7
-#define LOG_UserFormula19                       8569      // char*, 99 Byte
+#define LOG_UserFormula19                       8762      // char*, 99 Byte
 #define     LOG_UserFormula19Length 99
-#define LOG_UserFormula19Active                 8668      // 1 Bit, Bit 7
+#define LOG_UserFormula19Active                 8861      // 1 Bit, Bit 7
 #define     LOG_UserFormula19ActiveMask 0x80
 #define     LOG_UserFormula19ActiveShift 7
-#define LOG_UserFormula20                       8669      // char*, 99 Byte
+#define LOG_UserFormula20                       8862      // char*, 99 Byte
 #define     LOG_UserFormula20Length 99
-#define LOG_UserFormula20Active                 8768      // 1 Bit, Bit 7
+#define LOG_UserFormula20Active                 8961      // 1 Bit, Bit 7
 #define     LOG_UserFormula20ActiveMask 0x80
 #define     LOG_UserFormula20ActiveShift 7
-#define LOG_UserFormula21                       8769      // char*, 99 Byte
+#define LOG_UserFormula21                       8962      // char*, 99 Byte
 #define     LOG_UserFormula21Length 99
-#define LOG_UserFormula21Active                 8868      // 1 Bit, Bit 7
+#define LOG_UserFormula21Active                 9061      // 1 Bit, Bit 7
 #define     LOG_UserFormula21ActiveMask 0x80
 #define     LOG_UserFormula21ActiveShift 7
-#define LOG_UserFormula22                       8869      // char*, 99 Byte
+#define LOG_UserFormula22                       9062      // char*, 99 Byte
 #define     LOG_UserFormula22Length 99
-#define LOG_UserFormula22Active                 8968      // 1 Bit, Bit 7
+#define LOG_UserFormula22Active                 9161      // 1 Bit, Bit 7
 #define     LOG_UserFormula22ActiveMask 0x80
 #define     LOG_UserFormula22ActiveShift 7
-#define LOG_UserFormula23                       8969      // char*, 99 Byte
+#define LOG_UserFormula23                       9162      // char*, 99 Byte
 #define     LOG_UserFormula23Length 99
-#define LOG_UserFormula23Active                 9068      // 1 Bit, Bit 7
+#define LOG_UserFormula23Active                 9261      // 1 Bit, Bit 7
 #define     LOG_UserFormula23ActiveMask 0x80
 #define     LOG_UserFormula23ActiveShift 7
-#define LOG_UserFormula24                       9069      // char*, 99 Byte
+#define LOG_UserFormula24                       9262      // char*, 99 Byte
 #define     LOG_UserFormula24Length 99
-#define LOG_UserFormula24Active                 9168      // 1 Bit, Bit 7
+#define LOG_UserFormula24Active                 9361      // 1 Bit, Bit 7
 #define     LOG_UserFormula24ActiveMask 0x80
 #define     LOG_UserFormula24ActiveShift 7
-#define LOG_UserFormula25                       9169      // char*, 99 Byte
+#define LOG_UserFormula25                       9362      // char*, 99 Byte
 #define     LOG_UserFormula25Length 99
-#define LOG_UserFormula25Active                 9268      // 1 Bit, Bit 7
+#define LOG_UserFormula25Active                 9461      // 1 Bit, Bit 7
 #define     LOG_UserFormula25ActiveMask 0x80
 #define     LOG_UserFormula25ActiveShift 7
-#define LOG_UserFormula26                       9269      // char*, 99 Byte
+#define LOG_UserFormula26                       9462      // char*, 99 Byte
 #define     LOG_UserFormula26Length 99
-#define LOG_UserFormula26Active                 9368      // 1 Bit, Bit 7
+#define LOG_UserFormula26Active                 9561      // 1 Bit, Bit 7
 #define     LOG_UserFormula26ActiveMask 0x80
 #define     LOG_UserFormula26ActiveShift 7
-#define LOG_UserFormula27                       9369      // char*, 99 Byte
+#define LOG_UserFormula27                       9562      // char*, 99 Byte
 #define     LOG_UserFormula27Length 99
-#define LOG_UserFormula27Active                 9468      // 1 Bit, Bit 7
+#define LOG_UserFormula27Active                 9661      // 1 Bit, Bit 7
 #define     LOG_UserFormula27ActiveMask 0x80
 #define     LOG_UserFormula27ActiveShift 7
-#define LOG_UserFormula28                       9469      // char*, 99 Byte
+#define LOG_UserFormula28                       9662      // char*, 99 Byte
 #define     LOG_UserFormula28Length 99
-#define LOG_UserFormula28Active                 9568      // 1 Bit, Bit 7
+#define LOG_UserFormula28Active                 9761      // 1 Bit, Bit 7
 #define     LOG_UserFormula28ActiveMask 0x80
 #define     LOG_UserFormula28ActiveShift 7
-#define LOG_UserFormula29                       9569      // char*, 99 Byte
+#define LOG_UserFormula29                       9762      // char*, 99 Byte
 #define     LOG_UserFormula29Length 99
-#define LOG_UserFormula29Active                 9668      // 1 Bit, Bit 7
+#define LOG_UserFormula29Active                 9861      // 1 Bit, Bit 7
 #define     LOG_UserFormula29ActiveMask 0x80
 #define     LOG_UserFormula29ActiveShift 7
-#define LOG_UserFormula30                       9669      // char*, 99 Byte
+#define LOG_UserFormula30                       9862      // char*, 99 Byte
 #define     LOG_UserFormula30Length 99
-#define LOG_UserFormula30Active                 9768      // 1 Bit, Bit 7
+#define LOG_UserFormula30Active                 9961      // 1 Bit, Bit 7
 #define     LOG_UserFormula30ActiveMask 0x80
 #define     LOG_UserFormula30ActiveShift 7
 
@@ -4900,7 +7395,7 @@
 #define LOG_ChannelCount 50
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 9769
+#define LOG_ParamBlockOffset 9962
 #define LOG_ParamBlockSize 89
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -6808,7 +9303,7 @@
 #define FCB_ChannelCount 15
 
 // Parameter per channel
-#define FCB_ParamBlockOffset 14219
+#define FCB_ParamBlockOffset 14412
 #define FCB_ParamBlockSize 81
 #define FCB_ParamCalcIndex(index) (index + FCB_ParamBlockOffset + _channelIndex * FCB_ParamBlockSize)
 

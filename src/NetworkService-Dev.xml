@@ -76,6 +76,15 @@
     <op:verify File="../lib/OFM-Roborock/library.json" ModuleVersion="%ROB_VerifyVersion%" />
   </op:define>
 
+  <op:define prefix="GDW" ModuleType="32"
+    share="../lib/OFM-GoodWe/src/GoodWe.share.xml"
+    template="../lib/OFM-GoodWe/src/GoodWe.templ.xml"
+    NumChannels="2"
+    KoSingleOffset="1300"
+    KoOffset="1310">
+    <op:verify File="../lib/OFM-GoodWe/library.json" ModuleVersion="%GDW_VerifyVersion%" />
+  </op:define>
+
   <op:define prefix="LOG" ModuleType="10"
     share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
     template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
