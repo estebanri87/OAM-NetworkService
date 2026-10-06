@@ -5350,15 +5350,15 @@
 #define ParamGDW_CHUseSafetyCountry                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseSafetyCountry)) & GDW_CHUseSafetyCountryMask))
 // Funktionsbits
 #define ParamGDW_CHUseFunctionBit                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseFunctionBit)) & GDW_CHUseFunctionBitMask))
-// Betriebsstunden
+// Betriebsstunden (h)
 #define ParamGDW_CHUseHoursTotal                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseHoursTotal)) & GDW_CHUseHoursTotalMask))
 // Gerätezeit
 #define ParamGDW_CHUseTimestamp                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTimestamp)) & GDW_CHUseTimestampMask))
-// Temperatur Wechselrichter
+// Temperatur Wechselrichter (°C)
 #define ParamGDW_CHUseTemperature                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTemperature)) & GDW_CHUseTemperatureMask))
-// Busspannung
+// Busspannung (V)
 #define ParamGDW_CHUseBusVoltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBusVoltage)) & GDW_CHUseBusVoltageMask))
-// N-Busspannung
+// N-Busspannung (V)
 #define ParamGDW_CHUseNBusVoltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseNBusVoltage)) & GDW_CHUseNBusVoltageMask))
 // Netzrichtung
 #define ParamGDW_CHUseGridInOut                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridInOut)) & GDW_CHUseGridInOutMask))
@@ -5372,41 +5372,41 @@
 #define ParamGDW_CHUseOperationCode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseOperationCode)) & GDW_CHUseOperationCodeMask))
 // Diagnosestatus
 #define ParamGDW_CHUseDiagStatus                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDiagStatus)) & GDW_CHUseDiagStatusMask))
-// Temperatur Luft
+// Temperatur Luft (°C)
 #define ParamGDW_CHUseTempAir                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTempAir)) & GDW_CHUseTempAirMask))
-// Temperatur Modul
+// Temperatur Modul (°C)
 #define ParamGDW_CHUseTempModule                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTempModule)) & GDW_CHUseTempModuleMask))
-// Temperatur Kühlkörper
+// Temperatur Kühlkörper (°C)
 #define ParamGDW_CHUseTempHeatsink                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTempHeatsink)) & GDW_CHUseTempHeatsinkMask))
 // Leistungsreduzierung
 #define ParamGDW_CHUseDeratingMode                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseDeratingMode)) & GDW_CHUseDeratingModeMask))
-// Ableitstrom
+// Ableitstrom (A)
 #define ParamGDW_CHUseLeakageCurrent                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLeakageCurrent)) & GDW_CHUseLeakageCurrentMask))
-// PV-Leistung gesamt
+// PV-Leistung gesamt (W)
 #define ParamGDW_CHUsePvPower                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePvPower)) & GDW_CHUsePvPowerMask))
-// PV1 Spannung
+// PV1 Spannung (V)
 #define ParamGDW_CHUsePv1Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Voltage)) & GDW_CHUsePv1VoltageMask))
-// PV1 Strom
+// PV1 Strom (A)
 #define ParamGDW_CHUsePv1Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Current)) & GDW_CHUsePv1CurrentMask))
-// PV1 Leistung
+// PV1 Leistung (W)
 #define ParamGDW_CHUsePv1Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Power)) & GDW_CHUsePv1PowerMask))
-// PV2 Spannung
+// PV2 Spannung (V)
 #define ParamGDW_CHUsePv2Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Voltage)) & GDW_CHUsePv2VoltageMask))
-// PV2 Strom
+// PV2 Strom (A)
 #define ParamGDW_CHUsePv2Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Current)) & GDW_CHUsePv2CurrentMask))
-// PV2 Leistung
+// PV2 Leistung (W)
 #define ParamGDW_CHUsePv2Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv2Power)) & GDW_CHUsePv2PowerMask))
-// PV3 Spannung
+// PV3 Spannung (V)
 #define ParamGDW_CHUsePv3Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Voltage)) & GDW_CHUsePv3VoltageMask))
-// PV3 Strom
+// PV3 Strom (A)
 #define ParamGDW_CHUsePv3Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Current)) & GDW_CHUsePv3CurrentMask))
-// PV3 Leistung
+// PV3 Leistung (W)
 #define ParamGDW_CHUsePv3Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Power)) & GDW_CHUsePv3PowerMask))
-// PV4 Spannung
+// PV4 Spannung (V)
 #define ParamGDW_CHUsePv4Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Voltage)) & GDW_CHUsePv4VoltageMask))
-// PV4 Strom
+// PV4 Strom (A)
 #define ParamGDW_CHUsePv4Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Current)) & GDW_CHUsePv4CurrentMask))
-// PV4 Leistung
+// PV4 Leistung (W)
 #define ParamGDW_CHUsePv4Power                       ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Power)) & GDW_CHUsePv4PowerMask))
 // PV1 Modus
 #define ParamGDW_CHUsePv1Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv1Mode)) & GDW_CHUsePv1ModeMask))
@@ -5416,129 +5416,129 @@
 #define ParamGDW_CHUsePv3Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv3Mode)) & GDW_CHUsePv3ModeMask))
 // PV4 Modus
 #define ParamGDW_CHUsePv4Mode                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv4Mode)) & GDW_CHUsePv4ModeMask))
-// Eingangsleistung gesamt
+// Eingangsleistung gesamt (W)
 #define ParamGDW_CHUseTotalInputPower                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseTotalInputPower)) & GDW_CHUseTotalInputPowerMask))
 // PV-Leistung gesamt (MPPT-Block)
 #define ParamGDW_CHUsePvPowerTotalExt                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePvPowerTotalExt)) & GDW_CHUsePvPowerTotalExtMask))
 // Anzahl PV-Kanäle
 #define ParamGDW_CHUsePvChannel                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePvChannel)) & GDW_CHUsePvChannelMask))
-// PV5 Spannung
+// PV5 Spannung (V)
 #define ParamGDW_CHUsePv5Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv5Voltage)) & GDW_CHUsePv5VoltageMask))
-// PV5 Strom
+// PV5 Strom (A)
 #define ParamGDW_CHUsePv5Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv5Current)) & GDW_CHUsePv5CurrentMask))
-// PV6 Spannung
+// PV6 Spannung (V)
 #define ParamGDW_CHUsePv6Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv6Voltage)) & GDW_CHUsePv6VoltageMask))
-// PV6 Strom
+// PV6 Strom (A)
 #define ParamGDW_CHUsePv6Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv6Current)) & GDW_CHUsePv6CurrentMask))
-// PV7 Spannung
+// PV7 Spannung (V)
 #define ParamGDW_CHUsePv7Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv7Voltage)) & GDW_CHUsePv7VoltageMask))
-// PV7 Strom
+// PV7 Strom (A)
 #define ParamGDW_CHUsePv7Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv7Current)) & GDW_CHUsePv7CurrentMask))
-// PV8 Spannung
+// PV8 Spannung (V)
 #define ParamGDW_CHUsePv8Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv8Voltage)) & GDW_CHUsePv8VoltageMask))
-// PV8 Strom
+// PV8 Strom (A)
 #define ParamGDW_CHUsePv8Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv8Current)) & GDW_CHUsePv8CurrentMask))
-// PV9 Spannung
+// PV9 Spannung (V)
 #define ParamGDW_CHUsePv9Voltage                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv9Voltage)) & GDW_CHUsePv9VoltageMask))
-// PV9 Strom
+// PV9 Strom (A)
 #define ParamGDW_CHUsePv9Current                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv9Current)) & GDW_CHUsePv9CurrentMask))
-// PV10 Spannung
+// PV10 Spannung (V)
 #define ParamGDW_CHUsePv10Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv10Voltage)) & GDW_CHUsePv10VoltageMask))
-// PV10 Strom
+// PV10 Strom (A)
 #define ParamGDW_CHUsePv10Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv10Current)) & GDW_CHUsePv10CurrentMask))
-// PV11 Spannung
+// PV11 Spannung (V)
 #define ParamGDW_CHUsePv11Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv11Voltage)) & GDW_CHUsePv11VoltageMask))
-// PV11 Strom
+// PV11 Strom (A)
 #define ParamGDW_CHUsePv11Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv11Current)) & GDW_CHUsePv11CurrentMask))
-// PV12 Spannung
+// PV12 Spannung (V)
 #define ParamGDW_CHUsePv12Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv12Voltage)) & GDW_CHUsePv12VoltageMask))
-// PV12 Strom
+// PV12 Strom (A)
 #define ParamGDW_CHUsePv12Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv12Current)) & GDW_CHUsePv12CurrentMask))
-// PV13 Spannung
+// PV13 Spannung (V)
 #define ParamGDW_CHUsePv13Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv13Voltage)) & GDW_CHUsePv13VoltageMask))
-// PV13 Strom
+// PV13 Strom (A)
 #define ParamGDW_CHUsePv13Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv13Current)) & GDW_CHUsePv13CurrentMask))
-// PV14 Spannung
+// PV14 Spannung (V)
 #define ParamGDW_CHUsePv14Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv14Voltage)) & GDW_CHUsePv14VoltageMask))
-// PV14 Strom
+// PV14 Strom (A)
 #define ParamGDW_CHUsePv14Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv14Current)) & GDW_CHUsePv14CurrentMask))
-// PV15 Spannung
+// PV15 Spannung (V)
 #define ParamGDW_CHUsePv15Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv15Voltage)) & GDW_CHUsePv15VoltageMask))
-// PV15 Strom
+// PV15 Strom (A)
 #define ParamGDW_CHUsePv15Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv15Current)) & GDW_CHUsePv15CurrentMask))
-// PV16 Spannung
+// PV16 Spannung (V)
 #define ParamGDW_CHUsePv16Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv16Voltage)) & GDW_CHUsePv16VoltageMask))
-// PV16 Strom
+// PV16 Strom (A)
 #define ParamGDW_CHUsePv16Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePv16Current)) & GDW_CHUsePv16CurrentMask))
-// MPPT1 Leistung
+// MPPT1 Leistung (W)
 #define ParamGDW_CHUseMppt1Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt1Power)) & GDW_CHUseMppt1PowerMask))
-// MPPT2 Leistung
+// MPPT2 Leistung (W)
 #define ParamGDW_CHUseMppt2Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt2Power)) & GDW_CHUseMppt2PowerMask))
-// MPPT3 Leistung
+// MPPT3 Leistung (W)
 #define ParamGDW_CHUseMppt3Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt3Power)) & GDW_CHUseMppt3PowerMask))
-// MPPT4 Leistung
+// MPPT4 Leistung (W)
 #define ParamGDW_CHUseMppt4Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt4Power)) & GDW_CHUseMppt4PowerMask))
-// MPPT5 Leistung
+// MPPT5 Leistung (W)
 #define ParamGDW_CHUseMppt5Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt5Power)) & GDW_CHUseMppt5PowerMask))
-// MPPT6 Leistung
+// MPPT6 Leistung (W)
 #define ParamGDW_CHUseMppt6Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt6Power)) & GDW_CHUseMppt6PowerMask))
-// MPPT7 Leistung
+// MPPT7 Leistung (W)
 #define ParamGDW_CHUseMppt7Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt7Power)) & GDW_CHUseMppt7PowerMask))
-// MPPT8 Leistung
+// MPPT8 Leistung (W)
 #define ParamGDW_CHUseMppt8Power                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt8Power)) & GDW_CHUseMppt8PowerMask))
-// MPPT1 Strom
+// MPPT1 Strom (A)
 #define ParamGDW_CHUseMppt1Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt1Current)) & GDW_CHUseMppt1CurrentMask))
-// MPPT2 Strom
+// MPPT2 Strom (A)
 #define ParamGDW_CHUseMppt2Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt2Current)) & GDW_CHUseMppt2CurrentMask))
-// MPPT3 Strom
+// MPPT3 Strom (A)
 #define ParamGDW_CHUseMppt3Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt3Current)) & GDW_CHUseMppt3CurrentMask))
-// MPPT4 Strom
+// MPPT4 Strom (A)
 #define ParamGDW_CHUseMppt4Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt4Current)) & GDW_CHUseMppt4CurrentMask))
-// MPPT5 Strom
+// MPPT5 Strom (A)
 #define ParamGDW_CHUseMppt5Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt5Current)) & GDW_CHUseMppt5CurrentMask))
-// MPPT6 Strom
+// MPPT6 Strom (A)
 #define ParamGDW_CHUseMppt6Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt6Current)) & GDW_CHUseMppt6CurrentMask))
-// MPPT7 Strom
+// MPPT7 Strom (A)
 #define ParamGDW_CHUseMppt7Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt7Current)) & GDW_CHUseMppt7CurrentMask))
-// MPPT8 Strom
+// MPPT8 Strom (A)
 #define ParamGDW_CHUseMppt8Current                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMppt8Current)) & GDW_CHUseMppt8CurrentMask))
-// Netzspannung L1
+// Netzspannung L1 (V)
 #define ParamGDW_CHUseGridVoltageL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridVoltageL1)) & GDW_CHUseGridVoltageL1Mask))
-// Netzstrom L1
+// Netzstrom L1 (A)
 #define ParamGDW_CHUseGridCurrentL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridCurrentL1)) & GDW_CHUseGridCurrentL1Mask))
-// Netzfrequenz L1
+// Netzfrequenz L1 (Hz)
 #define ParamGDW_CHUseGridFrequencyL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridFrequencyL1)) & GDW_CHUseGridFrequencyL1Mask))
-// Leistung L1
+// Leistung L1 (W)
 #define ParamGDW_CHUseGridPowerL1                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridPowerL1)) & GDW_CHUseGridPowerL1Mask))
-// Netzspannung L2
+// Netzspannung L2 (V)
 #define ParamGDW_CHUseGridVoltageL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridVoltageL2)) & GDW_CHUseGridVoltageL2Mask))
-// Netzstrom L2
+// Netzstrom L2 (A)
 #define ParamGDW_CHUseGridCurrentL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridCurrentL2)) & GDW_CHUseGridCurrentL2Mask))
-// Netzfrequenz L2
+// Netzfrequenz L2 (Hz)
 #define ParamGDW_CHUseGridFrequencyL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridFrequencyL2)) & GDW_CHUseGridFrequencyL2Mask))
-// Leistung L2
+// Leistung L2 (W)
 #define ParamGDW_CHUseGridPowerL2                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridPowerL2)) & GDW_CHUseGridPowerL2Mask))
-// Netzspannung L3
+// Netzspannung L3 (V)
 #define ParamGDW_CHUseGridVoltageL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridVoltageL3)) & GDW_CHUseGridVoltageL3Mask))
-// Netzstrom L3
+// Netzstrom L3 (A)
 #define ParamGDW_CHUseGridCurrentL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridCurrentL3)) & GDW_CHUseGridCurrentL3Mask))
-// Netzfrequenz L3
+// Netzfrequenz L3 (Hz)
 #define ParamGDW_CHUseGridFrequencyL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridFrequencyL3)) & GDW_CHUseGridFrequencyL3Mask))
-// Leistung L3
+// Leistung L3 (W)
 #define ParamGDW_CHUseGridPowerL3                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseGridPowerL3)) & GDW_CHUseGridPowerL3Mask))
-// Wechselrichterleistung
+// Wechselrichterleistung (W)
 #define ParamGDW_CHUseInverterPower                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseInverterPower)) & GDW_CHUseInverterPowerMask))
 // Netzleistung (+ Einspeisung)
 #define ParamGDW_CHUseActivePower                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseActivePower)) & GDW_CHUseActivePowerMask))
-// Netzbezug Leistung
+// Netzbezug Leistung (W)
 #define ParamGDW_CHUseImportPower                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseImportPower)) & GDW_CHUseImportPowerMask))
-// Einspeisung Leistung
+// Einspeisung Leistung (W)
 #define ParamGDW_CHUseExportPower                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportPower)) & GDW_CHUseExportPowerMask))
 // Blindleistung (var)
 #define ParamGDW_CHUseReactivePower                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReactivePower)) & GDW_CHUseReactivePowerMask))
 // Scheinleistung (VA)
 #define ParamGDW_CHUseApparentPower                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPower)) & GDW_CHUseApparentPowerMask))
-// Hausverbrauch
+// Hausverbrauch (W)
 #define ParamGDW_CHUseHouseConsumption               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseHouseConsumption)) & GDW_CHUseHouseConsumptionMask))
 // Blindleistung L1 (var)
 #define ParamGDW_CHUseReactivePowerL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseReactivePowerL1)) & GDW_CHUseReactivePowerL1Mask))
@@ -5552,73 +5552,73 @@
 #define ParamGDW_CHUseApparentPowerL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPowerL2)) & GDW_CHUseApparentPowerL2Mask))
 // Scheinleistung L3 (VA)
 #define ParamGDW_CHUseApparentPowerL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseApparentPowerL3)) & GDW_CHUseApparentPowerL3Mask))
-// Außenleiterspannung L1-L2
+// Außenleiterspannung L1-L2 (V)
 #define ParamGDW_CHUseLineVoltageL1L2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLineVoltageL1L2)) & GDW_CHUseLineVoltageL1L2Mask))
-// Außenleiterspannung L2-L3
+// Außenleiterspannung L2-L3 (V)
 #define ParamGDW_CHUseLineVoltageL2L3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLineVoltageL2L3)) & GDW_CHUseLineVoltageL2L3Mask))
-// Außenleiterspannung L3-L1
+// Außenleiterspannung L3-L1 (V)
 #define ParamGDW_CHUseLineVoltageL3L1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLineVoltageL3L1)) & GDW_CHUseLineVoltageL3L1Mask))
 // Leistungsfaktor
 #define ParamGDW_CHUsePowerFactor                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUsePowerFactor)) & GDW_CHUsePowerFactorMask))
-// Backup L1 Spannung
+// Backup L1 Spannung (V)
 #define ParamGDW_CHUseBackupVoltageL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupVoltageL1)) & GDW_CHUseBackupVoltageL1Mask))
-// Backup L1 Strom
+// Backup L1 Strom (A)
 #define ParamGDW_CHUseBackupCurrentL1                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupCurrentL1)) & GDW_CHUseBackupCurrentL1Mask))
-// Backup L1 Frequenz
+// Backup L1 Frequenz (Hz)
 #define ParamGDW_CHUseBackupFrequencyL1              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupFrequencyL1)) & GDW_CHUseBackupFrequencyL1Mask))
 // Lastmodus L1
 #define ParamGDW_CHUseLoadModeL1                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadModeL1)) & GDW_CHUseLoadModeL1Mask))
-// Backup L1 Leistung
+// Backup L1 Leistung (W)
 #define ParamGDW_CHUseBackupPowerL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerL1)) & GDW_CHUseBackupPowerL1Mask))
-// Backup L2 Spannung
+// Backup L2 Spannung (V)
 #define ParamGDW_CHUseBackupVoltageL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupVoltageL2)) & GDW_CHUseBackupVoltageL2Mask))
-// Backup L2 Strom
+// Backup L2 Strom (A)
 #define ParamGDW_CHUseBackupCurrentL2                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupCurrentL2)) & GDW_CHUseBackupCurrentL2Mask))
-// Backup L2 Frequenz
+// Backup L2 Frequenz (Hz)
 #define ParamGDW_CHUseBackupFrequencyL2              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupFrequencyL2)) & GDW_CHUseBackupFrequencyL2Mask))
 // Lastmodus L2
 #define ParamGDW_CHUseLoadModeL2                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadModeL2)) & GDW_CHUseLoadModeL2Mask))
-// Backup L2 Leistung
+// Backup L2 Leistung (W)
 #define ParamGDW_CHUseBackupPowerL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerL2)) & GDW_CHUseBackupPowerL2Mask))
-// Backup L3 Spannung
+// Backup L3 Spannung (V)
 #define ParamGDW_CHUseBackupVoltageL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupVoltageL3)) & GDW_CHUseBackupVoltageL3Mask))
-// Backup L3 Strom
+// Backup L3 Strom (A)
 #define ParamGDW_CHUseBackupCurrentL3                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupCurrentL3)) & GDW_CHUseBackupCurrentL3Mask))
-// Backup L3 Frequenz
+// Backup L3 Frequenz (Hz)
 #define ParamGDW_CHUseBackupFrequencyL3              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupFrequencyL3)) & GDW_CHUseBackupFrequencyL3Mask))
 // Lastmodus L3
 #define ParamGDW_CHUseLoadModeL3                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadModeL3)) & GDW_CHUseLoadModeL3Mask))
-// Backup L3 Leistung
+// Backup L3 Leistung (W)
 #define ParamGDW_CHUseBackupPowerL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerL3)) & GDW_CHUseBackupPowerL3Mask))
-// Last L1
+// Last L1 (W)
 #define ParamGDW_CHUseLoadPowerL1                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerL1)) & GDW_CHUseLoadPowerL1Mask))
-// Last L2
+// Last L2 (W)
 #define ParamGDW_CHUseLoadPowerL2                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerL2)) & GDW_CHUseLoadPowerL2Mask))
-// Last L3
+// Last L3 (W)
 #define ParamGDW_CHUseLoadPowerL3                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerL3)) & GDW_CHUseLoadPowerL3Mask))
-// Backup-Last gesamt
+// Backup-Last gesamt (W)
 #define ParamGDW_CHUseBackupPowerTotal               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBackupPowerTotal)) & GDW_CHUseBackupPowerTotalMask))
-// Last gesamt
+// Last gesamt (W)
 #define ParamGDW_CHUseLoadPowerTotal                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadPowerTotal)) & GDW_CHUseLoadPowerTotalMask))
-// USV-Auslastung
+// USV-Auslastung (%)
 #define ParamGDW_CHUseUpsLoad                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseUpsLoad)) & GDW_CHUseUpsLoadMask))
-// Batterie Spannung
+// Batterie Spannung (V)
 #define ParamGDW_CHUseBatteryVoltage                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryVoltage)) & GDW_CHUseBatteryVoltageMask))
-// Batterie Strom
+// Batterie Strom (A)
 #define ParamGDW_CHUseBatteryCurrent                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryCurrent)) & GDW_CHUseBatteryCurrentMask))
 // Batterie Leistung (+ Entladen)
 #define ParamGDW_CHUseBatteryPower                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryPower)) & GDW_CHUseBatteryPowerMask))
 // Batterie Modus
 #define ParamGDW_CHUseBatteryMode                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMode)) & GDW_CHUseBatteryModeMask))
-// Batterie Ladezustand
+// Batterie Ladezustand (%)
 #define ParamGDW_CHUseBatterySoc                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatterySoc)) & GDW_CHUseBatterySocMask))
-// Batterie Gesundheitszustand
+// Batterie Gesundheitszustand (%)
 #define ParamGDW_CHUseBatterySoh                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatterySoh)) & GDW_CHUseBatterySohMask))
-// Batterie Temperatur
+// Batterie Temperatur (°C)
 #define ParamGDW_CHUseBatteryTemperature             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryTemperature)) & GDW_CHUseBatteryTemperatureMask))
-// Batterie Ladestromgrenze
+// Batterie Ladestromgrenze (A)
 #define ParamGDW_CHUseBatteryChargeLimit             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryChargeLimit)) & GDW_CHUseBatteryChargeLimitMask))
-// Batterie Entladestromgrenze
+// Batterie Entladestromgrenze (A)
 #define ParamGDW_CHUseBatteryDischargeLimit          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryDischargeLimit)) & GDW_CHUseBatteryDischargeLimitMask))
 // Batterie BMS
 #define ParamGDW_CHUseBatteryBms                     ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryBms)) & GDW_CHUseBatteryBmsMask))
@@ -5646,19 +5646,19 @@
 #define ParamGDW_CHUseBatteryMaxCellVoltId           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellVoltId)) & GDW_CHUseBatteryMaxCellVoltIdMask))
 // Batterie Zelle min. Spannung (Nr.)
 #define ParamGDW_CHUseBatteryMinCellVoltId           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellVoltId)) & GDW_CHUseBatteryMinCellVoltIdMask))
-// Batterie Zelltemperatur max.
+// Batterie Zelltemperatur max. (°C)
 #define ParamGDW_CHUseBatteryMaxCellTemp             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellTemp)) & GDW_CHUseBatteryMaxCellTempMask))
-// Batterie Zelltemperatur min.
+// Batterie Zelltemperatur min. (°C)
 #define ParamGDW_CHUseBatteryMinCellTemp             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellTemp)) & GDW_CHUseBatteryMinCellTempMask))
-// Batterie Zellspannung max.
+// Batterie Zellspannung max. (V)
 #define ParamGDW_CHUseBatteryMaxCellVoltage          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMaxCellVoltage)) & GDW_CHUseBatteryMaxCellVoltageMask))
-// Batterie Zellspannung min.
+// Batterie Zellspannung min. (V)
 #define ParamGDW_CHUseBatteryMinCellVoltage          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryMinCellVoltage)) & GDW_CHUseBatteryMinCellVoltageMask))
 // Batterie Kapazität (Ah)
 #define ParamGDW_CHUseBatteryCapacity                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryCapacity)) & GDW_CHUseBatteryCapacityMask))
-// Batterie 2 Spannung
+// Batterie 2 Spannung (V)
 #define ParamGDW_CHUseBattery2Voltage                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Voltage)) & GDW_CHUseBattery2VoltageMask))
-// Batterie 2 Strom
+// Batterie 2 Strom (A)
 #define ParamGDW_CHUseBattery2Current                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Current)) & GDW_CHUseBattery2CurrentMask))
 // Batterie 2 Leistung (+ Entladen)
 #define ParamGDW_CHUseBattery2Power                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Power)) & GDW_CHUseBattery2PowerMask))
@@ -5666,15 +5666,15 @@
 #define ParamGDW_CHUseBattery2Mode                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Mode)) & GDW_CHUseBattery2ModeMask))
 // Batterie 2 Status
 #define ParamGDW_CHUseBattery2Status                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Status)) & GDW_CHUseBattery2StatusMask))
-// Batterie 2 Temperatur
+// Batterie 2 Temperatur (°C)
 #define ParamGDW_CHUseBattery2Temperature            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Temperature)) & GDW_CHUseBattery2TemperatureMask))
-// Batterie 2 Ladestromgrenze
+// Batterie 2 Ladestromgrenze (A)
 #define ParamGDW_CHUseBattery2ChargeLimit            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2ChargeLimit)) & GDW_CHUseBattery2ChargeLimitMask))
-// Batterie 2 Entladestromgrenze
+// Batterie 2 Entladestromgrenze (A)
 #define ParamGDW_CHUseBattery2DischargeLimit         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2DischargeLimit)) & GDW_CHUseBattery2DischargeLimitMask))
-// Batterie 2 Ladezustand
+// Batterie 2 Ladezustand (%)
 #define ParamGDW_CHUseBattery2Soc                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Soc)) & GDW_CHUseBattery2SocMask))
-// Batterie 2 Gesundheitszustand
+// Batterie 2 Gesundheitszustand (%)
 #define ParamGDW_CHUseBattery2Soh                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Soh)) & GDW_CHUseBattery2SohMask))
 // Batterie 2 Modulanzahl
 #define ParamGDW_CHUseBattery2Modules                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2Modules)) & GDW_CHUseBattery2ModulesMask))
@@ -5696,41 +5696,41 @@
 #define ParamGDW_CHUseBattery2MaxCellVoltId          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellVoltId)) & GDW_CHUseBattery2MaxCellVoltIdMask))
 // Batterie 2 Zelle min. Spannung (Nr.)
 #define ParamGDW_CHUseBattery2MinCellVoltId          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellVoltId)) & GDW_CHUseBattery2MinCellVoltIdMask))
-// Batterie 2 Zelltemperatur max.
+// Batterie 2 Zelltemperatur max. (°C)
 #define ParamGDW_CHUseBattery2MaxCellTemp            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellTemp)) & GDW_CHUseBattery2MaxCellTempMask))
-// Batterie 2 Zelltemperatur min.
+// Batterie 2 Zelltemperatur min. (°C)
 #define ParamGDW_CHUseBattery2MinCellTemp            ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellTemp)) & GDW_CHUseBattery2MinCellTempMask))
-// Batterie 2 Zellspannung max.
+// Batterie 2 Zellspannung max. (V)
 #define ParamGDW_CHUseBattery2MaxCellVoltage         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MaxCellVoltage)) & GDW_CHUseBattery2MaxCellVoltageMask))
-// Batterie 2 Zellspannung min.
+// Batterie 2 Zellspannung min. (V)
 #define ParamGDW_CHUseBattery2MinCellVoltage         ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBattery2MinCellVoltage)) & GDW_CHUseBattery2MinCellVoltageMask))
-// PV-Ertrag gesamt
+// PV-Ertrag gesamt (kWh)
 #define ParamGDW_CHUseEnergyTotal                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEnergyTotal)) & GDW_CHUseEnergyTotalMask))
-// PV-Ertrag heute
+// PV-Ertrag heute (kWh)
 #define ParamGDW_CHUseEnergyToday                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseEnergyToday)) & GDW_CHUseEnergyTodayMask))
-// Zähler Einspeisung gesamt
+// Zähler Einspeisung gesamt (kWh)
 #define ParamGDW_CHUseMeterExportTotal               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportTotal)) & GDW_CHUseMeterExportTotalMask))
-// Zähler Netzbezug gesamt
+// Zähler Netzbezug gesamt (kWh)
 #define ParamGDW_CHUseMeterImportTotal               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportTotal)) & GDW_CHUseMeterImportTotalMask))
-// Einspeisung gesamt
+// Einspeisung gesamt (kWh)
 #define ParamGDW_CHUseExportTotal                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportTotal)) & GDW_CHUseExportTotalMask))
-// Einspeisung heute
+// Einspeisung heute (kWh)
 #define ParamGDW_CHUseExportToday                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseExportToday)) & GDW_CHUseExportTodayMask))
-// Netzbezug gesamt
+// Netzbezug gesamt (kWh)
 #define ParamGDW_CHUseImportTotal                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseImportTotal)) & GDW_CHUseImportTotalMask))
-// Netzbezug heute
+// Netzbezug heute (kWh)
 #define ParamGDW_CHUseImportToday                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseImportToday)) & GDW_CHUseImportTodayMask))
-// Verbrauch gesamt
+// Verbrauch gesamt (kWh)
 #define ParamGDW_CHUseLoadTotal                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadTotal)) & GDW_CHUseLoadTotalMask))
-// Verbrauch heute
+// Verbrauch heute (kWh)
 #define ParamGDW_CHUseLoadToday                      ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseLoadToday)) & GDW_CHUseLoadTodayMask))
-// Batterie geladen gesamt
+// Batterie geladen gesamt (kWh)
 #define ParamGDW_CHUseBatteryChargeTotal             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryChargeTotal)) & GDW_CHUseBatteryChargeTotalMask))
-// Batterie geladen heute
+// Batterie geladen heute (kWh)
 #define ParamGDW_CHUseBatteryChargeToday             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryChargeToday)) & GDW_CHUseBatteryChargeTodayMask))
-// Batterie entladen gesamt
+// Batterie entladen gesamt (kWh)
 #define ParamGDW_CHUseBatteryDischargeTotal          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryDischargeTotal)) & GDW_CHUseBatteryDischargeTotalMask))
-// Batterie entladen heute
+// Batterie entladen heute (kWh)
 #define ParamGDW_CHUseBatteryDischargeToday          ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBatteryDischargeToday)) & GDW_CHUseBatteryDischargeTodayMask))
 // Zähler Kommunikationsart
 #define ParamGDW_CHUseMeterCommode                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCommode)) & GDW_CHUseMeterCommodeMask))
@@ -5742,13 +5742,13 @@
 #define ParamGDW_CHUseMeterTypeCode                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterTypeCode)) & GDW_CHUseMeterTypeCodeMask))
 // Zähler Softwareversion
 #define ParamGDW_CHUseMeterSwVersion                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterSwVersion)) & GDW_CHUseMeterSwVersionMask))
-// Zähler Wirkleistung L1
+// Zähler Wirkleistung L1 (W)
 #define ParamGDW_CHUseMeterPowerL1                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerL1)) & GDW_CHUseMeterPowerL1Mask))
-// Zähler Wirkleistung L2
+// Zähler Wirkleistung L2 (W)
 #define ParamGDW_CHUseMeterPowerL2                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerL2)) & GDW_CHUseMeterPowerL2Mask))
-// Zähler Wirkleistung L3
+// Zähler Wirkleistung L3 (W)
 #define ParamGDW_CHUseMeterPowerL3                   ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerL3)) & GDW_CHUseMeterPowerL3Mask))
-// Zähler Wirkleistung gesamt
+// Zähler Wirkleistung gesamt (W)
 #define ParamGDW_CHUseMeterPowerTotal                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerTotal)) & GDW_CHUseMeterPowerTotalMask))
 // Zähler Wirkleistung L1 (16 Bit)
 #define ParamGDW_CHUseMeterPower16L1                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPower16L1)) & GDW_CHUseMeterPower16L1Mask))
@@ -5784,41 +5784,41 @@
 #define ParamGDW_CHUseMeterPowerFactorL3             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerFactorL3)) & GDW_CHUseMeterPowerFactorL3Mask))
 // Zähler Leistungsfaktor
 #define ParamGDW_CHUseMeterPowerFactor               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterPowerFactor)) & GDW_CHUseMeterPowerFactorMask))
-// Zähler Frequenz
+// Zähler Frequenz (Hz)
 #define ParamGDW_CHUseMeterFrequency                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterFrequency)) & GDW_CHUseMeterFrequencyMask))
-// Zähler Spannung L1
+// Zähler Spannung L1 (V)
 #define ParamGDW_CHUseMeterVoltageL1                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterVoltageL1)) & GDW_CHUseMeterVoltageL1Mask))
-// Zähler Spannung L2
+// Zähler Spannung L2 (V)
 #define ParamGDW_CHUseMeterVoltageL2                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterVoltageL2)) & GDW_CHUseMeterVoltageL2Mask))
-// Zähler Spannung L3
+// Zähler Spannung L3 (V)
 #define ParamGDW_CHUseMeterVoltageL3                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterVoltageL3)) & GDW_CHUseMeterVoltageL3Mask))
-// Zähler Strom L1
+// Zähler Strom L1 (A)
 #define ParamGDW_CHUseMeterCurrentL1                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCurrentL1)) & GDW_CHUseMeterCurrentL1Mask))
-// Zähler Strom L2
+// Zähler Strom L2 (A)
 #define ParamGDW_CHUseMeterCurrentL2                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCurrentL2)) & GDW_CHUseMeterCurrentL2Mask))
-// Zähler Strom L3
+// Zähler Strom L3 (A)
 #define ParamGDW_CHUseMeterCurrentL3                 ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterCurrentL3)) & GDW_CHUseMeterCurrentL3Mask))
-// Zähler 2 Wirkleistung
+// Zähler 2 Wirkleistung (W)
 #define ParamGDW_CHUseMeter2Power                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2Power)) & GDW_CHUseMeter2PowerMask))
-// Zähler 2 Einspeisung gesamt
+// Zähler 2 Einspeisung gesamt (kWh)
 #define ParamGDW_CHUseMeter2ExportTotal              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2ExportTotal)) & GDW_CHUseMeter2ExportTotalMask))
-// Zähler 2 Netzbezug gesamt
+// Zähler 2 Netzbezug gesamt (kWh)
 #define ParamGDW_CHUseMeter2ImportTotal              ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2ImportTotal)) & GDW_CHUseMeter2ImportTotalMask))
 // Zähler 2 Kommunikationsstatus
 #define ParamGDW_CHUseMeter2CommStatus               ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeter2CommStatus)) & GDW_CHUseMeter2CommStatusMask))
-// Zähler Einspeisung L1
+// Zähler Einspeisung L1 (kWh)
 #define ParamGDW_CHUseMeterExportL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportL1)) & GDW_CHUseMeterExportL1Mask))
-// Zähler Einspeisung L2
+// Zähler Einspeisung L2 (kWh)
 #define ParamGDW_CHUseMeterExportL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportL2)) & GDW_CHUseMeterExportL2Mask))
-// Zähler Einspeisung L3
+// Zähler Einspeisung L3 (kWh)
 #define ParamGDW_CHUseMeterExportL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportL3)) & GDW_CHUseMeterExportL3Mask))
 // Zähler Einspeisung gesamt (64 Bit)
 #define ParamGDW_CHUseMeterExportTotal64             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterExportTotal64)) & GDW_CHUseMeterExportTotal64Mask))
-// Zähler Netzbezug L1
+// Zähler Netzbezug L1 (kWh)
 #define ParamGDW_CHUseMeterImportL1                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportL1)) & GDW_CHUseMeterImportL1Mask))
-// Zähler Netzbezug L2
+// Zähler Netzbezug L2 (kWh)
 #define ParamGDW_CHUseMeterImportL2                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportL2)) & GDW_CHUseMeterImportL2Mask))
-// Zähler Netzbezug L3
+// Zähler Netzbezug L3 (kWh)
 #define ParamGDW_CHUseMeterImportL3                  ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportL3)) & GDW_CHUseMeterImportL3Mask))
 // Zähler Netzbezug gesamt (64 Bit)
 #define ParamGDW_CHUseMeterImportTotal64             ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseMeterImportTotal64)) & GDW_CHUseMeterImportTotal64Mask))
@@ -5826,23 +5826,23 @@
 #define ParamGDW_CHUseBms1Version                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Version)) & GDW_CHUseBms1VersionMask))
 // BMS 1 Modulanzahl
 #define ParamGDW_CHUseBms1Modules                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Modules)) & GDW_CHUseBms1ModulesMask))
-// BMS 1 Ladespannung max.
+// BMS 1 Ladespannung max. (V)
 #define ParamGDW_CHUseBms1ChargeVoltageMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1ChargeVoltageMax)) & GDW_CHUseBms1ChargeVoltageMaxMask))
-// BMS 1 Ladestrom max.
+// BMS 1 Ladestrom max. (A)
 #define ParamGDW_CHUseBms1ChargeCurrentMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1ChargeCurrentMax)) & GDW_CHUseBms1ChargeCurrentMaxMask))
-// BMS 1 Entladespannung min.
+// BMS 1 Entladespannung min. (V)
 #define ParamGDW_CHUseBms1DischargeVoltageMin        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1DischargeVoltageMin)) & GDW_CHUseBms1DischargeVoltageMinMask))
-// BMS 1 Entladestrom max.
+// BMS 1 Entladestrom max. (A)
 #define ParamGDW_CHUseBms1DischargeCurrentMax        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1DischargeCurrentMax)) & GDW_CHUseBms1DischargeCurrentMaxMask))
-// BMS 1 Spannung
+// BMS 1 Spannung (V)
 #define ParamGDW_CHUseBms1Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Voltage)) & GDW_CHUseBms1VoltageMask))
-// BMS 1 Strom
+// BMS 1 Strom (A)
 #define ParamGDW_CHUseBms1Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Current)) & GDW_CHUseBms1CurrentMask))
-// BMS 1 Ladezustand
+// BMS 1 Ladezustand (%)
 #define ParamGDW_CHUseBms1Soc                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Soc)) & GDW_CHUseBms1SocMask))
-// BMS 1 Gesundheitszustand
+// BMS 1 Gesundheitszustand (%)
 #define ParamGDW_CHUseBms1Soh                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Soh)) & GDW_CHUseBms1SohMask))
-// BMS 1 Temperatur
+// BMS 1 Temperatur (°C)
 #define ParamGDW_CHUseBms1Temperature                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1Temperature)) & GDW_CHUseBms1TemperatureMask))
 // BMS 1 Warnungscode
 #define ParamGDW_CHUseBms1WarningCode                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms1WarningCode)) & GDW_CHUseBms1WarningCodeMask))
@@ -5858,23 +5858,23 @@
 #define ParamGDW_CHUseBms2Version                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Version)) & GDW_CHUseBms2VersionMask))
 // BMS 2 Modulanzahl
 #define ParamGDW_CHUseBms2Modules                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Modules)) & GDW_CHUseBms2ModulesMask))
-// BMS 2 Ladespannung max.
+// BMS 2 Ladespannung max. (V)
 #define ParamGDW_CHUseBms2ChargeVoltageMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2ChargeVoltageMax)) & GDW_CHUseBms2ChargeVoltageMaxMask))
-// BMS 2 Ladestrom max.
+// BMS 2 Ladestrom max. (A)
 #define ParamGDW_CHUseBms2ChargeCurrentMax           ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2ChargeCurrentMax)) & GDW_CHUseBms2ChargeCurrentMaxMask))
-// BMS 2 Entladespannung min.
+// BMS 2 Entladespannung min. (V)
 #define ParamGDW_CHUseBms2DischargeVoltageMin        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2DischargeVoltageMin)) & GDW_CHUseBms2DischargeVoltageMinMask))
-// BMS 2 Entladestrom max.
+// BMS 2 Entladestrom max. (A)
 #define ParamGDW_CHUseBms2DischargeCurrentMax        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2DischargeCurrentMax)) & GDW_CHUseBms2DischargeCurrentMaxMask))
-// BMS 2 Spannung
+// BMS 2 Spannung (V)
 #define ParamGDW_CHUseBms2Voltage                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Voltage)) & GDW_CHUseBms2VoltageMask))
-// BMS 2 Strom
+// BMS 2 Strom (A)
 #define ParamGDW_CHUseBms2Current                    ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Current)) & GDW_CHUseBms2CurrentMask))
-// BMS 2 Ladezustand
+// BMS 2 Ladezustand (%)
 #define ParamGDW_CHUseBms2Soc                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Soc)) & GDW_CHUseBms2SocMask))
-// BMS 2 Gesundheitszustand
+// BMS 2 Gesundheitszustand (%)
 #define ParamGDW_CHUseBms2Soh                        ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Soh)) & GDW_CHUseBms2SohMask))
-// BMS 2 Temperatur
+// BMS 2 Temperatur (°C)
 #define ParamGDW_CHUseBms2Temperature                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2Temperature)) & GDW_CHUseBms2TemperatureMask))
 // BMS 2 Warnungscode
 #define ParamGDW_CHUseBms2WarningCode                ((bool)(knx.paramByte(GDW_ParamCalcIndex(GDW_CHUseBms2WarningCode)) & GDW_CHUseBms2WarningCodeMask))
